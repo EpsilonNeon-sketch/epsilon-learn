@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epsilon Learner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="icon" href="./icon.png">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            /* Light gray background */
+            color: #1f2937;
+            /* Dark gray text */
+        }
+
+        /* Glassmorphism for Light Mode */
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            /* Emerald border */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        .bg-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.15) 0, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(52, 211, 153, 0.15) 0, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(167, 243, 208, 0.1) 0, transparent 50%);
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        #authPage {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #dashboardPage {
+            display: none;
+        }
+
+        #dashboardPage.active {
+            display: block;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 260px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(16, 185, 129, 0.2);
+            transition: transform 0.3s ease;
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .sidebar.closed {
+            transform: translateX(-100%);
+        }
+
+        .main-content {
+            margin-left: 260px;
+            transition: margin-left 0.3s ease;
+            padding: 2rem;
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        .menu-toggle {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 101;
+            background: #10b981;
+            /* Emerald 500 */
+            border: none;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-toggle:hover {
+            background: #059669;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: 99;
+            display: none;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        /* Custom Inputs */
+        .input-field {
+            width: 100%;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            background-color: #f9fafb;
+            border: 1px solid #d1d5db;
+            transition: all 0.2s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #10b981;
+            ring: 2px solid rgba(16, 185, 129, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+    <div class="bg-mesh"></div>
+
+    <!-- Menu Toggle Button -->
+    <button id="menuToggle" class="menu-toggle hidden">
+        <i data-lucide="menu" class="w-6 h-6"></i>
+    </button>
+
+    <!-- Sidebar Overlay -->
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="sidebar closed">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-2xl font-bold text-gray-800">EPSILON<span class="text-emerald-500"> LEARNER</span></h2>
+                <button id="closeSidebar" class="md:hidden text-gray-500 hover:text-gray-800">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <nav class="space-y-2">
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="dashboard">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="tracker">
+                    <i data-lucide="check-square" class="w-5 h-5"></i>
+                    <span>Work Tracker</span>
+                </button>
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="tools">
+                    <i data-lucide="book-open" class="w-5 h-5"></i>
+                    <span>Study Tools</span>
+                </button>
+            </nav>
+
+            <div class="mt-8 pt-8 border-t border-gray-200">
+                <button id="logoutBtn"
+                    class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 hover:text-red-600 transition text-left text-gray-600">
+                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Authentication Page (Login & Signup) -->
+    <div id="authPage" class="page active px-6">
+        <div class="max-w-md w-full">
+            <div class="glass p-8 rounded-2xl">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-gray-800 mb-2">EPSILON<span class="text-emerald-500">
+                            LEARNER</span></h1>
+                    <p class="text-gray-500 text-sm">Track your progress and master your skills.</p>
+                </div>
+
+                <!-- Login Form -->
+                <form id="loginForm" class="space-y-4">
+                    <input id="loginEmail" type="email" placeholder="Email Address" class="input-field" required>
+                    <input id="loginPassword" type="password" placeholder="Password" class="input-field" required>
+                    <button type="submit"
+                        class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-3 rounded-lg transition shadow-md shadow-emerald-200">
+                        Sign In
+                    </button>
+                    <p class="text-center text-sm text-gray-500 mt-4">
+                        Don't have an account? <a href="#" id="showSignup"
+                            class="text-emerald-600 font-semibold hover:underline">Sign Up</a>
+                    </p>
+                    <p id="loginError" class="text-red-500 text-sm text-center hidden"></p>
+                </form>
+
+                <!-- Signup Form (Hidden initially) -->
+                <form id="signupForm" class="space-y-4 hidden">
+                    <input id="signupEmail" type="email" placeholder="Email Address" class="input-field" required>
+                    <input id="signupPassword" type="password" placeholder="Create Password" class="input-field"
+                        required>
+                    <button type="submit"
+                        class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-3 rounded-lg transition shadow-md shadow-emerald-200">
+                        Create Account
+                    </button>
+                    <p class="text-center text-sm text-gray-500 mt-4">
+                        Already have an account? <a href="#" id="showLogin"
+                            class="text-emerald-600 font-semibold hover:underline">Sign In</a>
+                    </p>
+                    <p id="signupError" class="text-red-500 text-sm text-center hidden"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div id="dashboardPage" class="page">
+        <div id="mainContent" class="main-content expanded">
+            <header class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800">Hello, <span id="userNameDisplay">Learner</span> 👋
+                    </h1>
+                    <p class="text-gray-500">Ready to learn something new today?</p>
+                </div>
+                <div id="userAvatar"
+                    class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-xl border-2 border-white shadow-sm">
+                    <!-- Initials injected via JS -->
+                </div>
+            </header>
+
+            <!-- Dashboard Section -->
+            <div id="dashboardSection" class="section">
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="glass p-6 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Pending Tasks</p>
+                            <h3 id="statPending" class="text-3xl font-bold text-gray-800 mt-1">0</h3>
+                        </div>
+                        <div
+                            class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600">
+                            <i data-lucide="clock" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div class="glass p-6 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Completed</p>
+                            <h3 id="statCompleted" class="text-3xl font-bold text-gray-800 mt-1">0</h3>
+                        </div>
+                        <div
+                            class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600">
+                            <i data-lucide="check-circle" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div class="glass p-6 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Saved Resources</p>
+                            <h3 id="statResources" class="text-3xl font-bold text-gray-800 mt-1">0</h3>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                            <i data-lucide="bookmark" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glass p-6 rounded-2xl">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4">Productivity Overview</h3>
+                        <canvas id="productivityChart"></canvas>
+                    </div>
+                    <div class="glass p-6 rounded-2xl flex flex-col justify-center items-center text-center">
+                        <div class="w-32 h-32 bg-emerald-50 rounded-full flex items-center justify-center mb-4">
+                            <i data-lucide="trophy" class="w-16 h-16 text-emerald-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">Keep it up!</h3>
+                        <p class="text-gray-500 max-w-xs mt-2">Consistency is key to mastering new skills. Check your
+                            Work Tracker to see today's goals.</p>
+                        <button onclick="document.querySelector('[data-page=\'tracker\']').click()"
+                            class="mt-6 px-6 py-2 bg-emerald-100 text-emerald-700 rounded-full font-medium hover:bg-emerald-200 transition">
+                            Go to Tracker
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Work Tracker Section -->
+            <div id="trackerSection" class="section hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Add Task Form -->
+                    <div class="lg:col-span-1">
+                        <div class="glass p-6 rounded-2xl sticky top-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4">Add New Task</h2>
+                            <form id="taskForm" class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Task Title</label>
+                                    <input id="taskTitle" type="text" placeholder="e.g. Finish Math Chapter 4"
+                                        class="input-field" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Description</label>
+                                    <textarea id="taskDesc" placeholder="Details..." class="input-field"
+                                        rows="3"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Due Date</label>
+                                    <input id="taskDate" type="date" class="input-field">
+                                </div>
+                                <button type="submit"
+                                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 rounded-lg transition">
+                                    Add Task
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Task List -->
+                    <div class="lg:col-span-2">
+                        <div class="glass p-6 rounded-2xl min-h-[500px]">
+                            <div class="flex justify-between items-center mb-6">
+                                <h2 class="text-xl font-bold text-gray-800">My Tasks</h2>
+                                <div class="flex gap-2 text-sm">
+                                    <button id="filterAll"
+                                        class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full font-medium">All</button>
+                                    <button id="filterPending"
+                                        class="px-3 py-1 text-gray-500 hover:bg-gray-100 rounded-full">Pending</button>
+                                    <button id="filterCompleted"
+                                        class="px-3 py-1 text-gray-500 hover:bg-gray-100 rounded-full">Done</button>
+                                </div>
+                            </div>
+
+                            <div id="tasksList" class="space-y-3">
+                                <!-- Tasks loaded here -->
+                                <div class="text-center py-10 text-gray-400">
+                                    <i data-lucide="coffee" class="w-12 h-12 mx-auto mb-2 opacity-50"></i>
+                                    <p>No tasks yet. Enjoy your free time!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Study Tools Section -->
+            <div id="toolsSection" class="section hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Add Resource Form -->
+                    <div class="lg:col-span-1">
+                        <div class="glass p-6 rounded-2xl sticky top-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4">Save Resource</h2>
+                            <form id="resourceForm" class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Title</label>
+                                    <input id="resTitle" type="text" placeholder="e.g. Python Documentation"
+                                        class="input-field" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">URL</label>
+                                    <input id="resUrl" type="url" placeholder="https://..." class="input-field"
+                                        required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Category</label>
+                                    <select id="resCategory" class="input-field">
+                                        <option value="reading">Reading</option>
+                                        <option value="video">Video</option>
+                                        <option value="course">Course</option>
+                                        <option value="tool">Tool</option>
+                                    </select>
+                                </div>
+                                <button type="submit"
+                                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition">
+                                    Save Link
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Resources List -->
+                    <div class="lg:col-span-2">
+                        <div class="glass p-6 rounded-2xl min-h-[500px]">
+                            <h2 class="text-xl font-bold text-gray-800 mb-6">Library</h2>
+                            <div id="resourcesList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Resources loaded here -->
+                                <div class="col-span-full text-center py-10 text-gray-400">
+                                    <i data-lucide="library" class="w-12 h-12 mx-auto mb-2 opacity-50"></i>
+                                    <p>Your library is empty.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Supabase Setup
+        const { createClient } = supabase;
+        const supabaseClient = createClient('https://gfsqzkyviivhvyqadpeg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdmc3F6a3l2aWl2aHZ5cWFkcGVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0NDI0NDQsImV4cCI6MjA4NjAxODQ0NH0.MwC6dMZKFZMyklCJKqr4DPek8dxR-EswBZSd1L_AkMA', {
+            auth: { persistSession: true, storageKey: 'epsilon-learner-auth' }
+        });
+
+        lucide.createIcons();
+
+        // State Variables
+        let currentUser = null;
+        let productivityChart = null;
+        let tasksFilter = 'all';
+
+        // UI References
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+        const menuToggle = document.getElementById('menuToggle');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        // Sidebar Logic
+        function toggleSidebar() {
+            sidebar.classList.toggle('closed');
+            sidebar.classList.toggle('open');
+            mainContent.classList.toggle('expanded');
+            sidebarOverlay.classList.toggle('active');
+        }
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        closeSidebar.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        // Navigation
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const page = btn.dataset.page;
+
+                // Hide all sections
+                document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+                // Show target section
+                document.getElementById(`${page}Section`).classList.remove('hidden');
+
+                // Update active state on buttons
+                document.querySelectorAll('.nav-btn').forEach(b => {
+                    b.classList.remove('bg-emerald-50', 'text-emerald-700');
+                    b.classList.add('text-gray-600');
+                });
+                btn.classList.remove('text-gray-600');
+                btn.classList.add('bg-emerald-50', 'text-emerald-700');
+
+                // Close sidebar on mobile
+                if (window.innerWidth < 768) toggleSidebar();
+
+                // Load Data based on page
+                if (page === 'dashboard') loadDashboardData();
+                if (page === 'tracker') loadTasks();
+                if (page === 'tools') loadResources();
+            });
+        });
+
+        // Authentication Logic
+        async function checkSession() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                currentUser = session.user;
+                setupUserInterface();
+            } else {
+                showAuthPage();
+            }
+        }
+
+        function showAuthPage() {
+            document.getElementById('authPage').classList.add('active');
+            document.getElementById('dashboardPage').classList.remove('active');
+            menuToggle.classList.add('hidden');
+        }
+
+        function setupUserInterface() {
+            document.getElementById('authPage').classList.remove('active');
+            document.getElementById('dashboardPage').classList.add('active');
+            menuToggle.classList.remove('hidden');
+            sidebar.classList.remove('closed');
+            mainContent.classList.remove('expanded');
+
+            // Set User Name
+            const email = currentUser.email;
+            const name = email.split('@')[0];
+            document.getElementById('userNameDisplay').textContent = name.charAt(0).toUpperCase() + name.slice(1);
+            document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+
+            // Load Dashboard initially
+            document.querySelector('[data-page="dashboard"]').click();
+        }
+
+        // Toggle Login/Signup
+        document.getElementById('showSignup').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('signupForm').classList.remove('hidden');
+        });
+
+        document.getElementById('showLogin').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('signupForm').classList.add('hidden');
+            document.getElementById('loginForm').classList.remove('hidden');
+        });
+
+        // Handle Signup
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+
+            const { data, error } = await supabaseClient.auth.signUp({ email, password });
+            if (error) {
+                document.getElementById('signupError').textContent = error.message;
+                document.getElementById('signupError').classList.remove('hidden');
+            } else {
+                // Success
+                document.getElementById('signupForm').classList.add('hidden');
+                document.getElementById('loginForm').classList.remove('hidden');
+                alert("Account created! Please sign in.");
+            }
+        });
+
+        // Handle Login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+            if (error) {
+                document.getElementById('loginError').textContent = error.message;
+                document.getElementById('loginError').classList.remove('hidden');
+            } else {
+                currentUser = data.user;
+                setupUserInterface();
+            }
+        });
+
+        // Handle Logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await supabaseClient.auth.signOut();
+            currentUser = null;
+            window.location.reload();
+        });
+
+        // --- DASHBOARD LOGIC ---
+
+        async function loadDashboardData() {
+            // Fetch Counts
+            const { count: pendingCount } = await supabaseClient
+                .from('learner_tasks')
+                .select('*', { count: 'exact', head: true })
+                .eq('user_id', currentUser.id)
+                .eq('completed', false);
+
+            const { count: completedCount } = await supabaseClient
+                .from('learner_tasks')
+                .select('*', { count: 'exact', head: true })
+                .eq('user_id', currentUser.id)
+                .eq('completed', true);
+
+            const { count: resourcesCount } = await supabaseClient
+                .from('learner_resources')
+                .select('*', { count: 'exact', head: true })
+                .eq('user_id', currentUser.id);
+
+            document.getElementById('statPending').textContent = pendingCount || 0;
+            document.getElementById('statCompleted').textContent = completedCount || 0;
+            document.getElementById('statResources').textContent = resourcesCount || 0;
+
+            updateChart(completedCount || 0, pendingCount || 0);
+        }
+
+        function updateChart(completed, pending) {
+            const ctx = document.getElementById('productivityChart').getContext('2d');
+
+            if (productivityChart) {
+                productivityChart.destroy();
+            }
+
+            productivityChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completed', 'Pending'],
+                    datasets: [{
+                        data: [completed, pending],
+                        backgroundColor: ['#10b981', '#fbbf24'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: { family: 'Inter', size: 12 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- WORK TRACKER LOGIC ---
+
+        document.getElementById('taskForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('taskTitle').value;
+            const desc = document.getElementById('taskDesc').value;
+            const date = document.getElementById('taskDate').value;
+
+            await supabaseClient.from('learner_tasks').insert([{
+                user_id: currentUser.id,
+                title,
+                description: desc,
+                due_date: date,
+                completed: false
+            }]);
+
+            e.target.reset();
+            loadTasks();
+        });
+
+        async function loadTasks() {
+            let query = supabaseClient
+                .from('learner_tasks')
+                .select('*')
+                .eq('user_id', currentUser.id)
+                .order('created_at', { ascending: false });
+
+            if (tasksFilter === 'pending') query = query.eq('completed', false);
+            if (tasksFilter === 'completed') query = query.eq('completed', true);
+
+            const { data: tasks, error } = await query;
+
+            const container = document.getElementById('tasksList');
+            container.innerHTML = '';
+
+            if (!tasks || tasks.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-10 text-gray-400">
+                        <i data-lucide="coffee" class="w-12 h-12 mx-auto mb-2 opacity-50"></i>
+                        <p>No tasks found.</p>
+                    </div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            tasks.forEach(task => {
+                const div = document.createElement('div');
+                div.className = `p-4 rounded-xl border transition-all ${task.completed ? 'bg-gray-50 border-gray-200' : 'bg-white border-emerald-100 shadow-sm'}`;
+
+                div.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <button onclick="toggleTaskStatus(${task.id}, ${task.completed})" 
+                            class="mt-1 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors
+                            ${task.completed ? 'bg-emerald-500 border-emerald-500' : 'border-gray-300 hover:border-emerald-500'}">
+                            ${task.completed ? '<i data-lucide="check" class="w-3 h-3 text-white"></i>' : ''}
+                        </button>
+                        <div class="flex-1">
+                            <h3 class="${task.completed ? 'text-gray-400 line-through' : 'text-gray-800 font-medium'}">${task.title}</h3>
+                            ${task.description ? `<p class="text-sm text-gray-500 mt-1">${task.description}</p>` : ''}
+                            ${task.due_date ? `<div class="flex items-center gap-1 mt-2 text-xs text-gray-400"><i data-lucide="calendar" class="w-3 h-3"></i> ${task.due_date}</div>` : ''}
+                        </div>
+                        <button onclick="deleteTask(${task.id})" class="text-gray-300 hover:text-red-500 transition">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            lucide.createIcons();
+        }
+
+        async function toggleTaskStatus(id, currentStatus) {
+            await supabaseClient.from('learner_tasks').update({ completed: !currentStatus }).eq('id', id);
+            loadTasks();
+        }
+
+        async function deleteTask(id) {
+            if (confirm('Delete this task?')) {
+                await supabaseClient.from('learner_tasks').delete().eq('id', id);
+                loadTasks();
+            }
+        }
+
+        // Filter Buttons
+        const filterBtns = {
+            'filterAll': 'all',
+            'filterPending': 'pending',
+            'filterCompleted': 'completed'
+        };
+
+        Object.keys(filterBtns).forEach(btnId => {
+            document.getElementById(btnId).addEventListener('click', (e) => {
+                tasksFilter = filterBtns[btnId];
+                // Update UI classes
+                Object.keys(filterBtns).forEach(id => {
+                    const btn = document.getElementById(id);
+                    btn.className = 'px-3 py-1 rounded-full font-medium transition ' +
+                        (id === btnId ? 'bg-emerald-100 text-emerald-700' : 'text-gray-500 hover:bg-gray-100');
+                });
+                loadTasks();
+            });
+        });
+
+
+        // --- STUDY TOOLS LOGIC ---
+
+        document.getElementById('resourceForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('resTitle').value;
+            const url = document.getElementById('resUrl').value;
+            const category = document.getElementById('resCategory').value;
+
+            await supabaseClient.from('learner_resources').insert([{
+                user_id: currentUser.id,
+                title,
+                url,
+                category
+            }]);
+
+            e.target.reset();
+            loadResources();
+        });
+
+        async function loadResources() {
+            const { data: resources } = await supabaseClient
+                .from('learner_resources')
+                .select('*')
+                .eq('user_id', currentUser.id)
+                .order('created_at', { ascending: false });
+
+            const container = document.getElementById('resourcesList');
+            container.innerHTML = '';
+
+            if (!resources || resources.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-10 text-gray-400">
+                        <i data-lucide="library" class="w-12 h-12 mx-auto mb-2 opacity-50"></i>
+                        <p>No resources saved yet.</p>
+                    </div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            resources.forEach(res => {
+                const div = document.createElement('div');
+                div.className = 'p-4 rounded-xl bg-white border border-gray-100 hover:border-emerald-200 hover:shadow-md transition group';
+
+                // Color code category
+                const catColors = {
+                    'reading': 'bg-orange-100 text-orange-600',
+                    'video': 'bg-red-100 text-red-600',
+                    'course': 'bg-blue-100 text-blue-600',
+                    'tool': 'bg-purple-100 text-purple-600'
+                };
+                const badgeClass = catColors[res.category] || 'bg-gray-100 text-gray-600';
+
+                div.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <span class="text-xs font-semibold px-2 py-1 rounded-md uppercase tracking-wide ${badgeClass}">${res.category}</span>
+                        <button onclick="deleteResource(${res.id})" class="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <h3 class="font-bold text-gray-800 mt-2 mb-1 leading-tight">${res.title}</h3>
+                    <a href="${res.url}" target="_blank" class="text-sm text-emerald-600 hover:text-emerald-700 hover:underline truncate block">
+                        ${res.url}
+                    </a>
+                `;
+                container.appendChild(div);
+            });
+            lucide.createIcons();
+        }
+
+        async function deleteResource(id) {
+            if (confirm('Remove this resource?')) {
+                await supabaseClient.from('learner_resources').delete().eq('id', id);
+                loadResources();
+            }
+        }
+
+        // Initialize
+        checkSession();
+
+    </script>
+</body>
+
+</html>
