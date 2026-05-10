@@ -9,7 +9,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-     <link rel="icon" href="./icon.png">
+    <link rel="icon" href="./icon.png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -33,9 +33,9 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            background-image: radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.15) 0, transparent 50%), 
-                              radial-gradient(at 100% 100%, rgba(52, 211, 153, 0.15) 0, transparent 50%),
-                              radial-gradient(at 100% 0%, rgba(167, 243, 208, 0.1) 0, transparent 50%);
+            background-image: radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.15) 0, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(52, 211, 153, 0.15) 0, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(167, 243, 208, 0.1) 0, transparent 50%);
         }
 
         .page {
@@ -102,7 +102,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             color: white;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .menu-toggle:hover {
@@ -144,15 +144,40 @@
             font-size: 1.25rem;
             transition: all 0.1s;
         }
-        .calc-btn:hover { background-color: #f0fdf4; border-color: #10b981; }
-        .calc-btn.op { background-color: #ecfdf5; color: #047857; font-weight: bold; }
-        .calc-btn.eq { background-color: #10b981; color: white; border-color: #10b981; }
-        .calc-btn.eq:hover { background-color: #059669; }
+
+        .calc-btn:hover {
+            background-color: #f0fdf4;
+            border-color: #10b981;
+        }
+
+        .calc-btn.op {
+            background-color: #ecfdf5;
+            color: #047857;
+            font-weight: bold;
+        }
+
+        .calc-btn.eq {
+            background-color: #10b981;
+            color: white;
+            border-color: #10b981;
+        }
+
+        .calc-btn.eq:hover {
+            background-color: #059669;
+        }
 
         @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); }
-            .sidebar.open { transform: translateX(0); }
-            .main-content { margin-left: 0; }
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
         }
     </style>
 </head>
@@ -179,30 +204,47 @@
             </div>
 
             <nav class="space-y-2">
-                <button class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600" data-page="dashboard">
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="dashboard">
                     <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                     <span>Dashboard</span>
                 </button>
-                <button class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600" data-page="tracker">
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="tracker">
                     <i data-lucide="check-square" class="w-5 h-5"></i>
                     <span>Work Tracker</span>
                 </button>
-                <button class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600" data-page="tools">
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="tools">
                     <i data-lucide="book-open" class="w-5 h-5"></i>
                     <span>Study Tools</span>
                 </button>
-                <button class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600" data-page="quiz">
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="quiz">
                     <i data-lucide="help-circle" class="w-5 h-5"></i>
                     <span>Quizzes</span>
                 </button>
-                <button class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600" data-page="calculator">
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="calculator">
                     <i data-lucide="calculator" class="w-5 h-5"></i>
                     <span>Calculators</span>
+                </button>
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="news">
+                    <i data-lucide="newspaper" class="w-5 h-5"></i>
+                    <span>News</span>
                 </button>
             </nav>
 
             <div class="mt-8 pt-8 border-t border-gray-200">
-                <button id="logoutBtn" class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 hover:text-red-600 transition text-left text-gray-600">
+                <button id="logoutBtn"
+                    class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 hover:text-red-600 transition text-left text-gray-600">
                     <i data-lucide="log-out" class="w-5 h-5"></i>
                     <span>Logout</span>
                 </button>
@@ -215,23 +257,31 @@
         <div class="max-w-md w-full">
             <div class="glass p-8 rounded-2xl">
                 <div class="text-center mb-8">
-                    <h1 class="text-3xl font-bold text-gray-800 mb-2">EPSILON<span class="text-emerald-500"> LEARNER</span></h1>
+                    <h1 class="text-3xl font-bold text-gray-800 mb-2">EPSILON<span class="text-emerald-500">
+                            LEARNER</span></h1>
                     <p class="text-gray-500 text-sm">Track your progress and master your skills.</p>
                 </div>
 
                 <form id="loginForm" class="space-y-4">
                     <input id="loginEmail" type="email" placeholder="Email Address" class="input-field" required>
                     <input id="loginPassword" type="password" placeholder="Password" class="input-field" required>
-                    <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-3 rounded-lg transition shadow-md shadow-emerald-200">Sign In</button>
-                    <p class="text-center text-sm text-gray-500 mt-4">Don't have an account? <a href="#" id="showSignup" class="text-emerald-600 font-semibold hover:underline">Sign Up</a></p>
+                    <button type="submit"
+                        class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-3 rounded-lg transition shadow-md shadow-emerald-200">Sign
+                        In</button>
+                    <p class="text-center text-sm text-gray-500 mt-4">Don't have an account? <a href="#" id="showSignup"
+                            class="text-emerald-600 font-semibold hover:underline">Sign Up</a></p>
                     <p id="loginError" class="text-red-500 text-sm text-center hidden"></p>
                 </form>
 
                 <form id="signupForm" class="space-y-4 hidden">
                     <input id="signupEmail" type="email" placeholder="Email Address" class="input-field" required>
-                    <input id="signupPassword" type="password" placeholder="Create Password" class="input-field" required>
-                    <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-3 rounded-lg transition shadow-md shadow-emerald-200">Create Account</button>
-                    <p class="text-center text-sm text-gray-500 mt-4">Already have an account? <a href="#" id="showLogin" class="text-emerald-600 font-semibold hover:underline">Sign In</a></p>
+                    <input id="signupPassword" type="password" placeholder="Create Password" class="input-field"
+                        required>
+                    <button type="submit"
+                        class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-3 rounded-lg transition shadow-md shadow-emerald-200">Create
+                        Account</button>
+                    <p class="text-center text-sm text-gray-500 mt-4">Already have an account? <a href="#"
+                            id="showLogin" class="text-emerald-600 font-semibold hover:underline">Sign In</a></p>
                     <p id="signupError" class="text-red-500 text-sm text-center hidden"></p>
                 </form>
             </div>
@@ -243,30 +293,56 @@
         <div id="mainContent" class="main-content expanded">
             <header class="flex justify-between items-center mb-8">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-800">Hello, <span id="userNameDisplay">Learner</span> 👋</h1>
+                    <h1 class="text-3xl font-bold text-gray-800">Hello, <span id="userNameDisplay">Learner</span> 👋
+                    </h1>
                     <p class="text-gray-500">Ready to learn something new today?</p>
                 </div>
-                <div id="userAvatar" class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-xl border-2 border-white shadow-sm"></div>
+                <div id="userAvatar"
+                    class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-xl border-2 border-white shadow-sm">
+                </div>
             </header>
 
             <!-- DASHBOARD SECTION -->
             <div id="dashboardSection" class="section">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                     <div class="glass p-6 rounded-2xl flex items-center justify-between">
-                        <div><p class="text-gray-500 text-sm font-medium">Pending Tasks</p><h3 id="statPending" class="text-3xl font-bold text-gray-800 mt-1">0</h3></div>
-                        <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600"><i data-lucide="clock" class="w-6 h-6"></i></div>
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Pending Tasks</p>
+                            <h3 id="statPending" class="text-3xl font-bold text-gray-800 mt-1">0</h3>
+                        </div>
+                        <div
+                            class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600">
+                            <i data-lucide="clock" class="w-6 h-6"></i>
+                        </div>
                     </div>
                     <div class="glass p-6 rounded-2xl flex items-center justify-between">
-                        <div><p class="text-gray-500 text-sm font-medium">Completed</p><h3 id="statCompleted" class="text-3xl font-bold text-gray-800 mt-1">0</h3></div>
-                        <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600"><i data-lucide="check-circle" class="w-6 h-6"></i></div>
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Completed</p>
+                            <h3 id="statCompleted" class="text-3xl font-bold text-gray-800 mt-1">0</h3>
+                        </div>
+                        <div
+                            class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600">
+                            <i data-lucide="check-circle" class="w-6 h-6"></i>
+                        </div>
                     </div>
                     <div class="glass p-6 rounded-2xl flex items-center justify-between">
-                        <div><p class="text-gray-500 text-sm font-medium">Resources</p><h3 id="statResources" class="text-3xl font-bold text-gray-800 mt-1">0</h3></div>
-                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600"><i data-lucide="bookmark" class="w-6 h-6"></i></div>
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Resources</p>
+                            <h3 id="statResources" class="text-3xl font-bold text-gray-800 mt-1">0</h3>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                            <i data-lucide="bookmark" class="w-6 h-6"></i>
+                        </div>
                     </div>
-                     <div class="glass p-6 rounded-2xl flex items-center justify-between">
-                        <div><p class="text-gray-500 text-sm font-medium">Quizzes</p><h3 id="statQuizzes" class="text-3xl font-bold text-gray-800 mt-1">0</h3></div>
-                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-purple-600"><i data-lucide="help-circle" class="w-6 h-6"></i></div>
+                    <div class="glass p-6 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Quizzes</p>
+                            <h3 id="statQuizzes" class="text-3xl font-bold text-gray-800 mt-1">0</h3>
+                        </div>
+                        <div
+                            class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-purple-600">
+                            <i data-lucide="help-circle" class="w-6 h-6"></i>
+                        </div>
                     </div>
                 </div>
                 <div class="glass p-6 rounded-2xl">
@@ -282,10 +358,18 @@
                         <div class="glass p-6 rounded-2xl sticky top-6">
                             <h2 class="text-xl font-bold text-gray-800 mb-4">Add New Task</h2>
                             <form id="taskForm" class="space-y-4">
-                                <div><label class="block text-sm font-medium text-gray-600 mb-1">Task Title</label><input id="taskTitle" type="text" placeholder="e.g. Finish Math Chapter 4" class="input-field" required></div>
-                                <div><label class="block text-sm font-medium text-gray-600 mb-1">Description</label><textarea id="taskDesc" placeholder="Details..." class="input-field" rows="3"></textarea></div>
-                                <div><label class="block text-sm font-medium text-gray-600 mb-1">Due Date</label><input id="taskDate" type="date" class="input-field"></div>
-                                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 rounded-lg transition">Add Task</button>
+                                <div><label class="block text-sm font-medium text-gray-600 mb-1">Task
+                                        Title</label><input id="taskTitle" type="text"
+                                        placeholder="e.g. Finish Math Chapter 4" class="input-field" required></div>
+                                <div><label
+                                        class="block text-sm font-medium text-gray-600 mb-1">Description</label><textarea
+                                        id="taskDesc" placeholder="Details..." class="input-field" rows="3"></textarea>
+                                </div>
+                                <div><label class="block text-sm font-medium text-gray-600 mb-1">Due Date</label><input
+                                        id="taskDate" type="date" class="input-field"></div>
+                                <button type="submit"
+                                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 rounded-lg transition">Add
+                                    Task</button>
                             </form>
                         </div>
                     </div>
@@ -294,9 +378,12 @@
                             <div class="flex justify-between items-center mb-6">
                                 <h2 class="text-xl font-bold text-gray-800">My Tasks</h2>
                                 <div class="flex gap-2 text-sm">
-                                    <button id="filterAll" class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full font-medium">All</button>
-                                    <button id="filterPending" class="px-3 py-1 text-gray-500 hover:bg-gray-100 rounded-full">Pending</button>
-                                    <button id="filterCompleted" class="px-3 py-1 text-gray-500 hover:bg-gray-100 rounded-full">Done</button>
+                                    <button id="filterAll"
+                                        class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full font-medium">All</button>
+                                    <button id="filterPending"
+                                        class="px-3 py-1 text-gray-500 hover:bg-gray-100 rounded-full">Pending</button>
+                                    <button id="filterCompleted"
+                                        class="px-3 py-1 text-gray-500 hover:bg-gray-100 rounded-full">Done</button>
                                 </div>
                             </div>
                             <div id="tasksList" class="space-y-3"></div>
@@ -312,10 +399,22 @@
                         <div class="glass p-6 rounded-2xl sticky top-6">
                             <h2 class="text-xl font-bold text-gray-800 mb-4">Save Resource</h2>
                             <form id="resourceForm" class="space-y-4">
-                                <div><label class="block text-sm font-medium text-gray-600 mb-1">Title</label><input id="resTitle" type="text" placeholder="e.g. Python Docs" class="input-field" required></div>
-                                <div><label class="block text-sm font-medium text-gray-600 mb-1">URL</label><input id="resUrl" type="url" placeholder="https://..." class="input-field" required></div>
-                                <div><label class="block text-sm font-medium text-gray-600 mb-1">Category</label><select id="resCategory" class="input-field"><option value="reading">Reading</option><option value="video">Video</option><option value="course">Course</option><option value="tool">Tool</option></select></div>
-                                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition">Save Link</button>
+                                <div><label class="block text-sm font-medium text-gray-600 mb-1">Title</label><input
+                                        id="resTitle" type="text" placeholder="e.g. Python Docs" class="input-field"
+                                        required></div>
+                                <div><label class="block text-sm font-medium text-gray-600 mb-1">URL</label><input
+                                        id="resUrl" type="url" placeholder="https://..." class="input-field" required>
+                                </div>
+                                <div><label class="block text-sm font-medium text-gray-600 mb-1">Category</label><select
+                                        id="resCategory" class="input-field">
+                                        <option value="reading">Reading</option>
+                                        <option value="video">Video</option>
+                                        <option value="course">Course</option>
+                                        <option value="tool">Tool</option>
+                                    </select></div>
+                                <button type="submit"
+                                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition">Save
+                                    Link</button>
                             </form>
                         </div>
                     </div>
@@ -331,7 +430,7 @@
             <!-- QUIZ SECTION -->
             <div id="quizSection" class="section hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    
+
                     <!-- Quiz Creator / Menu -->
                     <div class="lg:col-span-1">
                         <div class="glass p-6 rounded-2xl sticky top-6">
@@ -339,29 +438,35 @@
                             <form id="quizForm" class="space-y-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-600 mb-1">Quiz Title</label>
-                                    <input id="quizTitle" type="text" placeholder="e.g. Science Chapter 5" class="input-field" required>
+                                    <input id="quizTitle" type="text" placeholder="e.g. Science Chapter 5"
+                                        class="input-field" required>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-600 mb-1">Expiration Date</label>
                                     <input id="quizExpire" type="datetime-local" class="input-field">
                                     <p class="text-xs text-gray-400 mt-1">Leave empty for no expiration.</p>
                                 </div>
-                                
+
                                 <div class="border-t border-gray-100 pt-4">
                                     <div class="flex justify-between items-center mb-2">
                                         <label class="text-sm font-bold text-gray-700">Questions</label>
-                                        <button type="button" onclick="addQuizQuestion()" class="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded hover:bg-emerald-200">+ Add Pair</button>
+                                        <button type="button" onclick="addQuizQuestion()"
+                                            class="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded hover:bg-emerald-200">+
+                                            Add Pair</button>
                                     </div>
                                     <div id="quizQuestionsContainer" class="space-y-3 max-h-60 overflow-y-auto pr-2">
                                         <!-- Dynamic Q/A pairs go here -->
                                         <div class="quiz-pair space-y-2 p-2 bg-gray-50 rounded border border-gray-100">
-                                            <input type="text" class="quiz-q input-field text-sm" placeholder="Question">
+                                            <input type="text" class="quiz-q input-field text-sm"
+                                                placeholder="Question">
                                             <input type="text" class="quiz-a input-field text-sm" placeholder="Answer">
                                         </div>
                                     </div>
                                 </div>
 
-                                <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 rounded-lg transition">Create Quiz</button>
+                                <button type="submit"
+                                    class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 rounded-lg transition">Create
+                                    Quiz</button>
                             </form>
                         </div>
                     </div>
@@ -378,19 +483,37 @@
 
                         <!-- Quiz Taking View (Hidden) -->
                         <div id="quizTakeView" class="glass p-6 rounded-2xl hidden">
-                            <button onclick="exitQuiz()" class="text-sm text-gray-500 hover:text-gray-800 mb-4 flex items-center gap-1">
+                            <button onclick="exitQuiz()"
+                                class="text-sm text-gray-500 hover:text-gray-800 mb-4 flex items-center gap-1">
                                 <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to List
                             </button>
                             <h2 id="activeQuizTitle" class="text-2xl font-bold text-gray-800 mb-6"></h2>
                             <div id="activeQuizContent" class="space-y-6"></div>
-                            <button onclick="submitQuiz()" class="mt-8 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg shadow-lg">Submit Answers</button>
-                            <div id="quizResult" class="hidden mt-6 p-4 bg-emerald-50 rounded-xl text-center border border-emerald-100">
-                                <h3 class="text-2xl font-bold text-emerald-700">Score: <span id="scoreVal">0</span>%</h3>
+                            <button onclick="submitQuiz()"
+                                class="mt-8 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg shadow-lg">Submit
+                                Answers</button>
+                            <div id="quizResult"
+                                class="hidden mt-6 p-4 bg-emerald-50 rounded-xl text-center border border-emerald-100">
+                                <h3 class="text-2xl font-bold text-emerald-700">Score: <span id="scoreVal">0</span>%
+                                </h3>
                                 <p class="text-gray-600 text-sm mt-1">Great effort!</p>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- NEWS SECTION -->
+            <div id="newsSection" class="section hidden">
+                <div class="glass p-6 rounded-2xl mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Latest News</h2>
+                    <div class="flex gap-3 mb-4">
+                        <input id="newsSearch" type="text" placeholder="Search news..." class="input-field flex-1">
+                        <button onclick="loadNews()"
+                            class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg font-medium transition">Search</button>
+                    </div>
+                </div>
+                <div id="newsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </div>
 
             <!-- CALCULATOR SECTION -->
@@ -400,9 +523,15 @@
                         <div class="glass p-6 rounded-2xl sticky top-6">
                             <h2 class="text-xl font-bold text-gray-800 mb-4">Tools</h2>
                             <div class="space-y-2">
-                                <button onclick="switchCalcTab('standard')" id="tab-standard" class="w-full text-left p-3 rounded-lg bg-emerald-100 text-emerald-800 font-medium transition">Standard Calculator</button>
-                                <button onclick="switchCalcTab('converter')" id="tab-converter" class="w-full text-left p-3 rounded-lg hover:bg-gray-50 text-gray-600 font-medium transition">Unit Converter</button>
-                                <button onclick="switchCalcTab('business')" id="tab-business" class="w-full text-left p-3 rounded-lg hover:bg-gray-50 text-gray-600 font-medium transition">Business Tools</button>
+                                <button onclick="switchCalcTab('standard')" id="tab-standard"
+                                    class="w-full text-left p-3 rounded-lg bg-emerald-100 text-emerald-800 font-medium transition">Standard
+                                    Calculator</button>
+                                <button onclick="switchCalcTab('converter')" id="tab-converter"
+                                    class="w-full text-left p-3 rounded-lg hover:bg-gray-50 text-gray-600 font-medium transition">Unit
+                                    Converter</button>
+                                <button onclick="switchCalcTab('business')" id="tab-business"
+                                    class="w-full text-left p-3 rounded-lg hover:bg-gray-50 text-gray-600 font-medium transition">Business
+                                    Tools</button>
                             </div>
                         </div>
                     </div>
@@ -411,7 +540,8 @@
                         <div id="calc-standard" class="glass p-6 rounded-2xl">
                             <h3 class="text-lg font-bold text-gray-800 mb-4">Standard Calculator</h3>
                             <div class="max-w-sm mx-auto">
-                                <input type="text" id="calcDisplay" readonly class="w-full text-right text-3xl p-4 mb-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-800">
+                                <input type="text" id="calcDisplay" readonly
+                                    class="w-full text-right text-3xl p-4 mb-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-800">
                                 <div class="grid grid-cols-4 gap-2">
                                     <button onclick="clearCalc()" class="calc-btn p-4 text-red-500">C</button>
                                     <button onclick="appendCalc('/')" class="calc-btn op p-4">/</button>
@@ -428,7 +558,8 @@
                                     <button onclick="appendCalc('1')" class="calc-btn p-4">1</button>
                                     <button onclick="appendCalc('2')" class="calc-btn p-4">2</button>
                                     <button onclick="appendCalc('3')" class="calc-btn p-4">3</button>
-                                    <button onclick="calculateResult()" class="calc-btn eq p-4 row-span-2 flex items-center justify-center">=</button>
+                                    <button onclick="calculateResult()"
+                                        class="calc-btn eq p-4 row-span-2 flex items-center justify-center">=</button>
                                     <button onclick="appendCalc('0')" class="calc-btn p-4 col-span-2">0</button>
                                     <button onclick="appendCalc('.')" class="calc-btn p-4">.</button>
                                 </div>
@@ -438,11 +569,24 @@
                         <div id="calc-converter" class="glass p-6 rounded-2xl hidden">
                             <h3 class="text-lg font-bold text-gray-800 mb-4">Unit Converter</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
-                                <div><label class="block text-sm font-medium text-gray-600 mb-1">Value</label><input type="number" id="convInput" value="1" class="input-field" oninput="convertUnit()"></div>
-                                <div><label class="block text-sm font-medium text-gray-600 mb-1">Category</label><select id="convCategory" class="input-field" onchange="populateUnits(); convertUnit()"><option value="length">Length</option><option value="weight">Weight</option><option value="temp">Temperature</option></select></div>
-                                <div><label class="block text-sm font-medium text-gray-600 mb-1">From</label><select id="convFrom" class="input-field" onchange="convertUnit()"></select></div>
-                                <div><label class="block text-sm font-medium text-gray-600 mb-1">To</label><select id="convTo" class="input-field" onchange="convertUnit()"></select></div>
-                                <div class="md:col-span-2 mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-100 text-center"><p class="text-sm text-gray-500">Result</p><h2 id="convResult" class="text-2xl font-bold text-emerald-700">--</h2></div>
+                                <div><label class="block text-sm font-medium text-gray-600 mb-1">Value</label><input
+                                        type="number" id="convInput" value="1" class="input-field"
+                                        oninput="convertUnit()"></div>
+                                <div><label class="block text-sm font-medium text-gray-600 mb-1">Category</label><select
+                                        id="convCategory" class="input-field" onchange="populateUnits(); convertUnit()">
+                                        <option value="length">Length</option>
+                                        <option value="weight">Weight</option>
+                                        <option value="temp">Temperature</option>
+                                    </select></div>
+                                <div><label class="block text-sm font-medium text-gray-600 mb-1">From</label><select
+                                        id="convFrom" class="input-field" onchange="convertUnit()"></select></div>
+                                <div><label class="block text-sm font-medium text-gray-600 mb-1">To</label><select
+                                        id="convTo" class="input-field" onchange="convertUnit()"></select></div>
+                                <div
+                                    class="md:col-span-2 mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-100 text-center">
+                                    <p class="text-sm text-gray-500">Result</p>
+                                    <h2 id="convResult" class="text-2xl font-bold text-emerald-700">--</h2>
+                                </div>
                             </div>
                         </div>
                         <!-- Business -->
@@ -451,26 +595,43 @@
                             <div class="mb-8 border-b border-gray-100 pb-6">
                                 <h4 class="font-semibold text-gray-700 mb-3">ROI Calculator</h4>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <input id="roiInvested" type="number" placeholder="Amount Invested" class="input-field" oninput="calcROI()">
-                                    <input id="roiReturned" type="number" placeholder="Amount Returned" class="input-field" oninput="calcROI()">
-                                    <div class="bg-white p-3 rounded-lg border border-gray-200 text-center"><p class="text-xs text-gray-500">ROI %</p><p id="roiResult" class="text-xl font-bold text-emerald-600">0%</p></div>
+                                    <input id="roiInvested" type="number" placeholder="Amount Invested"
+                                        class="input-field" oninput="calcROI()">
+                                    <input id="roiReturned" type="number" placeholder="Amount Returned"
+                                        class="input-field" oninput="calcROI()">
+                                    <div class="bg-white p-3 rounded-lg border border-gray-200 text-center">
+                                        <p class="text-xs text-gray-500">ROI %</p>
+                                        <p id="roiResult" class="text-xl font-bold text-emerald-600">0%</p>
+                                    </div>
                                 </div>
                             </div>
                             <div class="mb-8 border-b border-gray-100 pb-6">
                                 <h4 class="font-semibold text-gray-700 mb-3">Margin Calculator</h4>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <input id="marginCost" type="number" placeholder="Cost of Goods" class="input-field" oninput="calcMargin()">
-                                    <input id="marginRevenue" type="number" placeholder="Selling Price" class="input-field" oninput="calcMargin()">
-                                    <div class="bg-white p-3 rounded-lg border border-gray-200 text-center"><p class="text-xs text-gray-500">Margin %</p><p id="marginResult" class="text-xl font-bold text-blue-600">0%</p></div>
+                                    <input id="marginCost" type="number" placeholder="Cost of Goods" class="input-field"
+                                        oninput="calcMargin()">
+                                    <input id="marginRevenue" type="number" placeholder="Selling Price"
+                                        class="input-field" oninput="calcMargin()">
+                                    <div class="bg-white p-3 rounded-lg border border-gray-200 text-center">
+                                        <p class="text-xs text-gray-500">Margin %</p>
+                                        <p id="marginResult" class="text-xl font-bold text-blue-600">0%</p>
+                                    </div>
                                 </div>
                             </div>
                             <div>
                                 <h4 class="font-semibold text-gray-700 mb-3">Break-Even Point</h4>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <input id="beFixed" type="number" placeholder="Fixed Costs" class="input-field" oninput="calcBreakEven()">
-                                    <input id="bePrice" type="number" placeholder="Price per Unit" class="input-field" oninput="calcBreakEven()">
-                                    <input id="beVar" type="number" placeholder="Variable Cost/Unit" class="input-field" oninput="calcBreakEven()">
-                                    <div class="md:col-span-3 bg-white p-3 rounded-lg border border-gray-200 text-center"><p class="text-xs text-gray-500">Units to Sell</p><p id="beResult" class="text-xl font-bold text-purple-600">0</p></div>
+                                    <input id="beFixed" type="number" placeholder="Fixed Costs" class="input-field"
+                                        oninput="calcBreakEven()">
+                                    <input id="bePrice" type="number" placeholder="Price per Unit" class="input-field"
+                                        oninput="calcBreakEven()">
+                                    <input id="beVar" type="number" placeholder="Variable Cost/Unit" class="input-field"
+                                        oninput="calcBreakEven()">
+                                    <div
+                                        class="md:col-span-3 bg-white p-3 rounded-lg border border-gray-200 text-center">
+                                        <p class="text-xs text-gray-500">Units to Sell</p>
+                                        <p id="beResult" class="text-xl font-bold text-purple-600">0</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -483,6 +644,7 @@
 
     <script>
         // --- CONFIG ---
+        const NEWS_API_KEY = 'f5c862c1f83c445da6bece4fd0389df4'; // Replace with your NewsAPI.org key
         const { createClient } = supabase;
         const supabaseClient = createClient('https://gfsqzkyviivhvyqadpeg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdmc3F6a3l2aWl2aHZ5cWFkcGVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0NDI0NDQsImV4cCI6MjA4NjAxODQ0NH0.MwC6dMZKFZMyklCJKqr4DPek8dxR-EswBZSd1L_AkMA', {
             auth: { persistSession: true, storageKey: 'epsilon-learner-auth' }
@@ -519,6 +681,7 @@
                 if (page === 'tracker') loadTasks();
                 if (page === 'tools') loadResources();
                 if (page === 'quiz') loadQuizzes();
+                if (page === 'news') loadNews();
             });
         });
 
@@ -533,17 +696,17 @@
         function populateUnits() {
             const cat = document.getElementById('convCategory').value; const fromSel = document.getElementById('convFrom'); const toSel = document.getElementById('convTo');
             fromSel.innerHTML = ""; toSel.innerHTML = ""; Object.keys(units[cat]).forEach(u => { fromSel.add(new Option(u.toUpperCase(), u)); toSel.add(new Option(u.toUpperCase(), u)); });
-            if(toSel.options.length > 1) toSel.selectedIndex = 1;
+            if (toSel.options.length > 1) toSel.selectedIndex = 1;
         }
         function convertUnit() {
             const val = parseFloat(document.getElementById('convInput').value); const cat = document.getElementById('convCategory').value; const from = document.getElementById('convFrom').value; const to = document.getElementById('convTo').value; const resEl = document.getElementById('convResult');
             if (isNaN(val)) { resEl.innerText = "--"; return; } let result;
-            if (cat === 'temp') { let inC = (from === 'c' ? val : (from === 'f' ? (val - 32) * 5/9 : val - 273.15)); result = (to === 'c' ? inC : (to === 'f' ? (inC * 9/5) + 32 : inC + 273.15)); } else { const rate = units[cat][to] / units[cat][from]; result = val * rate; }
+            if (cat === 'temp') { let inC = (from === 'c' ? val : (from === 'f' ? (val - 32) * 5 / 9 : val - 273.15)); result = (to === 'c' ? inC : (to === 'f' ? (inC * 9 / 5) + 32 : inC + 273.15)); } else { const rate = units[cat][to] / units[cat][from]; result = val * rate; }
             resEl.innerText = parseFloat(result.toFixed(4));
         }
-        function calcROI() { const inv = parseFloat(document.getElementById('roiInvested').value); const ret = parseFloat(document.getElementById('roiReturned').value); const res = document.getElementById('roiResult'); if(inv && ret) { const roi = ((ret - inv) / inv) * 100; res.innerText = roi.toFixed(2) + "%"; res.className = roi >= 0 ? "text-xl font-bold text-emerald-600" : "text-xl font-bold text-red-600"; } else { res.innerText = "0%"; } }
-        function calcMargin() { const cost = parseFloat(document.getElementById('marginCost').value); const rev = parseFloat(document.getElementById('marginRevenue').value); const res = document.getElementById('marginResult'); if(cost && rev) { res.innerText = (((rev - cost) / rev) * 100).toFixed(2) + "%"; } else { res.innerText = "0%"; } }
-        function calcBreakEven() { const fixed = parseFloat(document.getElementById('beFixed').value); const price = parseFloat(document.getElementById('bePrice').value); const variable = parseFloat(document.getElementById('beVar').value); const res = document.getElementById('beResult'); if(fixed && price && variable) { if (price <= variable) { res.innerText = "Impossible"; res.className = "text-xl font-bold text-red-600"; } else { res.innerText = Math.ceil(fixed / (price - variable)) + " units"; res.className = "text-xl font-bold text-purple-600"; } } else { res.innerText = "0"; } }
+        function calcROI() { const inv = parseFloat(document.getElementById('roiInvested').value); const ret = parseFloat(document.getElementById('roiReturned').value); const res = document.getElementById('roiResult'); if (inv && ret) { const roi = ((ret - inv) / inv) * 100; res.innerText = roi.toFixed(2) + "%"; res.className = roi >= 0 ? "text-xl font-bold text-emerald-600" : "text-xl font-bold text-red-600"; } else { res.innerText = "0%"; } }
+        function calcMargin() { const cost = parseFloat(document.getElementById('marginCost').value); const rev = parseFloat(document.getElementById('marginRevenue').value); const res = document.getElementById('marginResult'); if (cost && rev) { res.innerText = (((rev - cost) / rev) * 100).toFixed(2) + "%"; } else { res.innerText = "0%"; } }
+        function calcBreakEven() { const fixed = parseFloat(document.getElementById('beFixed').value); const price = parseFloat(document.getElementById('bePrice').value); const variable = parseFloat(document.getElementById('beVar').value); const res = document.getElementById('beResult'); if (fixed && price && variable) { if (price <= variable) { res.innerText = "Impossible"; res.className = "text-xl font-bold text-red-600"; } else { res.innerText = Math.ceil(fixed / (price - variable)) + " units"; res.className = "text-xl font-bold text-purple-600"; } } else { res.innerText = "0"; } }
         function switchCalcTab(tab) { ['standard', 'converter', 'business'].forEach(t => { document.getElementById(`calc-${t}`).classList.add('hidden'); document.getElementById(`tab-${t}`).classList.remove('bg-emerald-100', 'text-emerald-800'); document.getElementById(`tab-${t}`).classList.add('hover:bg-gray-50', 'text-gray-600'); }); document.getElementById(`calc-${tab}`).classList.remove('hidden'); document.getElementById(`tab-${tab}`).classList.add('bg-emerald-100', 'text-emerald-800'); document.getElementById(`tab-${tab}`).classList.remove('hover:bg-gray-50', 'text-gray-600'); }
         populateUnits(); convertUnit();
 
@@ -566,7 +729,7 @@
             const aInputs = document.querySelectorAll('.quiz-a');
             const questions = Array.from(qInputs).map(i => i.value).filter(v => v.trim() !== "");
             const answers = Array.from(aInputs).map(i => i.value).filter(v => v.trim() !== "");
-            
+
             if (questions.length === 0) return alert("Please add at least one question.");
 
             const expireVal = document.getElementById('quizExpire').value;
@@ -579,7 +742,7 @@
                 answers,
                 expires_at
             }]);
-            if(error) alert("Error: " + error.message);
+            if (error) alert("Error: " + error.message);
             else {
                 e.target.reset();
                 document.getElementById('quizQuestionsContainer').innerHTML = '<div class="quiz-pair space-y-2 p-2 bg-gray-50 rounded border border-gray-100"><input type="text" class="quiz-q input-field text-sm" placeholder="Question"><input type="text" class="quiz-a input-field text-sm" placeholder="Answer"></div>';
@@ -593,7 +756,7 @@
             const container = document.getElementById('quizzesList');
             container.innerHTML = '';
 
-            if(!quizzes || quizzes.length === 0) {
+            if (!quizzes || quizzes.length === 0) {
                 container.innerHTML = '<p class="text-gray-400 col-span-2 text-center py-10">No quizzes created yet.</p>';
                 return;
             }
@@ -619,7 +782,7 @@
         }
 
         async function deleteQuiz(id) {
-            if(confirm("Delete this quiz?")) {
+            if (confirm("Delete this quiz?")) {
                 await supabaseClient.from('learner_quizzes').delete().eq('id', id);
                 loadQuizzes();
             }
@@ -627,9 +790,9 @@
 
         async function startQuiz(id) {
             const { data: q } = await supabaseClient.from('learner_quizzes').select('*').eq('id', id).single();
-            if(!q) return;
+            if (!q) return;
             activeQuizData = q;
-            
+
             // UI Toggle
             document.getElementById('quizListView').classList.add('hidden');
             document.getElementById('quizTakeView').classList.remove('hidden');
@@ -655,15 +818,15 @@
         }
 
         function submitQuiz() {
-            if(!activeQuizData) return;
+            if (!activeQuizData) return;
             const userInputs = document.querySelectorAll('.user-answer');
             let score = 0;
-            
+
             userInputs.forEach(input => {
                 const idx = input.getAttribute('data-idx');
                 const correct = activeQuizData.answers[idx];
                 // Simple string comparison (case-insensitive, trimmed)
-                if(input.value.trim().toLowerCase() === correct.trim().toLowerCase()) {
+                if (input.value.trim().toLowerCase() === correct.trim().toLowerCase()) {
                     score++;
                     input.parentElement.classList.add('border-emerald-500', 'bg-emerald-50');
                     input.parentElement.classList.remove('border-gray-100', 'bg-gray-50');
@@ -728,7 +891,7 @@
         // --- TRACKER ---
         document.getElementById('taskForm').addEventListener('submit', async (e) => {
             e.preventDefault(); const { error } = await supabaseClient.from('learner_tasks').insert([{ user_id: currentUser.id, title: document.getElementById('taskTitle').value, description: document.getElementById('taskDesc').value, due_date: document.getElementById('taskDate').value, completed: false }]);
-            if(error) alert("Error saving task: " + error.message); else { e.target.reset(); loadTasks(); }
+            if (error) alert("Error saving task: " + error.message); else { e.target.reset(); loadTasks(); }
         });
         async function loadTasks() {
             let query = supabaseClient.from('learner_tasks').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
@@ -748,7 +911,7 @@
             }); lucide.createIcons();
         }
         async function toggleTaskStatus(id, currentStatus) { await supabaseClient.from('learner_tasks').update({ completed: !currentStatus }).eq('id', id); loadTasks(); }
-        async function deleteTask(id) { if(confirm('Delete this task?')) { await supabaseClient.from('learner_tasks').delete().eq('id', id); loadTasks(); } }
+        async function deleteTask(id) { if (confirm('Delete this task?')) { await supabaseClient.from('learner_tasks').delete().eq('id', id); loadTasks(); } }
         const filterBtns = { 'filterAll': 'all', 'filterPending': 'pending', 'filterCompleted': 'completed' };
         Object.keys(filterBtns).forEach(btnId => {
             document.getElementById(btnId).addEventListener('click', (e) => {
@@ -760,7 +923,7 @@
         // --- TOOLS ---
         document.getElementById('resourceForm').addEventListener('submit', async (e) => {
             e.preventDefault(); const { error } = await supabaseClient.from('learner_resources').insert([{ user_id: currentUser.id, title: document.getElementById('resTitle').value, url: document.getElementById('resUrl').value, category: document.getElementById('resCategory').value }]);
-            if(error) alert("Error saving resource: " + error.message); else { e.target.reset(); loadResources(); }
+            if (error) alert("Error saving resource: " + error.message); else { e.target.reset(); loadResources(); }
         });
         async function loadResources() {
             const { data: resources } = await supabaseClient.from('learner_resources').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
@@ -773,9 +936,52 @@
                 container.appendChild(div);
             }); lucide.createIcons();
         }
-        async function deleteResource(id) { if(confirm('Remove this resource?')) { await supabaseClient.from('learner_resources').delete().eq('id', id); loadResources(); } }
+        async function deleteResource(id) { if (confirm('Remove this resource?')) { await supabaseClient.from('learner_resources').delete().eq('id', id); loadResources(); } }
+
+        // --- NEWS ---
+        async function loadNews() {
+            const query = document.getElementById('newsSearch').value || 'technology';
+            const container = document.getElementById('newsList');
+            container.innerHTML = '<div class="col-span-full text-center py-10 text-gray-400"><p>Loading news...</p></div>';
+
+            try {
+                const res = await fetch(`http://localhost:3000/api/news?q=${encodeURIComponent(query)}`);
+                const data = await res.json();
+
+                if (data.status !== 'ok' || !data.articles || data.articles.length === 0) {
+                    container.innerHTML = '<div class="col-span-full text-center py-10 text-gray-400"><i data-lucide="alert-circle" class="w-12 h-12 mx-auto mb-2 opacity-50"></i><p>No news found or server not running.</p></div>';
+                    lucide.createIcons();
+                    return;
+                }
+
+                container.innerHTML = '';
+                data.articles.forEach(article => {
+                    const div = document.createElement('div');
+                    div.className = 'glass p-4 rounded-xl hover:shadow-lg transition group';
+                    const img = article.urlToImage || 'https://via.placeholder.com/400x200?text=No+Image';
+                    const date = new Date(article.publishedAt).toLocaleDateString();
+                    div.innerHTML = `
+                        <img src="${img}" alt="${article.title}" class="w-full h-40 object-cover rounded-lg mb-3" onerror="this.src='https://via.placeholder.com/400x200?text=No+Image'">
+                        <h3 class="font-bold text-gray-800 mb-2 line-clamp-2 group-hover:text-emerald-600 transition">${article.title}</h3>
+                        <p class="text-sm text-gray-500 mb-3 line-clamp-3">${article.description || 'No description available.'}</p>
+                        <div class="flex justify-between items-center text-xs text-gray-400 mb-3">
+                            <span>${article.source.name}</span>
+                            <span>${date}</span>
+                        </div>
+                        <a href="${article.url}" target="_blank" class="block w-full text-center bg-emerald-50 hover:bg-emerald-100 text-emerald-700 py-2 rounded-lg font-medium transition">Read More</a>
+                    `;
+                    container.appendChild(div);
+                });
+                lucide.createIcons();
+            } catch (err) {
+                container.innerHTML = '<div class="col-span-full text-center py-10 text-red-400"><i data-lucide="x-circle" class="w-12 h-12 mx-auto mb-2 opacity-50"></i><p>Server not running. Start with: npm start</p></div>';
+                console.error('News API Error:', err);
+                lucide.createIcons();
+            }
+        }
 
         checkSession();
     </script>
 </body>
+
 </html>
