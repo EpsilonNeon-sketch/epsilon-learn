@@ -1,0 +1,122 @@
+[
+  {
+    "title": "Introduction to Calculus - Limits and Derivatives",
+    "description": "Learn the fundamental concepts of calculus including limits, continuity, and basic derivatives. Perfect for beginners starting their calculus journey.",
+    "ytlink": "https://www.youtube.com/watch?v=WUvTyaaNkzM",
+    "subject": "Math",
+    "length": "18:43",
+    "owner": "The Organic Chemistry Tutor"
+  },
+  {
+    "title": "Python Programming for Beginners - Full Course",
+    "description": "Complete Python tutorial covering variables, data types, loops, functions, and object-oriented programming. Great for absolute beginners.",
+    "ytlink": "https://www.youtube.com/watch?v=rfscVS0vtbw",
+    "subject": "Programming",
+    "length": "4:26:52",
+    "owner": "freeCodeCamp"
+  },
+  {
+    "title": "The Cell - Biology Basics",
+    "description": "Explore the structure and function of cells, the basic unit of life. Covers cell organelles, membrane transport, and cellular processes.",
+    "ytlink": "https://www.youtube.com/watch?v=URUJD5NEXC8",
+    "subject": "Science",
+    "length": "12:15",
+    "owner": "Crash Course"
+  },
+  {
+    "title": "World War II Overview - Complete History",
+    "description": "Comprehensive overview of World War II, covering major events, key figures, and the global impact of the war from 1939-1945.",
+    "ytlink": "https://www.youtube.com/watch?v=fo2Rb9h788s",
+    "subject": "History",
+    "length": "22:37",
+    "owner": "OverSimplified"
+  },
+  {
+    "title": "Spanish for Beginners - Learn Basic Phrases",
+    "description": "Master essential Spanish phrases and vocabulary for everyday conversations. Includes pronunciation tips and cultural insights.",
+    "ytlink": "https://www.youtube.com/watch?v=DAp_v7EH9AA",
+    "subject": "Language",
+    "length": "15:28",
+    "owner": "SpanishPod101"
+  },
+  {
+    "title": "Algebra - Solving Linear Equations",
+    "description": "Step-by-step guide to solving linear equations. Learn techniques for isolating variables and checking your solutions.",
+    "ytlink": "https://www.youtube.com/watch?v=QLhqYNsPIVo",
+    "subject": "Math",
+    "length": "10:52",
+    "owner": "Khan Academy"
+  },
+  {
+    "title": "JavaScript Tutorial for Beginners",
+    "description": "Learn JavaScript fundamentals including variables, functions, arrays, objects, and DOM manipulation. Build your first interactive webpage.",
+    "ytlink": "https://www.youtube.com/watch?v=W6NZfCO5SIk",
+    "subject": "Programming",
+    "length": "1:00:44",
+    "owner": "Programming with Mosh"
+  },
+  {
+    "title": "Chemistry - Understanding Chemical Reactions",
+    "description": "Explore different types of chemical reactions, balancing equations, and understanding reaction rates and equilibrium.",
+    "ytlink": "https://www.youtube.com/watch?v=0jTq8Nqvx_I",
+    "subject": "Science",
+    "length": "14:20",
+    "owner": "Professor Dave Explains"
+  },
+  {
+    "title": "Ancient Rome - Rise and Fall of an Empire",
+    "description": "Journey through Roman history from the founding of Rome to the fall of the Western Roman Empire. Discover key emperors and events.",
+    "ytlink": "https://www.youtube.com/watch?v=46ZXl-V4qwY",
+    "subject": "History",
+    "length": "19:45",
+    "owner": "History Matters"
+  },
+  {
+    "title": "French Pronunciation Guide - Master the Basics",
+    "description": "Perfect your French pronunciation with this comprehensive guide covering vowels, consonants, and common sound combinations.",
+    "ytlink": "https://www.youtube.com/watch?v=3wgljiTc6b0",
+    "subject": "Language",
+    "length": "11:33",
+    "owner": "Learn French with Alexa"
+  },
+  {
+    "title": "Trigonometry - Sine, Cosine, and Tangent",
+    "description": "Master the basics of trigonometry including the unit circle, trigonometric ratios, and solving right triangles.",
+    "ytlink": "https://www.youtube.com/watch?v=PUB0TaZ7bhA",
+    "subject": "Math",
+    "length": "16:28",
+    "owner": "The Organic Chemistry Tutor"
+  },
+  {
+    "title": "React JS Full Course for Beginners",
+    "description": "Complete React tutorial covering components, props, state, hooks, and building real-world applications with React.",
+    "ytlink": "https://www.youtube.com/watch?v=bMknfKXIFA8",
+    "subject": "Programming",
+    "length": "2:25:39",
+    "owner": "freeCodeCamp"
+  },
+  {
+    "title": "Physics - Newton's Laws of Motion",
+    "description": "Understand the three fundamental laws of motion that govern how objects move and interact with forces.",
+    "ytlink": "https://www.youtube.com/watch?v=kKKM8Y-u7ds",
+    "subject": "Science",
+    "length": "13:47",
+    "owner": "Khan Academy"
+  },
+  {
+    "title": "The Renaissance - Art, Science, and Culture",
+    "description": "Explore the cultural rebirth of Europe during the Renaissance period, featuring art, literature, and scientific discoveries.",
+    "ytlink": "https://www.youtube.com/watch?v=Vufba_ZcoR0",
+    "subject": "History",
+    "length": "17:22",
+    "owner": "Crash Course"
+  },
+  {
+    "title": "German Grammar Essentials - Cases and Articles",
+    "description": "Master German grammar fundamentals including nominative, accusative, dative, and genitive cases with practical examples.",
+    "ytlink": "https://www.youtube.com/watch?v=YnGPQ8EbVWk",
+    "subject": "Language",
+    "length": "20:15",
+    "owner": "Easy German"
+  }
+]
