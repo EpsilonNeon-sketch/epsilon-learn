@@ -225,300 +225,183 @@
     "users": "500K+ students"
   },
   {
-    "name": "Coursera",
-    "description": "Access online courses and degrees from top universities and companies worldwide.",
-    "category": "coding",
-    "price": "freemium",
-    "link": "https://www.coursera.org",
-    "rating": "4.8",
-    "users": "113M+ learners"
-  },
-  {
     "name": "Khan Academy",
-    "description": "Non-profit providing free education in math, science, and computing for all ages.",
-    "category": "coding",
+    "description": "Free online courses, lessons, and practice in math, science, and more.",
+    "category": "math",
     "price": "free",
     "link": "https://www.khanacademy.org",
-    "rating": "4.7",
-    "users": "120M+ registered users"
-  },
-  {
-    "name": "Pluralsight",
-    "description": "Technology skill platform helping businesses and individuals build better tech skills.",
-    "category": "coding",
-    "price": "subscription",
-    "link": "https://www.pluralsight.com",
-    "rating": "4.6",
-    "users": "Enterprise & Individuals"
-  },
-  {
-    "name": "Udacity",
-    "description": "Vocational courses for programming and data science, created in collaboration with industry leaders.",
-    "category": "coding",
-    "price": "subscription",
-    "link": "https://www.udacity.com",
-    "rating": "4.5",
-    "users": "10M+ students"
-  },
-  {
-    "name": "Codewars",
-    "description": "Gamify your coding practice by solving challenges (kata) in various programming languages.",
-    "category": "coding",
-    "price": "freemium",
-    "link": "https://www.codewars.com",
-    "rating": "4.7",
-    "users": "3M+ developers"
-  },
-  {
-    "name": "Sketch",
-    "description": "Digital design platform used for creating user interfaces and prototyping.",
-    "category": "design",
-    "price": "subscription",
-    "link": "https://www.sketch.com",
-    "rating": "4.5",
-    "users": "1M+ teams"
-  },
-  {
-    "name": "Miro",
-    "description": "Online collaborative whiteboard platform for brainstorming, diagramming, and agile workflows.",
-    "category": "design",
-    "price": "freemium",
-    "link": "https://miro.com",
-    "rating": "4.7",
-    "users": "45M+ users"
-  },
-  {
-    "name": "Blender",
-    "description": "Free and open-source 3D creation suite for modeling, animation, and rendering.",
-    "category": "design",
-    "price": "free",
-    "link": "https://www.blender.org",
     "rating": "4.9",
-    "users": "10M+ downloads"
+    "users": "150M+ learners"
   },
   {
-    "name": "Behance",
-    "description": "Platform for creatives to showcase and discover creative work across industries.",
-    "category": "design",
-    "price": "free",
-    "link": "https://www.behance.net",
-    "rating": "4.6",
-    "users": "30M+ members"
-  },
-  {
-    "name": "InVision",
-    "description": "Digital product design platform for prototyping, collaboration, and workflow management.",
-    "category": "design",
-    "price": "freemium",
-    "link": "https://www.invisionapp.com",
-    "rating": "4.4",
-    "users": "5M+ users"
-  },
-  {
-    "name": "Rosetta Stone",
-    "description": "Immersion-based language learning software focusing on intuitive language acquisition.",
-    "category": "language",
-    "price": "subscription",
-    "link": "https://www.rosettastone.com",
-    "rating": "4.5",
-    "users": "10M+ subscribers"
-  },
-  {
-    "name": "Clozemaster",
-    "description": "Learn vocabulary in context through mass exposure to sentences in your target language.",
-    "category": "language",
-    "price": "freemium",
-    "link": "https://www.clozemaster.com",
-    "rating": "4.4",
-    "users": "500K+ learners"
-  },
-  {
-    "name": "HelloTalk",
-    "description": "Language exchange app connecting you with native speakers for text and voice chat.",
-    "category": "language",
-    "price": "freemium",
-    "link": "https://www.hellotalk.com",
-    "rating": "4.5",
-    "users": "30M+ users"
-  },
-  {
-    "name": "Lingodeer",
-    "description": "Language learning app specifically designed for learning Asian languages like Japanese and Korean.",
-    "category": "language",
-    "price": "freemium",
-    "link": "https://www.lingodeer.com",
-    "rating": "4.7",
-    "users": "10M+ learners"
-  },
-  {
-    "name": "Pimsleur",
-    "description": "Audio-based language learning method focusing on conversational skills and pronunciation.",
-    "category": "language",
-    "price": "subscription",
-    "link": "https://www.pimsleur.com",
-    "rating": "4.6",
-    "users": "Millions of users"
-  },
-  {
-    "name": "Skoove",
-    "description": "Interactive piano learning app that listens to you play and provides instant feedback.",
-    "category": "music",
-    "price": "subscription",
-    "link": "https://www.skoove.com",
-    "rating": "4.6",
-    "users": "2M+ users"
-  },
-  {
-    "name": "Flowkey",
-    "description": "Learn to play piano with songs you love, from classical to pop, step-by-step.",
-    "category": "music",
-    "price": "freemium",
-    "link": "https://flowkey.com",
-    "rating": "4.7",
-    "users": "5M+ learners"
-  },
-  {
-    "name": "BandLab",
-    "description": "Cloud-based music creation studio where you can create, collaborate, and share music.",
-    "category": "music",
-    "price": "free",
-    "link": "https://www.bandlab.com",
-    "rating": "4.6",
-    "users": "60M+ creators"
-  },
-  {
-    "name": "New York Times Cooking",
-    "description": "Premium recipe subscription with expert guides, how-to videos, and reliable recipes.",
-    "category": "cooking",
-    "price": "subscription",
-    "link": "https://cooking.nytimes.com",
-    "rating": "4.6",
-    "users": "Subscribers"
-  },
-  {
-    "name": "Food52",
-    "description": "Community-driven cooking site with recipes, kitchen tools, and a support community.",
-    "category": "cooking",
-    "price": "freemium",
-    "link": "https://food52.com",
-    "rating": "4.4",
-    "users": "Community driven"
-  },
-  {
-    "name": "Brilliant",
-    "description": "Interactive math and science courses designed to build intuition and problem-solving skills.",
-    "category": "math",
-    "price": "subscription",
-    "link": "https://brilliant.org",
-    "rating": "4.7",
-    "users": "10M+ users"
-  },
-  {
-    "name": "Desmos",
-    "description": "Advanced graphing calculator implemented as a web application, widely used in math education.",
-    "category": "math",
-    "price": "free",
-    "link": "https://www.desmos.com",
-    "rating": "4.8",
-    "users": "Students globally"
-  },
-  {
-    "name": "PhET Simulations",
-    "description": "Interactive math and science simulations provided by the University of Colorado Boulder.",
-    "category": "math",
-    "price": "free",
-    "link": "https://phet.colorado.edu",
-    "rating": "4.7",
-    "users": "Hundreds of millions"
-  },
-  {
-    "name": "Wolfram Alpha",
-    "description": "Computational intelligence engine that answers factual queries and solves math problems.",
-    "category": "math",
-    "price": "freemium",
-    "link": "https://www.wolframalpha.com",
-    "rating": "4.5",
-    "users": "2M+ daily users"
-  },
-  {
-    "name": "HubSpot Academy",
-    "description": "Comprehensive training platform for inbound marketing, sales, and customer service.",
+    "name": "Coursera",
+    "description": "Online courses from top universities and companies worldwide.",
     "category": "business",
-    "price": "free",
-    "link": "https://academy.hubspot.com",
-    "rating": "4.8",
-    "users": "Certified professionals"
-  },
-  {
-    "name": "LinkedIn Learning",
-    "description": "Video courses taught by industry experts in business, technology, and creative skills.",
-    "category": "business",
-    "price": "subscription",
-    "link": "https://learning.linkedin.com",
-    "rating": "4.6",
-    "users": "700M+ members"
-  },
-  {
-    "name": "Google Digital Garage",
-    "description": "Free courses on digital marketing, data, and tech career development.",
-    "category": "business",
-    "price": "free",
-    "link": "https://learndigital.withgoogle.com",
-    "rating": "4.5",
-    "users": "Millions trained"
+    "price": "freemium",
+    "link": "https://www.coursera.org",
+    "rating": "4.7",
+    "users": "92M+ learners"
   },
   {
     "name": "edX",
-    "description": "Platform offering university-level courses from institutions like MIT and Harvard.",
-    "category": "general",
+    "description": "Access 3,000+ online courses from 160+ institutions including Harvard and MIT.",
+    "category": "business",
     "price": "freemium",
     "link": "https://www.edx.org",
-    "rating": "4.7",
-    "users": "42M+ learners"
-  },
-  {
-    "name": "Quizlet",
-    "description": "AI-powered flashcard app for studying and memorizing information efficiently.",
-    "category": "general",
-    "price": "freemium",
-    "link": "https://quizlet.com",
     "rating": "4.6",
-    "users": "2 in 3 high school students"
+    "users": "44M+ learners"
   },
   {
-    "name": "Anki",
-    "description": "Powerful, open-source flashcard app using spaced repetition for efficient memorization.",
-    "category": "general",
-    "price": "free",
-    "link": "https://apps.ankiweb.net",
-    "rating": "4.7",
-    "users": "Millions of downloads"
+    "name": "Brilliant",
+    "description": "Interactive problem-solving in math, science, and computer science.",
+    "category": "math",
+    "price": "subscription",
+    "link": "https://www.brilliant.org",
+    "rating": "4.8",
+    "users": "10M+ learners"
   },
   {
     "name": "Notion",
-    "description": "All-in-one workspace for notes, tasks, wikis, and databases to organize learning.",
-    "category": "general",
+    "description": "All-in-one workspace for notes, tasks, wikis, and databases.",
+    "category": "productivity",
     "price": "freemium",
     "link": "https://www.notion.so",
     "rating": "4.7",
     "users": "30M+ users"
   },
   {
-    "name": "Grammarly",
-    "description": "AI writing assistant that checks for grammar, spelling, clarity, and tone.",
-    "category": "writing",
+    "name": "Trello",
+    "description": "Visual project management tool using boards, lists, and cards.",
+    "category": "productivity",
     "price": "freemium",
-    "link": "https://www.grammarly.com",
-    "rating": "4.6",
-    "users": "30M+ daily users"
+    "link": "https://www.trello.com",
+    "rating": "4.5",
+    "users": "50M+ users"
   },
   {
-    "name": "Hemingway Editor",
-    "description": "Writing tool that highlights complex sentences and common errors to improve readability.",
-    "category": "writing",
+    "name": "Miro",
+    "description": "Collaborative online whiteboard for brainstorming and planning.",
+    "category": "productivity",
+    "price": "freemium",
+    "link": "https://www.miro.com",
+    "rating": "4.6",
+    "users": "60M+ users"
+  },
+  {
+    "name": "Quizlet",
+    "description": "Study with flashcards, games, and learning tools for any subject.",
+    "category": "study",
+    "price": "freemium",
+    "link": "https://www.quizlet.com",
+    "rating": "4.7",
+    "users": "60M+ students"
+  },
+  {
+    "name": "Wolfram Alpha",
+    "description": "Computational knowledge engine for math, science, and more.",
+    "category": "math",
+    "price": "freemium",
+    "link": "https://www.wolframalpha.com",
+    "rating": "4.8",
+    "users": "millions"
+  },
+  {
+    "name": "TED-Ed",
+    "description": "Educational videos and lessons from expert educators and animators.",
+    "category": "general",
     "price": "free",
-    "link": "https://hemingwayapp.com",
+    "link": "https://ed.ted.com",
+    "rating": "4.7",
+    "users": "20M+ viewers"
+  },
+  {
+    "name": "LinkedIn Learning",
+    "description": "Professional development courses in business, tech, and creative skills.",
+    "category": "business",
+    "price": "subscription",
+    "link": "https://www.linkedin.com/learning",
+    "rating": "4.6",
+    "users": "27M+ learners"
+  },
+  {
+    "name": "SoloLearn",
+    "description": "Mobile-first platform for learning coding with bite-sized lessons.",
+    "category": "coding",
+    "price": "freemium",
+    "link": "https://www.sololearn.com",
+    "rating": "4.7",
+    "users": "25M+ learners"
+  },
+  {
+    "name": "Rosetta Stone",
+    "description": "Immersive language learning with speech recognition technology.",
+    "category": "language",
+    "price": "subscription",
+    "link": "https://www.rosettastone.com",
     "rating": "4.5",
-    "users": "Writers worldwide"
+    "users": "500K+ subscribers"
+  },
+  {
+    "name": "FutureLearn",
+    "description": "Online courses and degrees from leading universities and organizations.",
+    "category": "general",
+    "price": "freemium",
+    "link": "https://www.futurelearn.com",
+    "rating": "4.6",
+    "users": "18M+ learners"
+  },
+  {
+    "name": "Udacity",
+    "description": "Industry-focused nanodegree programs in tech and business.",
+    "category": "coding",
+    "price": "subscription",
+    "link": "https://www.udacity.com",
+    "rating": "4.6",
+    "users": "16M+ learners"
+  },
+  {
+    "name": "OpenAI Cookbook",
+    "description": "Practical guides and code examples for using OpenAI models and APIs.",
+    "category": "coding",
+    "price": "free",
+    "link": "https://platform.openai.com/docs/guides",
+    "rating": "4.8",
+    "users": "developers worldwide"
+  },
+  {
+    "name": "Stack Overflow",
+    "description": "Community-driven Q&A for programming and software development.",
+    "category": "coding",
+    "price": "free",
+    "link": "https://stackoverflow.com",
+    "rating": "4.9",
+    "users": "100M+ visitors/month"
+  },
+  {
+    "name": "Google Arts & Culture",
+    "description": "Explore art collections, cultural stories, and virtual museum tours.",
+    "category": "art",
+    "price": "free",
+    "link": "https://artsandculture.google.com",
+    "rating": "4.7",
+    "users": "millions"
+  },
+  {
+    "name": "NASA",
+    "description": "Official NASA site for space, science, and technology education resources.",
+    "category": "science",
+    "price": "free",
+    "link": "https://www.nasa.gov",
+    "rating": "4.8",
+    "users": "global audience"
+  },
+  {
+    "name": "MindMeister",
+    "description": "Collaborative online mind mapping tool for brainstorming and planning.",
+    "category": "productivity",
+    "price": "freemium",
+    "link": "https://www.mindmeister.com",
+    "rating": "4.5",
+    "users": "20M+ users"
   }
 ]
