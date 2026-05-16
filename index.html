@@ -166,6 +166,48 @@
             background-color: #059669;
         }
 
+        /* Flashcard Styles */
+        .flashcard {
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 2px solid #d1d5db;
+        }
+
+        .flashcard-front {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .flashcard-back {
+            background: white;
+            color: #1f2937;
+            transform: rotateY(180deg);
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -239,6 +281,18 @@
                     data-page="pomodoro">
                     <i data-lucide="timer" class="w-5 h-5"></i>
                     <span>Pomodoro Timer</span>
+                </button>
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="flashcards">
+                    <i data-lucide="layers" class="w-5 h-5"></i>
+                    <span>Flashcards</span>
+                </button>
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="notes">
+                    <i data-lucide="file-text" class="w-5 h-5"></i>
+                    <span>Notes</span>
                 </button>
             </nav>
 
@@ -549,6 +603,133 @@
                 </div>
             </div>
 
+            <!-- FLASHCARDS SECTION -->
+            <div id="flashcardsSection" class="section hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-1">
+                        <div class="glass p-6 rounded-2xl sticky top-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4">Create Deck</h2>
+                            <form id="deckForm" class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Deck Name</label>
+                                    <input id="deckName" type="text" placeholder="e.g. Spanish Vocabulary" class="input-field" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Subject</label>
+                                    <input id="deckSubject" type="text" placeholder="e.g. Language" class="input-field">
+                                </div>
+                                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 rounded-lg transition">Create Deck</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2">
+                        <div class="glass p-6 rounded-2xl min-h-[500px]">
+                            <h2 class="text-xl font-bold text-gray-800 mb-6">My Decks</h2>
+                            <div id="decksList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FLASHCARD STUDY VIEW -->
+            <div id="flashcardStudySection" class="section hidden">
+                <div class="max-w-4xl mx-auto">
+                    <button onclick="exitFlashcardStudy()" class="mb-4 text-gray-500 hover:text-gray-800 flex items-center gap-2">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Decks
+                    </button>
+                    <div class="glass p-8 rounded-2xl">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 id="studyDeckTitle" class="text-2xl font-bold text-gray-800"></h2>
+                            <button onclick="showAddCardForm()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2">
+                                <i data-lucide="plus" class="w-4 h-4"></i> Add Card
+                            </button>
+                        </div>
+                        
+                        <!-- Add Card Form -->
+                        <div id="addCardForm" class="hidden mb-6 p-4 bg-gray-50 rounded-xl">
+                            <form id="cardForm" class="space-y-3">
+                                <input id="cardFront" type="text" placeholder="Front (Question)" class="input-field" required>
+                                <input id="cardBack" type="text" placeholder="Back (Answer)" class="input-field" required>
+                                <div class="flex gap-2">
+                                    <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg">Add Card</button>
+                                    <button type="button" onclick="hideAddCardForm()" class="px-4 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-lg">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Flashcard Display -->
+                        <div id="flashcardDisplay" class="mb-6">
+                            <div class="flashcard" onclick="flipCard()">
+                                <div class="flashcard-inner">
+                                    <div class="flashcard-front">
+                                        <h3 id="cardFrontText" class="text-2xl font-bold text-center">Click to start</h3>
+                                    </div>
+                                    <div class="flashcard-back">
+                                        <h3 id="cardBackText" class="text-2xl font-bold text-center"></h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <button onclick="prevCard()" class="px-6 py-3 bg-gray-200 hover:bg-gray-300 rounded-lg flex items-center gap-2">
+                                <i data-lucide="chevron-left" class="w-5 h-5"></i> Previous
+                            </button>
+                            <span id="cardProgress" class="text-gray-600 font-medium">0 / 0</span>
+                            <button onclick="nextCard()" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg flex items-center gap-2">
+                                Next <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+
+                        <!-- Cards List -->
+                        <div class="mt-8 pt-8 border-t border-gray-200">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4">All Cards</h3>
+                            <div id="cardsList" class="space-y-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NOTES SECTION -->
+            <div id="notesSection" class="section hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-1">
+                        <div class="glass p-6 rounded-2xl sticky top-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4">Create Note</h2>
+                            <form id="noteForm" class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Title</label>
+                                    <input id="noteTitle" type="text" placeholder="Note title" class="input-field" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Category</label>
+                                    <select id="noteCategory" class="input-field">
+                                        <option value="general">General</option>
+                                        <option value="lecture">Lecture</option>
+                                        <option value="reading">Reading</option>
+                                        <option value="idea">Idea</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Content</label>
+                                    <textarea id="noteContent" placeholder="Write your notes here..." class="input-field" rows="8" required></textarea>
+                                </div>
+                                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition">Save Note</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2">
+                        <div class="glass p-6 rounded-2xl min-h-[500px]">
+                            <div class="flex justify-between items-center mb-6">
+                                <h2 class="text-xl font-bold text-gray-800">My Notes</h2>
+                                <input type="text" id="noteSearch" placeholder="Search notes..." class="input-field max-w-xs" oninput="searchNotes()">
+                            </div>
+                            <div id="notesList" class="space-y-4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- CALCULATOR SECTION -->
             <div id="calculatorSection" class="section hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
@@ -713,6 +894,8 @@
                 if (page === 'tracker') loadTasks();
                 if (page === 'tools') loadResources();
                 if (page === 'quiz') loadQuizzes();
+                if (page === 'flashcards') loadDecks();
+                if (page === 'notes') loadNotes();
             });
         });
 
@@ -977,6 +1160,227 @@
         function resetTimer() { clearInterval(timerInterval); isRunning = false; timeLeft = 25 * 60; updateDisplay(); document.getElementById('startBtn').classList.remove('hidden'); document.getElementById('pauseBtn').classList.add('hidden'); document.getElementById('timerStatus').textContent = 'Ready to focus'; }
         function setTimer(mins) { if (isRunning) pauseTimer(); timeLeft = mins * 60; updateDisplay(); document.getElementById('timerStatus').textContent = 'Ready to focus'; }
         function setCustomTimer() { const mins = parseInt(document.getElementById('customMin').value); if (mins && mins > 0 && mins <= 120) { setTimer(mins); document.getElementById('customMin').value = ''; } }
+
+        // --- FLASHCARDS ---
+        let currentDeckId = null;
+        let currentCards = [];
+        let currentCardIndex = 0;
+
+        document.getElementById('deckForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const { error } = await supabaseClient.from('learner_decks').insert([{
+                user_id: currentUser.id,
+                name: document.getElementById('deckName').value,
+                subject: document.getElementById('deckSubject').value
+            }]);
+            if (error) alert("Error: " + error.message);
+            else { e.target.reset(); loadDecks(); }
+        });
+
+        async function loadDecks() {
+            const { data: decks } = await supabaseClient.from('learner_decks').select('*, learner_cards(count)').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+            const container = document.getElementById('decksList');
+            container.innerHTML = '';
+            if (!decks || decks.length === 0) {
+                container.innerHTML = '<p class="text-gray-400 col-span-2 text-center py-10">No decks created yet.</p>';
+                return;
+            }
+            decks.forEach(deck => {
+                const cardCount = deck.learner_cards[0]?.count || 0;
+                const div = document.createElement('div');
+                div.className = 'p-5 rounded-xl border bg-white hover:shadow-md transition';
+                div.innerHTML = `
+                    <h3 class="font-bold text-lg text-gray-800 mb-1">${deck.name}</h3>
+                    <p class="text-sm text-gray-500 mb-4">${deck.subject || 'No subject'} • ${cardCount} cards</p>
+                    <div class="flex gap-2">
+                        <button onclick="studyDeck(${deck.id})" class="flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 py-2 rounded-lg text-sm font-medium">Study</button>
+                        <button onclick="deleteDeck(${deck.id})" class="px-3 py-2 bg-gray-50 hover:bg-red-50 text-gray-500 hover:text-red-500 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            lucide.createIcons();
+        }
+
+        async function deleteDeck(id) {
+            if (confirm('Delete this deck and all its cards?')) {
+                await supabaseClient.from('learner_decks').delete().eq('id', id);
+                loadDecks();
+            }
+        }
+
+        async function studyDeck(deckId) {
+            currentDeckId = deckId;
+            const { data: deck } = await supabaseClient.from('learner_decks').select('*').eq('id', deckId).single();
+            const { data: cards } = await supabaseClient.from('learner_cards').select('*').eq('deck_id', deckId).order('created_at', { ascending: true });
+            
+            currentCards = cards || [];
+            currentCardIndex = 0;
+            
+            document.getElementById('flashcardsSection').classList.add('hidden');
+            document.getElementById('flashcardStudySection').classList.remove('hidden');
+            document.getElementById('studyDeckTitle').textContent = deck.name;
+            
+            displayCurrentCard();
+            updateCardsList();
+        }
+
+        function exitFlashcardStudy() {
+            document.getElementById('flashcardStudySection').classList.add('hidden');
+            document.getElementById('flashcardsSection').classList.remove('hidden');
+            currentDeckId = null;
+            currentCards = [];
+        }
+
+        function showAddCardForm() {
+            document.getElementById('addCardForm').classList.remove('hidden');
+        }
+
+        function hideAddCardForm() {
+            document.getElementById('addCardForm').classList.add('hidden');
+            document.getElementById('cardForm').reset();
+        }
+
+        document.getElementById('cardForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const { error } = await supabaseClient.from('learner_cards').insert([{
+                deck_id: currentDeckId,
+                front: document.getElementById('cardFront').value,
+                back: document.getElementById('cardBack').value
+            }]);
+            if (error) alert("Error: " + error.message);
+            else {
+                hideAddCardForm();
+                studyDeck(currentDeckId);
+            }
+        });
+
+        function displayCurrentCard() {
+            const card = currentCards[currentCardIndex];
+            if (!card) {
+                document.getElementById('cardFrontText').textContent = 'No cards yet';
+                document.getElementById('cardBackText').textContent = 'Add some cards to start studying';
+                document.getElementById('cardProgress').textContent = '0 / 0';
+                return;
+            }
+            document.getElementById('cardFrontText').textContent = card.front;
+            document.getElementById('cardBackText').textContent = card.back;
+            document.getElementById('cardProgress').textContent = `${currentCardIndex + 1} / ${currentCards.length}`;
+            document.querySelector('.flashcard').classList.remove('flipped');
+        }
+
+        function flipCard() {
+            document.querySelector('.flashcard').classList.toggle('flipped');
+        }
+
+        function nextCard() {
+            if (currentCardIndex < currentCards.length - 1) {
+                currentCardIndex++;
+                displayCurrentCard();
+            }
+        }
+
+        function prevCard() {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                displayCurrentCard();
+            }
+        }
+
+        async function deleteCard(cardId) {
+            if (confirm('Delete this card?')) {
+                await supabaseClient.from('learner_cards').delete().eq('id', cardId);
+                studyDeck(currentDeckId);
+            }
+        }
+
+        function updateCardsList() {
+            const container = document.getElementById('cardsList');
+            container.innerHTML = '';
+            if (currentCards.length === 0) {
+                container.innerHTML = '<p class="text-gray-400 text-center py-4">No cards in this deck</p>';
+                return;
+            }
+            currentCards.forEach((card, idx) => {
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition';
+                div.innerHTML = `
+                    <div class="flex-1">
+                        <span class="text-sm font-medium text-gray-800">${card.front}</span>
+                        <span class="text-xs text-gray-400 mx-2">→</span>
+                        <span class="text-sm text-gray-600">${card.back}</span>
+                    </div>
+                    <button onclick="deleteCard(${card.id})" class="text-gray-400 hover:text-red-500"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                `;
+                container.appendChild(div);
+            });
+            lucide.createIcons();
+        }
+
+        // --- NOTES ---
+        let allNotes = [];
+
+        document.getElementById('noteForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const { error } = await supabaseClient.from('learner_notes').insert([{
+                user_id: currentUser.id,
+                title: document.getElementById('noteTitle').value,
+                content: document.getElementById('noteContent').value,
+                category: document.getElementById('noteCategory').value
+            }]);
+            if (error) alert("Error: " + error.message);
+            else { e.target.reset(); loadNotes(); }
+        });
+
+        async function loadNotes() {
+            const { data: notes } = await supabaseClient.from('learner_notes').select('*').eq('user_id', currentUser.id).order('updated_at', { ascending: false });
+            allNotes = notes || [];
+            displayNotes(allNotes);
+        }
+
+        function displayNotes(notes) {
+            const container = document.getElementById('notesList');
+            container.innerHTML = '';
+            if (!notes || notes.length === 0) {
+                container.innerHTML = '<div class="text-center py-10 text-gray-400"><i data-lucide="file-text" class="w-12 h-12 mx-auto mb-2 opacity-50"></i><p>No notes yet.</p></div>';
+                lucide.createIcons();
+                return;
+            }
+            notes.forEach(note => {
+                const catColors = { 'general': 'bg-gray-100 text-gray-600', 'lecture': 'bg-blue-100 text-blue-600', 'reading': 'bg-green-100 text-green-600', 'idea': 'bg-purple-100 text-purple-600' };
+                const div = document.createElement('div');
+                div.className = 'p-5 rounded-xl bg-white border border-gray-100 hover:shadow-md transition';
+                div.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg text-gray-800 mb-1">${note.title}</h3>
+                            <span class="text-xs font-semibold px-2 py-1 rounded-md uppercase ${catColors[note.category]}">${note.category}</span>
+                        </div>
+                        <button onclick="deleteNote(${note.id})" class="text-gray-300 hover:text-red-500"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div>
+                    <p class="text-sm text-gray-600 line-clamp-3">${note.content}</p>
+                    <p class="text-xs text-gray-400 mt-3">${new Date(note.updated_at).toLocaleDateString()}</p>
+                `;
+                container.appendChild(div);
+            });
+            lucide.createIcons();
+        }
+
+        async function deleteNote(id) {
+            if (confirm('Delete this note?')) {
+                await supabaseClient.from('learner_notes').delete().eq('id', id);
+                loadNotes();
+            }
+        }
+
+        function searchNotes() {
+            const query = document.getElementById('noteSearch').value.toLowerCase();
+            const filtered = allNotes.filter(note => 
+                note.title.toLowerCase().includes(query) || 
+                note.content.toLowerCase().includes(query)
+            );
+            displayNotes(filtered);
+        }
 
         checkSession();
     </script>
