@@ -118,5 +118,165 @@
     "subject": "Language",
     "length": "20:15",
     "owner": "Easy German"
+  },
+  {
+    "title": "Excel for Beginners - Full Course",
+    "description": "Learn the basics of Microsoft Excel including formulas, functions, and data visualization.",
+    "ytlink": "https://www.youtube.com/watch?v=Vl0H-qTclOg",
+    "subject": "Productivity",
+    "length": "2:09:43",
+    "owner": "Technology for Teachers and Students"
+  },
+  {
+    "title": "Introduction to Statistics - Probability and Data",
+    "description": "Understand the basics of statistics, probability, and data analysis with real-world examples.",
+    "ytlink": "https://www.youtube.com/watch?v=xxpc-HPKN28",
+    "subject": "Math",
+    "length": "1:15:32",
+    "owner": "Crash Course"
+  },
+  {
+    "title": "How the Internet Works - Networking Basics",
+    "description": "Explore the fundamentals of computer networking, the internet, and how data travels online.",
+    "ytlink": "https://www.youtube.com/watch?v=3QhU9jd03a0",
+    "subject": "Technology",
+    "length": "6:11",
+    "owner": "PowerCert Animated Videos"
+  },
+  {
+    "title": "Photoshop Tutorial for Beginners",
+    "description": "Step-by-step guide to using Adobe Photoshop for photo editing and graphic design.",
+    "ytlink": "https://www.youtube.com/watch?v=OjRqZiAgoHo",
+    "subject": "Design",
+    "length": "1:40:36",
+    "owner": "Piximperfect"
+  },
+  {
+    "title": "Introduction to Machine Learning",
+    "description": "Learn the basics of machine learning, supervised and unsupervised learning, and real-world applications.",
+    "ytlink": "https://www.youtube.com/watch?v=Gv9_4yMHFhI",
+    "subject": "Programming",
+    "length": "1:11:00",
+    "owner": "Simplilearn"
+  },
+  {
+    "title": "The French Revolution - History Crash Course",
+    "description": "A detailed look at the causes, events, and impact of the French Revolution.",
+    "ytlink": "https://www.youtube.com/watch?v=5fJl_ZX91l0",
+    "subject": "History",
+    "length": "11:54",
+    "owner": "Crash Course"
+  },
+  {
+    "title": "Learn Japanese - Basic Conversation",
+    "description": "Essential Japanese phrases and conversation skills for beginners.",
+    "ytlink": "https://www.youtube.com/watch?v=8uD9bG6h2g0",
+    "subject": "Language",
+    "length": "13:22",
+    "owner": "JapanesePod101"
+  },
+  {
+    "title": "Organic Chemistry - Introduction and Basics",
+    "description": "Understand the basics of organic chemistry, including functional groups and reaction mechanisms.",
+    "ytlink": "https://www.youtube.com/watch?v=Q0lD9F1eYp4",
+    "subject": "Science",
+    "length": "23:10",
+    "owner": "The Organic Chemistry Tutor"
+  },
+  {
+    "title": "How to Draw Faces - Step by Step",
+    "description": "Learn the fundamentals of drawing realistic human faces from scratch.",
+    "ytlink": "https://www.youtube.com/watch?v=2T7cDY7YDsg",
+    "subject": "Art",
+    "length": "28:12",
+    "owner": "Proko"
+  },
+  {
+    "title": "Entrepreneurship 101 - How to Start a Business",
+    "description": "A beginner's guide to launching a startup, business planning, and entrepreneurship basics.",
+    "ytlink": "https://www.youtube.com/watch?v=Fqch5OrUPvA",
+    "subject": "Business",
+    "length": "1:00:00",
+    "owner": "Stanford eCorner"
+  },
+  {
+    "title": "Time Management Tips for Students",
+    "description": "Practical strategies to improve productivity, manage time, and reduce stress for students.",
+    "ytlink": "https://www.youtube.com/watch?v=OeTnMZ5FjJ8",
+    "subject": "Productivity",
+    "length": "9:45",
+    "owner": "Thomas Frank"
+  },
+  {
+    "title": "Introduction to Astronomy - The Solar System",
+    "description": "Explore the planets, moons, and other objects in our solar system with stunning visuals.",
+    "ytlink": "https://www.youtube.com/watch?v=libKVRa01L8",
+    "subject": "Science",
+    "length": "44:26",
+    "owner": "Kurzgesagt – In a Nutshell"
+  },
+  {
+    "title": "Learn Italian - Basic Phrases and Pronunciation",
+    "description": "Essential Italian phrases, greetings, and pronunciation tips for beginners.",
+    "ytlink": "https://www.youtube.com/watch?v=QJpKQ1V3pMc",
+    "subject": "Language",
+    "length": "14:05",
+    "owner": "Learn Italian with ItalianPod101.com"
+  },
+  {
+    "title": "Geometry - Angles, Triangles, and Circles",
+    "description": "A comprehensive introduction to geometry concepts including angles, triangles, and circles.",
+    "ytlink": "https://www.youtube.com/watch?v=Qd8Vg5jF3jA",
+    "subject": "Math",
+    "length": "21:30",
+    "owner": "Math Antics"
+  },
+  {
+    "title": "How to Write a Resume - Tips and Examples",
+    "description": "Step-by-step guide to creating a professional resume that stands out to employers.",
+    "ytlink": "https://www.youtube.com/watch?v=QZp1W5q4gGI",
+    "subject": "Business",
+    "length": "12:34",
+    "owner": "Linda Raynier"
+  },
+  {
+    "title": "Introduction to SQL - Databases for Beginners",
+    "description": "Learn the basics of SQL, relational databases, and how to write simple queries.",
+    "ytlink": "https://www.youtube.com/watch?v=HXV3zeQKqGY",
+    "subject": "Programming",
+    "length": "1:04:20",
+    "owner": "freeCodeCamp"
+  },
+  {
+    "title": "The Art of Public Speaking",
+    "description": "Master the fundamentals of public speaking, presentation skills, and overcoming stage fright.",
+    "ytlink": "https://www.youtube.com/watch?v=NU7W7qe2R0A",
+    "subject": "Productivity",
+    "length": "18:00",
+    "owner": "TEDx Talks"
+  },
+  {
+    "title": "World Geography - Continents, Countries, and Capitals",
+    "description": "Explore the world's continents, major countries, and their capitals with engaging visuals.",
+    "ytlink": "https://www.youtube.com/watch?v=Q7xvC8g5c3E",
+    "subject": "General Knowledge",
+    "length": "24:18",
+    "owner": "Geography Now"
+  },
+  {
+    "title": "Music Theory Basics - Reading Sheet Music",
+    "description": "Learn how to read sheet music, understand notes, rhythms, and basic music theory concepts.",
+    "ytlink": "https://www.youtube.com/watch?v=JFaKNR7eeJk",
+    "subject": "Music",
+    "length": "14:32",
+    "owner": "Michael New"
+  },
+  {
+    "title": "Critical Thinking and Problem Solving Skills",
+    "description": "Develop your critical thinking and problem-solving abilities with practical examples and exercises.",
+    "ytlink": "https://www.youtube.com/watch?v=6OLPL5p0fMg",
+    "subject": "General Knowledge",
+    "length": "15:20",
+    "owner": "Sprouts"
   }
 ]
