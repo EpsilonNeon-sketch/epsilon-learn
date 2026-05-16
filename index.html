@@ -399,6 +399,12 @@
                     <i data-lucide="messages-square" class="w-5 h-5"></i>
                     <span>Chat Rooms</span>
                 </button>
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="videos">
+                    <i data-lucide="video" class="w-5 h-5"></i>
+                    <span>Study Videos</span>
+                </button>
             </nav>
 
             <div class="mt-4 pt-4 border-t border-gray-200">
@@ -1123,6 +1129,68 @@
                 </div>
             </div>
 
+            <!-- VIDEOS SECTION -->
+            <div id="videosSection" class="section hidden">
+                <div class="max-w-7xl mx-auto">
+                    <div class="glass p-6 rounded-2xl mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Study Videos</h2>
+                        <p class="text-gray-600 mb-6">Watch curated educational videos</p>
+                        
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <div class="flex-1 relative">
+                                <i data-lucide="search" class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <input type="text" id="videoSearch" placeholder="Search videos by title or subject..." class="input-field pl-10" oninput="filterVideos()">
+                            </div>
+                            <select id="videoSubjectFilter" class="input-field md:w-48" onchange="filterVideos()">
+                                <option value="all">All Subjects</option>
+                                <option value="Math">Math</option>
+                                <option value="Science">Science</option>
+                                <option value="Programming">Programming</option>
+                                <option value="History">History</option>
+                                <option value="Language">Language</option>
+                            </select>
+                        </div>
+                        <div id="videoCount" class="text-sm text-gray-500 mt-4"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Video Player -->
+                        <div class="lg:col-span-2">
+                            <div id="videoPlayerContainer" class="glass p-6 rounded-2xl">
+                                <div id="videoPlayerPlaceholder" class="aspect-video bg-gray-100 rounded-xl flex items-center justify-center">
+                                    <div class="text-center text-gray-400">
+                                        <i data-lucide="play-circle" class="w-16 h-16 mx-auto mb-3 opacity-50"></i>
+                                        <p>Select a video to watch</p>
+                                    </div>
+                                </div>
+                                <div id="videoPlayer" class="hidden">
+                                    <div class="aspect-video rounded-xl overflow-hidden mb-4">
+                                        <iframe id="videoIframe" width="100%" height="100%" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>
+                                    <div>
+                                        <h3 id="currentVideoTitle" class="text-2xl font-bold text-gray-800 mb-2"></h3>
+                                        <div class="flex items-center gap-4 text-sm text-gray-500 mb-3">
+                                            <span id="currentVideoSubject" class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full font-medium"></span>
+                                            <span id="currentVideoLength" class="flex items-center gap-1"><i data-lucide="clock" class="w-4 h-4"></i></span>
+                                            <span id="currentVideoOwner" class="flex items-center gap-1"><i data-lucide="user" class="w-4 h-4"></i></span>
+                                        </div>
+                                        <p id="currentVideoDesc" class="text-gray-600"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Video List -->
+                        <div class="lg:col-span-1">
+                            <div class="glass p-6 rounded-2xl max-h-[800px] overflow-y-auto">
+                                <h3 class="text-lg font-bold text-gray-800 mb-4">Video Library</h3>
+                                <div id="videosList" class="space-y-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- CALCULATOR SECTION -->
             <div id="calculatorSection" class="section hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
@@ -1294,6 +1362,7 @@
                 if (page === 'users') loadUsers();
                 if (page === 'chat') loadChat();
                 if (page === 'chatrooms') loadChatRooms();
+                if (page === 'videos') loadVideos();
             });
         });
 
@@ -2297,6 +2366,107 @@ create index chat_messages_created_at_idx
         // --- CALENDAR ---
         let currentCalendarDate = new Date();
         let calendarTasks = [];
+
+        // --- VIDEOS ---
+        let allVideos = [];
+        let currentVideo = null;
+
+        async function loadVideos() {
+            try {
+                const response = await fetch('./vid.json');
+                allVideos = await response.json();
+                filterVideos();
+            } catch (error) {
+                console.error('Error loading videos:', error);
+                document.getElementById('videosList').innerHTML = '<p class="text-red-500 text-center py-10">Error loading videos</p>';
+            }
+        }
+
+        function filterVideos() {
+            const searchQuery = document.getElementById('videoSearch').value.toLowerCase();
+            const subjectFilter = document.getElementById('videoSubjectFilter').value;
+
+            let filtered = allVideos.filter(video => {
+                const matchesSearch = video.title.toLowerCase().includes(searchQuery) || 
+                                     video.description.toLowerCase().includes(searchQuery) ||
+                                     video.subject.toLowerCase().includes(searchQuery);
+                const matchesSubject = subjectFilter === 'all' || video.subject === subjectFilter;
+                return matchesSearch && matchesSubject;
+            });
+
+            displayVideos(filtered);
+        }
+
+        function displayVideos(videos) {
+            const container = document.getElementById('videosList');
+            const countEl = document.getElementById('videoCount');
+            
+            countEl.textContent = `${videos.length} video${videos.length !== 1 ? 's' : ''} available`;
+            container.innerHTML = '';
+            
+            if (videos.length === 0) {
+                container.innerHTML = '<div class="text-center py-10 text-gray-400"><i data-lucide="video-off" class="w-12 h-12 mx-auto mb-2 opacity-50"></i><p>No videos found</p></div>';
+                lucide.createIcons();
+                return;
+            }
+
+            videos.forEach(video => {
+                const div = document.createElement('div');
+                div.className = 'p-4 rounded-xl bg-white border border-gray-100 hover:border-emerald-200 hover:shadow-md transition cursor-pointer';
+                div.onclick = () => playVideo(video);
+                
+                const subjectColors = {
+                    'Math': 'bg-blue-100 text-blue-700',
+                    'Science': 'bg-green-100 text-green-700',
+                    'Programming': 'bg-purple-100 text-purple-700',
+                    'History': 'bg-orange-100 text-orange-700',
+                    'Language': 'bg-pink-100 text-pink-700'
+                };
+                const subjectClass = subjectColors[video.subject] || 'bg-gray-100 text-gray-700';
+                
+                div.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="play" class="w-6 h-6 text-emerald-600"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-bold text-gray-800 mb-1 line-clamp-2">${video.title}</h4>
+                            <div class="flex items-center gap-2 text-xs mb-2">
+                                <span class="px-2 py-1 rounded-full font-medium ${subjectClass}">${video.subject}</span>
+                                <span class="text-gray-500">${video.length}</span>
+                            </div>
+                            <p class="text-xs text-gray-500">by ${video.owner}</p>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            
+            lucide.createIcons();
+        }
+
+        function playVideo(video) {
+            currentVideo = video;
+            
+            // Extract YouTube video ID
+            let videoId = '';
+            if (video.ytlink.includes('youtube.com/watch?v=')) {
+                videoId = video.ytlink.split('v=')[1].split('&')[0];
+            } else if (video.ytlink.includes('youtu.be/')) {
+                videoId = video.ytlink.split('youtu.be/')[1].split('?')[0];
+            }
+            
+            document.getElementById('videoPlayerPlaceholder').classList.add('hidden');
+            document.getElementById('videoPlayer').classList.remove('hidden');
+            document.getElementById('videoIframe').src = `https://www.youtube.com/embed/${videoId}`;
+            document.getElementById('currentVideoTitle').textContent = video.title;
+            document.getElementById('currentVideoSubject').textContent = video.subject;
+            document.getElementById('currentVideoLength').innerHTML = `<i data-lucide="clock" class="w-4 h-4"></i> ${video.length}`;
+            document.getElementById('currentVideoOwner').innerHTML = `<i data-lucide="user" class="w-4 h-4"></i> ${video.owner}`;
+            document.getElementById('currentVideoDesc').textContent = video.description;
+            
+            lucide.createIcons();
+        }
 
         // --- CHATROOMS ---
         let currentRoomId = null;
