@@ -294,6 +294,12 @@
                     <i data-lucide="file-text" class="w-5 h-5"></i>
                     <span>Notes</span>
                 </button>
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="discover">
+                    <i data-lucide="compass" class="w-5 h-5"></i>
+                    <span>Discover Tools</span>
+                </button>
             </nav>
 
             <div class="mt-8 pt-8 border-t border-gray-200">
@@ -690,6 +696,43 @@
                 </div>
             </div>
 
+            <!-- DISCOVER TOOLS SECTION -->
+            <div id="discoverSection" class="section hidden">
+                <div class="max-w-6xl mx-auto">
+                    <div class="glass p-8 rounded-2xl mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Discover Learning Tools</h2>
+                        <p class="text-gray-600 mb-6">Find the perfect learning resources for your goals</p>
+                        
+                        <div class="flex flex-col md:flex-row gap-4 mb-6">
+                            <div class="flex-1 relative">
+                                <i data-lucide="search" class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <input type="text" id="toolSearch" placeholder="Search by name or category (e.g., coding, cooking, design)" 
+                                    class="input-field pl-10" oninput="filterTools()">
+                            </div>
+                            <select id="categoryFilter" class="input-field md:w-48" onchange="filterTools()">
+                                <option value="all">All Categories</option>
+                                <option value="coding">Coding</option>
+                                <option value="design">Design</option>
+                                <option value="language">Language</option>
+                                <option value="cooking">Cooking</option>
+                                <option value="music">Music</option>
+                            </select>
+                            <select id="priceFilter" class="input-field md:w-48" onchange="filterTools()">
+                                <option value="all">All Prices</option>
+                                <option value="free">Free</option>
+                                <option value="freemium">Freemium</option>
+                                <option value="subscription">Subscription</option>
+                                <option value="one-time">One-time</option>
+                            </select>
+                        </div>
+
+                        <div id="toolsCount" class="text-sm text-gray-500 mb-4"></div>
+                    </div>
+
+                    <div id="toolsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </div>
+            </div>
+
             <!-- NOTES SECTION -->
             <div id="notesSection" class="section hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -896,6 +939,7 @@
                 if (page === 'quiz') loadQuizzes();
                 if (page === 'flashcards') loadDecks();
                 if (page === 'notes') loadNotes();
+                if (page === 'discover') loadDiscoverTools();
             });
         });
 
@@ -1380,6 +1424,108 @@
                 note.content.toLowerCase().includes(query)
             );
             displayNotes(filtered);
+        }
+
+        // --- DISCOVER TOOLS ---
+        let allTools = [];
+
+        async function loadDiscoverTools() {
+            try {
+                const response = await fetch('./data.json');
+                allTools = await response.json();
+                filterTools();
+            } catch (error) {
+                console.error('Error loading tools:', error);
+                document.getElementById('toolsGrid').innerHTML = '<p class="text-red-500 col-span-3 text-center py-10">Error loading tools. Please check data.json file.</p>';
+            }
+        }
+
+        function filterTools() {
+            const searchQuery = document.getElementById('toolSearch').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const priceFilter = document.getElementById('priceFilter').value;
+
+            let filtered = allTools.filter(tool => {
+                const matchesSearch = tool.name.toLowerCase().includes(searchQuery) || 
+                                     tool.description.toLowerCase().includes(searchQuery) ||
+                                     tool.category.toLowerCase().includes(searchQuery);
+                const matchesCategory = categoryFilter === 'all' || tool.category === categoryFilter;
+                const matchesPrice = priceFilter === 'all' || tool.price === priceFilter;
+                
+                return matchesSearch && matchesCategory && matchesPrice;
+            });
+
+            displayTools(filtered);
+        }
+
+        function displayTools(tools) {
+            const container = document.getElementById('toolsGrid');
+            const countEl = document.getElementById('toolsCount');
+            
+            countEl.textContent = `Showing ${tools.length} tool${tools.length !== 1 ? 's' : ''}`;
+            
+            container.innerHTML = '';
+            
+            if (tools.length === 0) {
+                container.innerHTML = '<div class="col-span-3 text-center py-10 text-gray-400"><i data-lucide="search-x" class="w-12 h-12 mx-auto mb-2 opacity-50"></i><p>No tools found. Try different filters.</p></div>';
+                lucide.createIcons();
+                return;
+            }
+
+            const categoryColors = {
+                'coding': 'bg-blue-100 text-blue-700 border-blue-200',
+                'design': 'bg-purple-100 text-purple-700 border-purple-200',
+                'language': 'bg-green-100 text-green-700 border-green-200',
+                'cooking': 'bg-orange-100 text-orange-700 border-orange-200',
+                'music': 'bg-pink-100 text-pink-700 border-pink-200'
+            };
+
+            const priceColors = {
+                'free': 'bg-emerald-100 text-emerald-700',
+                'freemium': 'bg-cyan-100 text-cyan-700',
+                'subscription': 'bg-yellow-100 text-yellow-700',
+                'one-time': 'bg-indigo-100 text-indigo-700'
+            };
+
+            tools.forEach(tool => {
+                const div = document.createElement('div');
+                div.className = 'glass p-6 rounded-2xl hover:shadow-lg transition-all border-2 border-transparent hover:border-emerald-200';
+                
+                const categoryClass = categoryColors[tool.category] || 'bg-gray-100 text-gray-700 border-gray-200';
+                const priceClass = priceColors[tool.price] || 'bg-gray-100 text-gray-700';
+                
+                div.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide border ${categoryClass}">
+                            ${tool.category}
+                        </span>
+                        <span class="text-xs font-semibold px-2 py-1 rounded-md ${priceClass}">
+                            ${tool.price === 'one-time' ? 'One-time' : tool.price.charAt(0).toUpperCase() + tool.price.slice(1)}
+                        </span>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">${tool.name}</h3>
+                    <p class="text-sm text-gray-600 mb-4 line-clamp-2">${tool.description}</p>
+                    
+                    <div class="flex items-center gap-2 text-xs text-gray-500 mb-4">
+                        <i data-lucide="star" class="w-4 h-4 fill-yellow-400 text-yellow-400"></i>
+                        <span class="font-medium">${tool.rating || 'N/A'}</span>
+                        ${tool.users ? `<span class="ml-2">• ${tool.users}</span>` : ''}
+                    </div>
+                    
+                    <a href="${tool.link}" target="_blank" 
+                        class="block w-full text-center bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 rounded-lg transition shadow-sm">
+                        <span class="flex items-center justify-center gap-2">
+                            Visit Site
+                            <i data-lucide="external-link" class="w-4 h-4"></i>
+                        </span>
+                    </a>
+                `;
+                
+                container.appendChild(div);
+            });
+            
+            lucide.createIcons();
         }
 
         checkSession();
