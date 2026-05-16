@@ -1,0 +1,227 @@
+[
+  {
+    "name": "freeCodeCamp",
+    "description": "Learn to code for free with interactive tutorials covering web development, data science, and more.",
+    "category": "coding",
+    "price": "free",
+    "link": "https://www.freecodecamp.org",
+    "rating": "4.8",
+    "users": "40M+ learners"
+  },
+  {
+    "name": "Codecademy",
+    "description": "Interactive platform to learn programming languages like Python, JavaScript, SQL, and more.",
+    "category": "coding",
+    "price": "freemium",
+    "link": "https://www.codecademy.com",
+    "rating": "4.6",
+    "users": "50M+ users"
+  },
+  {
+    "name": "LeetCode",
+    "description": "Master coding interview questions and improve your programming skills with real challenges.",
+    "category": "coding",
+    "price": "freemium",
+    "link": "https://leetcode.com",
+    "rating": "4.7",
+    "users": "20M+ developers"
+  },
+  {
+    "name": "Udemy",
+    "description": "Massive online course marketplace with thousands of coding courses from beginner to advanced.",
+    "category": "coding",
+    "price": "one-time",
+    "link": "https://www.udemy.com",
+    "rating": "4.5",
+    "users": "57M+ students"
+  },
+  {
+    "name": "The Odin Project",
+    "description": "Free full-stack web development curriculum with hands-on projects and community support.",
+    "category": "coding",
+    "price": "free",
+    "link": "https://www.theodinproject.com",
+    "rating": "4.9",
+    "users": "1M+ learners"
+  },
+  {
+    "name": "Figma",
+    "description": "Collaborative design tool for creating UI/UX designs, prototypes, and design systems.",
+    "category": "design",
+    "price": "freemium",
+    "link": "https://www.figma.com",
+    "rating": "4.8",
+    "users": "4M+ designers"
+  },
+  {
+    "name": "Canva",
+    "description": "Easy-to-use graphic design platform for creating social media graphics, presentations, and more.",
+    "category": "design",
+    "price": "freemium",
+    "link": "https://www.canva.com",
+    "rating": "4.7",
+    "users": "135M+ users"
+  },
+  {
+    "name": "Dribbble",
+    "description": "Design inspiration platform and community where designers showcase their work and get feedback.",
+    "category": "design",
+    "price": "freemium",
+    "link": "https://dribbble.com",
+    "rating": "4.6",
+    "users": "12M+ designers"
+  },
+  {
+    "name": "Skillshare",
+    "description": "Online learning community with thousands of design classes covering illustration, branding, and more.",
+    "category": "design",
+    "price": "subscription",
+    "link": "https://www.skillshare.com",
+    "rating": "4.5",
+    "users": "12M+ students"
+  },
+  {
+    "name": "Adobe Creative Cloud",
+    "description": "Professional design suite including Photoshop, Illustrator, XD, and more creative tools.",
+    "category": "design",
+    "price": "subscription",
+    "link": "https://www.adobe.com/creativecloud.html",
+    "rating": "4.6",
+    "users": "26M+ subscribers"
+  },
+  {
+    "name": "Duolingo",
+    "description": "Gamified language learning app with bite-sized lessons in 40+ languages.",
+    "category": "language",
+    "price": "freemium",
+    "link": "https://www.duolingo.com",
+    "rating": "4.7",
+    "users": "500M+ learners"
+  },
+  {
+    "name": "Babbel",
+    "description": "Comprehensive language courses designed by experts for real-world conversations.",
+    "category": "language",
+    "price": "subscription",
+    "link": "https://www.babbel.com",
+    "rating": "4.5",
+    "users": "10M+ users"
+  },
+  {
+    "name": "Memrise",
+    "description": "Learn languages with native speaker videos and spaced repetition memory techniques.",
+    "category": "language",
+    "price": "freemium",
+    "link": "https://www.memrise.com",
+    "rating": "4.6",
+    "users": "60M+ learners"
+  },
+  {
+    "name": "italki",
+    "description": "Connect with native language tutors for personalized one-on-one lessons online.",
+    "category": "language",
+    "price": "one-time",
+    "link": "https://www.italki.com",
+    "rating": "4.8",
+    "users": "5M+ students"
+  },
+  {
+    "name": "Busuu",
+    "description": "Language learning with AI-powered lessons and feedback from native speakers.",
+    "category": "language",
+    "price": "freemium",
+    "link": "https://www.busuu.com",
+    "rating": "4.5",
+    "users": "120M+ users"
+  },
+  {
+    "name": "Tasty",
+    "description": "Learn cooking with thousands of easy-to-follow recipe videos and step-by-step guides.",
+    "category": "cooking",
+    "price": "free",
+    "link": "https://tasty.co",
+    "rating": "4.6",
+    "users": "100M+ followers"
+  },
+  {
+    "name": "MasterClass",
+    "description": "Learn cooking from world-renowned chefs like Gordon Ramsay and Thomas Keller.",
+    "category": "cooking",
+    "price": "subscription",
+    "link": "https://www.masterclass.com",
+    "rating": "4.7",
+    "users": "20M+ members"
+  },
+  {
+    "name": "America's Test Kitchen",
+    "description": "Science-based cooking lessons with tested recipes and technique tutorials.",
+    "category": "cooking",
+    "price": "subscription",
+    "link": "https://www.americastestkitchen.com",
+    "rating": "4.8",
+    "users": "2M+ subscribers"
+  },
+  {
+    "name": "Yummly",
+    "description": "Personalized recipe recommendations with smart cooking tools and meal planning.",
+    "category": "cooking",
+    "price": "freemium",
+    "link": "https://www.yummly.com",
+    "rating": "4.5",
+    "users": "25M+ users"
+  },
+  {
+    "name": "ChefSteps",
+    "description": "Modern cooking techniques and recipes with precision cooking guides and videos.",
+    "category": "cooking",
+    "price": "freemium",
+    "link": "https://www.chefsteps.com",
+    "rating": "4.6",
+    "users": "1M+ cooks"
+  },
+  {
+    "name": "Yousician",
+    "description": "Interactive music lessons for guitar, piano, bass, ukulele, and singing with instant feedback.",
+    "category": "music",
+    "price": "freemium",
+    "link": "https://yousician.com",
+    "rating": "4.6",
+    "users": "20M+ musicians"
+  },
+  {
+    "name": "Simply Piano",
+    "description": "Learn piano with fun, interactive lessons that adapt to your skill level.",
+    "category": "music",
+    "price": "subscription",
+    "link": "https://www.joytunes.com/simply-piano",
+    "rating": "4.7",
+    "users": "10M+ downloads"
+  },
+  {
+    "name": "Fender Play",
+    "description": "Learn guitar, bass, and ukulele with step-by-step video lessons from Fender.",
+    "category": "music",
+    "price": "subscription",
+    "link": "https://www.fender.com/play",
+    "rating": "4.5",
+    "users": "500K+ subscribers"
+  },
+  {
+    "name": "Soundtrap",
+    "description": "Online music studio for creating, recording, and collaborating on music projects.",
+    "category": "music",
+    "price": "freemium",
+    "link": "https://www.soundtrap.com",
+    "rating": "4.4",
+    "users": "2M+ creators"
+  },
+  {
+    "name": "Hooktheory",
+    "description": "Learn music theory and songwriting through interactive books and analysis tools.",
+    "category": "music",
+    "price": "one-time",
+    "link": "https://www.hooktheory.com",
+    "rating": "4.8",
+    "users": "500K+ students"
+  }
+]
