@@ -184,7 +184,8 @@
             transform: rotateY(180deg);
         }
 
-        .flashcard-front, .flashcard-back {
+        .flashcard-front,
+        .flashcard-back {
             position: absolute;
             width: 100%;
             height: 100%;
@@ -386,9 +387,21 @@
                     <i data-lucide="calendar" class="w-5 h-5"></i>
                     <span>Calendar</span>
                 </button>
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="users">
+                    <i data-lucide="users" class="w-5 h-5"></i>
+                    <span>Study Partners</span>
+                </button>
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="chatrooms">
+                    <i data-lucide="messages-square" class="w-5 h-5"></i>
+                    <span>Chat Rooms</span>
+                </button>
             </nav>
 
-            <div class="mt-8 pt-8 border-t border-gray-200">
+            <div class="mt-4 pt-4 border-t border-gray-200">
                 <button id="logoutBtn"
                     class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 hover:text-red-600 transition text-left text-gray-600">
                     <i data-lucide="log-out" class="w-5 h-5"></i>
@@ -414,8 +427,10 @@
                         <i data-lucide="info" class="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0"></i>
                         <div>
                             <h3 class="font-bold text-blue-900 mb-1">Important: Create Account First</h3>
-                            <p class="text-sm text-blue-800 mb-3">Before signing in here, you must first create an account on EpsilonHub (our main platform). Use the same credentials to log in here.</p>
-                            <a href="https://epsilonhub.vercel.app" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition shadow-sm">
+                            <p class="text-sm text-blue-800 mb-3">Before signing in here, you must first create an
+                                account on EpsilonHub (our main platform). Use the same credentials to log in here.</p>
+                            <a href="https://epsilonhub.vercel.app" target="_blank"
+                                class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition shadow-sm">
                                 <i data-lucide="external-link" class="w-4 h-4"></i>
                                 Open EpsilonHub
                             </a>
@@ -438,7 +453,8 @@
                 <form id="signupForm" class="space-y-4 hidden">
                     <h2 class="text-lg font-bold text-gray-800 mb-4">Sign Up</h2>
                     <div class="p-3 bg-yellow-50 border border-yellow-200 rounded-lg mb-4">
-                        <p class="text-xs text-yellow-800"><strong>Note:</strong> Make sure you've already created an account on EpsilonHub first!</p>
+                        <p class="text-xs text-yellow-800"><strong>Note:</strong> Make sure you've already created an
+                            account on EpsilonHub first!</p>
                     </div>
                     <input id="signupEmail" type="email" placeholder="Email Address" class="input-field" required>
                     <input id="signupPassword" type="password" placeholder="Create Password" class="input-field"
@@ -478,7 +494,8 @@
                         </div>
                         <div
                             class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600">
-                            <i data-lucide="clock" class="w-6 h-6"></i></div>
+                            <i data-lucide="clock" class="w-6 h-6"></i>
+                        </div>
                     </div>
                     <div class="glass p-6 rounded-2xl flex items-center justify-between">
                         <div>
@@ -487,7 +504,8 @@
                         </div>
                         <div
                             class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600">
-                            <i data-lucide="check-circle" class="w-6 h-6"></i></div>
+                            <i data-lucide="check-circle" class="w-6 h-6"></i>
+                        </div>
                     </div>
                     <div class="glass p-6 rounded-2xl flex items-center justify-between">
                         <div>
@@ -495,7 +513,8 @@
                             <h3 id="statResources" class="text-3xl font-bold text-gray-800 mt-1">0</h3>
                         </div>
                         <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
-                            <i data-lucide="bookmark" class="w-6 h-6"></i></div>
+                            <i data-lucide="bookmark" class="w-6 h-6"></i>
+                        </div>
                     </div>
                     <div class="glass p-6 rounded-2xl flex items-center justify-between">
                         <div>
@@ -504,7 +523,8 @@
                         </div>
                         <div
                             class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-purple-600">
-                            <i data-lucide="help-circle" class="w-6 h-6"></i></div>
+                            <i data-lucide="help-circle" class="w-6 h-6"></i>
+                        </div>
                     </div>
                 </div>
                 <div class="glass p-6 rounded-2xl">
@@ -675,20 +695,37 @@
                             <p id="timerStatus" class="text-gray-500">Ready to focus</p>
                         </div>
                         <div class="flex gap-3 justify-center mb-6">
-                            <button onclick="startTimer()" id="startBtn" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition">Start</button>
-                            <button onclick="pauseTimer()" id="pauseBtn" class="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-lg transition hidden">Pause</button>
-                            <button onclick="resetTimer()" class="px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-lg transition">Reset</button>
+                            <button onclick="startTimer()" id="startBtn"
+                                class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition">Start</button>
+                            <button onclick="pauseTimer()" id="pauseBtn"
+                                class="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-lg transition hidden">Pause</button>
+                            <button onclick="resetTimer()"
+                                class="px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-lg transition">Reset</button>
                         </div>
                         <div class="grid grid-cols-3 gap-3 mb-6">
-                            <button onclick="setTimer(25)" class="p-3 bg-white hover:bg-emerald-50 border border-gray-200 rounded-lg transition"><div class="font-bold text-gray-800">25 min</div><div class="text-xs text-gray-500">Focus</div></button>
-                            <button onclick="setTimer(5)" class="p-3 bg-white hover:bg-emerald-50 border border-gray-200 rounded-lg transition"><div class="font-bold text-gray-800">5 min</div><div class="text-xs text-gray-500">Short Break</div></button>
-                            <button onclick="setTimer(15)" class="p-3 bg-white hover:bg-emerald-50 border border-gray-200 rounded-lg transition"><div class="font-bold text-gray-800">15 min</div><div class="text-xs text-gray-500">Long Break</div></button>
+                            <button onclick="setTimer(25)"
+                                class="p-3 bg-white hover:bg-emerald-50 border border-gray-200 rounded-lg transition">
+                                <div class="font-bold text-gray-800">25 min</div>
+                                <div class="text-xs text-gray-500">Focus</div>
+                            </button>
+                            <button onclick="setTimer(5)"
+                                class="p-3 bg-white hover:bg-emerald-50 border border-gray-200 rounded-lg transition">
+                                <div class="font-bold text-gray-800">5 min</div>
+                                <div class="text-xs text-gray-500">Short Break</div>
+                            </button>
+                            <button onclick="setTimer(15)"
+                                class="p-3 bg-white hover:bg-emerald-50 border border-gray-200 rounded-lg transition">
+                                <div class="font-bold text-gray-800">15 min</div>
+                                <div class="text-xs text-gray-500">Long Break</div>
+                            </button>
                         </div>
                         <div class="bg-gray-50 p-4 rounded-lg">
                             <label class="block text-sm font-medium text-gray-600 mb-2">Custom Timer (minutes)</label>
                             <div class="flex gap-2">
-                                <input type="number" id="customMin" min="1" max="120" placeholder="30" class="input-field flex-1">
-                                <button onclick="setCustomTimer()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">Set</button>
+                                <input type="number" id="customMin" min="1" max="120" placeholder="30"
+                                    class="input-field flex-1">
+                                <button onclick="setCustomTimer()"
+                                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">Set</button>
                             </div>
                         </div>
                     </div>
@@ -704,13 +741,16 @@
                             <form id="deckForm" class="space-y-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-600 mb-1">Deck Name</label>
-                                    <input id="deckName" type="text" placeholder="e.g. Spanish Vocabulary" class="input-field" required>
+                                    <input id="deckName" type="text" placeholder="e.g. Spanish Vocabulary"
+                                        class="input-field" required>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-600 mb-1">Subject</label>
                                     <input id="deckSubject" type="text" placeholder="e.g. Language" class="input-field">
                                 </div>
-                                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 rounded-lg transition">Create Deck</button>
+                                <button type="submit"
+                                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 rounded-lg transition">Create
+                                    Deck</button>
                             </form>
                         </div>
                     </div>
@@ -726,25 +766,32 @@
             <!-- FLASHCARD STUDY VIEW -->
             <div id="flashcardStudySection" class="section hidden">
                 <div class="max-w-4xl mx-auto">
-                    <button onclick="exitFlashcardStudy()" class="mb-4 text-gray-500 hover:text-gray-800 flex items-center gap-2">
+                    <button onclick="exitFlashcardStudy()"
+                        class="mb-4 text-gray-500 hover:text-gray-800 flex items-center gap-2">
                         <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Decks
                     </button>
                     <div class="glass p-8 rounded-2xl">
                         <div class="flex justify-between items-center mb-6">
                             <h2 id="studyDeckTitle" class="text-2xl font-bold text-gray-800"></h2>
-                            <button onclick="showAddCardForm()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2">
+                            <button onclick="showAddCardForm()"
+                                class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2">
                                 <i data-lucide="plus" class="w-4 h-4"></i> Add Card
                             </button>
                         </div>
-                        
+
                         <!-- Add Card Form -->
                         <div id="addCardForm" class="hidden mb-6 p-4 bg-gray-50 rounded-xl">
                             <form id="cardForm" class="space-y-3">
-                                <input id="cardFront" type="text" placeholder="Front (Question)" class="input-field" required>
-                                <input id="cardBack" type="text" placeholder="Back (Answer)" class="input-field" required>
+                                <input id="cardFront" type="text" placeholder="Front (Question)" class="input-field"
+                                    required>
+                                <input id="cardBack" type="text" placeholder="Back (Answer)" class="input-field"
+                                    required>
                                 <div class="flex gap-2">
-                                    <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg">Add Card</button>
-                                    <button type="button" onclick="hideAddCardForm()" class="px-4 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-lg">Cancel</button>
+                                    <button type="submit"
+                                        class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg">Add
+                                        Card</button>
+                                    <button type="button" onclick="hideAddCardForm()"
+                                        class="px-4 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-lg">Cancel</button>
                                 </div>
                             </form>
                         </div>
@@ -754,7 +801,8 @@
                             <div class="flashcard" onclick="flipCard()">
                                 <div class="flashcard-inner">
                                     <div class="flashcard-front">
-                                        <h3 id="cardFrontText" class="text-2xl font-bold text-center">Click to start</h3>
+                                        <h3 id="cardFrontText" class="text-2xl font-bold text-center">Click to start
+                                        </h3>
                                     </div>
                                     <div class="flashcard-back">
                                         <h3 id="cardBackText" class="text-2xl font-bold text-center"></h3>
@@ -764,11 +812,13 @@
                         </div>
 
                         <div class="flex justify-between items-center">
-                            <button onclick="prevCard()" class="px-6 py-3 bg-gray-200 hover:bg-gray-300 rounded-lg flex items-center gap-2">
+                            <button onclick="prevCard()"
+                                class="px-6 py-3 bg-gray-200 hover:bg-gray-300 rounded-lg flex items-center gap-2">
                                 <i data-lucide="chevron-left" class="w-5 h-5"></i> Previous
                             </button>
                             <span id="cardProgress" class="text-gray-600 font-medium">0 / 0</span>
-                            <button onclick="nextCard()" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg flex items-center gap-2">
+                            <button onclick="nextCard()"
+                                class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg flex items-center gap-2">
                                 Next <i data-lucide="chevron-right" class="w-5 h-5"></i>
                             </button>
                         </div>
@@ -788,11 +838,13 @@
                     <div class="glass p-8 rounded-2xl mb-6">
                         <h2 class="text-2xl font-bold text-gray-800 mb-4">Discover Learning Tools</h2>
                         <p class="text-gray-600 mb-6">Find the perfect learning resources for your goals</p>
-                        
+
                         <div class="flex flex-col md:flex-row gap-4 mb-6">
                             <div class="flex-1 relative">
-                                <i data-lucide="search" class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                                <input type="text" id="toolSearch" placeholder="Search by name or category (e.g., coding, cooking, design)" 
+                                <i data-lucide="search"
+                                    class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <input type="text" id="toolSearch"
+                                    placeholder="Search by name or category (e.g., coding, cooking, design)"
                                     class="input-field pl-10" oninput="filterTools()">
                             </div>
                             <select id="categoryFilter" class="input-field md:w-48" onchange="filterTools()">
@@ -825,14 +877,16 @@
                     <div class="glass p-8 rounded-2xl mb-6">
                         <h2 class="text-2xl font-bold text-gray-800 mb-4">Study Music Player</h2>
                         <p class="text-gray-600 mb-6">Upload your favorite music to play while studying</p>
-                        
+
                         <div class="mb-6">
                             <label class="block w-full">
-                                <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-emerald-500 transition cursor-pointer">
+                                <div
+                                    class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-emerald-500 transition cursor-pointer">
                                     <i data-lucide="upload" class="w-12 h-12 mx-auto mb-3 text-gray-400"></i>
                                     <p class="text-gray-600 font-medium mb-1">Click to upload music</p>
                                     <p class="text-sm text-gray-400">MP3, WAV, OGG supported</p>
-                                    <input type="file" id="musicUpload" accept="audio/*" class="hidden" onchange="loadMusicFile(event)">
+                                    <input type="file" id="musicUpload" accept="audio/*" class="hidden"
+                                        onchange="loadMusicFile(event)">
                                 </div>
                             </label>
                         </div>
@@ -861,19 +915,23 @@
 
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-3">
-                                <button onclick="previousTrack()" class="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition">
+                                <button onclick="previousTrack()"
+                                    class="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition">
                                     <i data-lucide="skip-back" class="w-5 h-5"></i>
                                 </button>
-                                <button id="playPauseBtn" onclick="togglePlayPause()" class="p-3 bg-white text-emerald-600 rounded-full hover:scale-110 transition">
+                                <button id="playPauseBtn" onclick="togglePlayPause()"
+                                    class="p-3 bg-white text-emerald-600 rounded-full hover:scale-110 transition">
                                     <i data-lucide="play" class="w-6 h-6"></i>
                                 </button>
-                                <button onclick="nextTrack()" class="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition">
+                                <button onclick="nextTrack()"
+                                    class="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition">
                                     <i data-lucide="skip-forward" class="w-5 h-5"></i>
                                 </button>
                             </div>
                             <div class="flex items-center gap-2">
                                 <i data-lucide="volume-2" class="w-5 h-5"></i>
-                                <input type="range" id="volumeSlider" min="0" max="100" value="70" class="w-24" onchange="changeVolume(this.value)">
+                                <input type="range" id="volumeSlider" min="0" max="100" value="70" class="w-24"
+                                    onchange="changeVolume(this.value)">
                             </div>
                         </div>
                     </div>
@@ -890,7 +948,8 @@
                                 <button onclick="changeMonth(-1)" class="p-2 hover:bg-gray-100 rounded-lg transition">
                                     <i data-lucide="chevron-left" class="w-5 h-5"></i>
                                 </button>
-                                <h3 id="calendarMonth" class="text-xl font-semibold text-gray-700 min-w-[200px] text-center"></h3>
+                                <h3 id="calendarMonth"
+                                    class="text-xl font-semibold text-gray-700 min-w-[200px] text-center"></h3>
                                 <button onclick="changeMonth(1)" class="p-2 hover:bg-gray-100 rounded-lg transition">
                                     <i data-lucide="chevron-right" class="w-5 h-5"></i>
                                 </button>
@@ -911,7 +970,8 @@
 
                         <div id="selectedDateTasks" class="hidden">
                             <div class="border-t border-gray-200 pt-6">
-                                <h3 class="text-lg font-bold text-gray-800 mb-4">Tasks for <span id="selectedDateDisplay"></span></h3>
+                                <h3 class="text-lg font-bold text-gray-800 mb-4">Tasks for <span
+                                        id="selectedDateDisplay"></span></h3>
                                 <div id="dateTasksList" class="space-y-3"></div>
                             </div>
                         </div>
@@ -928,7 +988,8 @@
                             <form id="noteForm" class="space-y-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-600 mb-1">Title</label>
-                                    <input id="noteTitle" type="text" placeholder="Note title" class="input-field" required>
+                                    <input id="noteTitle" type="text" placeholder="Note title" class="input-field"
+                                        required>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-600 mb-1">Category</label>
@@ -941,9 +1002,12 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-600 mb-1">Content</label>
-                                    <textarea id="noteContent" placeholder="Write your notes here..." class="input-field" rows="8" required></textarea>
+                                    <textarea id="noteContent" placeholder="Write your notes here..."
+                                        class="input-field" rows="8" required></textarea>
                                 </div>
-                                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition">Save Note</button>
+                                <button type="submit"
+                                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition">Save
+                                    Note</button>
                             </form>
                         </div>
                     </div>
@@ -951,9 +1015,109 @@
                         <div class="glass p-6 rounded-2xl min-h-[500px]">
                             <div class="flex justify-between items-center mb-6">
                                 <h2 class="text-xl font-bold text-gray-800">My Notes</h2>
-                                <input type="text" id="noteSearch" placeholder="Search notes..." class="input-field max-w-xs" oninput="searchNotes()">
+                                <input type="text" id="noteSearch" placeholder="Search notes..."
+                                    class="input-field max-w-xs" oninput="searchNotes()">
                             </div>
                             <div id="notesList" class="space-y-4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- USERS SECTION -->
+            <div id="usersSection" class="section hidden">
+                <div class="max-w-6xl mx-auto">
+                    <div class="glass p-8 rounded-2xl mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Study Partners</h2>
+                        <p class="text-gray-600 mb-6">Connect with other learners and study together</p>
+                        <input type="text" id="userSearch" placeholder="Search by username..."
+                            class="input-field max-w-md" oninput="searchUsers()">
+                    </div>
+                    <div id="usersList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </div>
+            </div>
+
+            <!-- CHAT SECTION -->
+            <div id="chatSection" class="section hidden">
+                <div class="max-w-6xl mx-auto h-[calc(100vh-12rem)]">
+                    <div class="glass rounded-2xl h-full flex flex-col">
+                        <div class="p-6 border-b border-gray-200">
+                            <h2 class="text-2xl font-bold text-gray-800">Study Chat</h2>
+                            <p class="text-gray-600 text-sm">Collaborate and learn together</p>
+                        </div>
+                        <div id="chatMessages" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
+                        <div class="p-6 border-t border-gray-200">
+                            <form id="chatForm" class="flex gap-3">
+                                <input type="text" id="chatInput" placeholder="Type your message..."
+                                    class="input-field flex-1" required>
+                                <button type="submit"
+                                    class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition">
+                                    <i data-lucide="send" class="w-5 h-5"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHATROOMS SECTION -->
+            <div id="chatroomsSection" class="section hidden">
+                <div class="max-w-6xl mx-auto">
+                    <!-- Rooms List View -->
+                    <div id="roomsListView">
+                        <div class="glass p-6 rounded-2xl mb-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <div>
+                                    <h2 class="text-2xl font-bold text-gray-800">Chat Rooms</h2>
+                                    <p class="text-gray-600 text-sm">Join or create study rooms</p>
+                                </div>
+                                <button onclick="showCreateRoomForm()"
+                                    class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center gap-2">
+                                    <i data-lucide="plus" class="w-5 h-5"></i> Create Room
+                                </button>
+                            </div>
+                            <div id="createRoomForm" class="hidden mt-4 p-4 bg-gray-50 rounded-xl">
+                                <form id="roomForm" class="space-y-3">
+                                    <input id="roomName" type="text" placeholder="Room Name" class="input-field"
+                                        required>
+                                    <textarea id="roomDesc" placeholder="Description" class="input-field"
+                                        rows="2"></textarea>
+                                    <input id="roomSubject" type="text" placeholder="Subject (e.g., Math, Science)"
+                                        class="input-field">
+                                    <div class="flex gap-2">
+                                        <button type="submit"
+                                            class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg">Create</button>
+                                        <button type="button" onclick="hideCreateRoomForm()"
+                                            class="px-4 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-lg">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div id="roomsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                    </div>
+
+                    <!-- Room Chat View -->
+                    <div id="roomChatView" class="hidden">
+                        <div class="glass rounded-2xl h-[calc(100vh-12rem)] flex flex-col">
+                            <div class="p-6 border-b border-gray-200">
+                                <button onclick="exitRoom()"
+                                    class="text-gray-500 hover:text-gray-800 mb-3 flex items-center gap-2">
+                                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Rooms
+                                </button>
+                                <h2 id="currentRoomName" class="text-2xl font-bold text-gray-800"></h2>
+                                <p id="currentRoomDesc" class="text-gray-600 text-sm"></p>
+                            </div>
+                            <div id="roomMessages" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
+                            <div class="p-6 border-t border-gray-200">
+                                <form id="roomChatForm" class="flex gap-3">
+                                    <input type="text" id="roomChatInput" placeholder="Type your message..."
+                                        class="input-field flex-1" required>
+                                    <button type="submit"
+                                        class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition">
+                                        <i data-lucide="send" class="w-5 h-5"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1127,6 +1291,9 @@
                 if (page === 'notes') loadNotes();
                 if (page === 'discover') loadDiscoverTools();
                 if (page === 'calendar') loadCalendar();
+                if (page === 'users') loadUsers();
+                if (page === 'chat') loadChat();
+                if (page === 'chatrooms') loadChatRooms();
             });
         });
 
@@ -1444,14 +1611,14 @@
             currentDeckId = deckId;
             const { data: deck } = await supabaseClient.from('learner_decks').select('*').eq('id', deckId).single();
             const { data: cards } = await supabaseClient.from('learner_cards').select('*').eq('deck_id', deckId).order('created_at', { ascending: true });
-            
+
             currentCards = cards || [];
             currentCardIndex = 0;
-            
+
             document.getElementById('flashcardsSection').classList.add('hidden');
             document.getElementById('flashcardStudySection').classList.remove('hidden');
             document.getElementById('studyDeckTitle').textContent = deck.name;
-            
+
             displayCurrentCard();
             updateCardsList();
         }
@@ -1606,8 +1773,8 @@
 
         function searchNotes() {
             const query = document.getElementById('noteSearch').value.toLowerCase();
-            const filtered = allNotes.filter(note => 
-                note.title.toLowerCase().includes(query) || 
+            const filtered = allNotes.filter(note =>
+                note.title.toLowerCase().includes(query) ||
                 note.content.toLowerCase().includes(query)
             );
             displayNotes(filtered);
@@ -1633,12 +1800,12 @@
             const priceFilter = document.getElementById('priceFilter').value;
 
             let filtered = allTools.filter(tool => {
-                const matchesSearch = tool.name.toLowerCase().includes(searchQuery) || 
-                                     tool.description.toLowerCase().includes(searchQuery) ||
-                                     tool.category.toLowerCase().includes(searchQuery);
+                const matchesSearch = tool.name.toLowerCase().includes(searchQuery) ||
+                    tool.description.toLowerCase().includes(searchQuery) ||
+                    tool.category.toLowerCase().includes(searchQuery);
                 const matchesCategory = categoryFilter === 'all' || tool.category === categoryFilter;
                 const matchesPrice = priceFilter === 'all' || tool.price === priceFilter;
-                
+
                 return matchesSearch && matchesCategory && matchesPrice;
             });
 
@@ -1648,11 +1815,11 @@
         function displayTools(tools) {
             const container = document.getElementById('toolsGrid');
             const countEl = document.getElementById('toolsCount');
-            
+
             countEl.textContent = `Showing ${tools.length} tool${tools.length !== 1 ? 's' : ''}`;
-            
+
             container.innerHTML = '';
-            
+
             if (tools.length === 0) {
                 container.innerHTML = '<div class="col-span-3 text-center py-10 text-gray-400"><i data-lucide="search-x" class="w-12 h-12 mx-auto mb-2 opacity-50"></i><p>No tools found. Try different filters.</p></div>';
                 lucide.createIcons();
@@ -1677,10 +1844,10 @@
             tools.forEach(tool => {
                 const div = document.createElement('div');
                 div.className = 'glass p-6 rounded-2xl hover:shadow-lg transition-all border-2 border-transparent hover:border-emerald-200';
-                
+
                 const categoryClass = categoryColors[tool.category] || 'bg-gray-100 text-gray-700 border-gray-200';
                 const priceClass = priceColors[tool.price] || 'bg-gray-100 text-gray-700';
-                
+
                 div.innerHTML = `
                     <div class="flex justify-between items-start mb-3">
                         <span class="text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide border ${categoryClass}">
@@ -1708,10 +1875,10 @@
                         </span>
                     </a>
                 `;
-                
+
                 container.appendChild(div);
             });
-            
+
             lucide.createIcons();
         }
 
@@ -1727,7 +1894,7 @@
             const url = URL.createObjectURL(file);
             playlist.push({ name: file.name, url: url });
             updatePlaylist();
-            
+
             if (playlist.length === 1) {
                 loadTrack(0);
             }
@@ -1736,7 +1903,7 @@
         function updatePlaylist() {
             const container = document.getElementById('playlist');
             container.innerHTML = '';
-            
+
             if (playlist.length === 0) {
                 container.innerHTML = '<p class="text-gray-400 text-center py-4">No tracks uploaded yet</p>';
                 return;
@@ -1766,10 +1933,10 @@
 
         function loadTrack(index) {
             if (index < 0 || index >= playlist.length) return;
-            
+
             currentTrackIndex = index;
             const track = playlist[index];
-            
+
             audioPlayer.src = track.url;
             audioPlayer.volume = 0.7;
             document.getElementById('currentTrackName').textContent = track.name;
@@ -1834,7 +2001,7 @@
             if (audioPlayer.duration) {
                 const percentage = (audioPlayer.currentTime / audioPlayer.duration) * 100;
                 document.getElementById('progressFill').style.width = percentage + '%';
-                
+
                 const current = formatTime(audioPlayer.currentTime);
                 const total = formatTime(audioPlayer.duration);
                 document.getElementById('currentTrackTime').textContent = `${current} / ${total}`;
@@ -1851,9 +2018,476 @@
             return `${mins}:${secs.toString().padStart(2, '0')}`;
         }
 
+        // --- USERS ---
+        let allUsers = [];
+
+        async function loadUsers() {
+            const { data: users } = await supabaseClient.from('profiles').select('*').order('created_at', { ascending: false });
+            allUsers = users || [];
+            displayUsers(allUsers);
+        }
+
+        function displayUsers(users) {
+            const container = document.getElementById('usersList');
+            container.innerHTML = '';
+
+            if (!users || users.length === 0) {
+                container.innerHTML = '<div class="col-span-3 text-center py-10 text-gray-400"><i data-lucide="users" class="w-12 h-12 mx-auto mb-2 opacity-50"></i><p>No users found.</p></div>';
+                lucide.createIcons();
+                return;
+            }
+
+            users.forEach(user => {
+                const div = document.createElement('div');
+                div.className = 'glass p-6 rounded-2xl hover:shadow-lg transition-all';
+
+                const profilePic = user.profile_pic || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username || 'User')}&background=10b981&color=fff`;
+
+                div.innerHTML = `
+                    <div class="flex items-start gap-4">
+                        <img src="${profilePic}" alt="${user.username}" class="w-16 h-16 rounded-full object-cover border-2 border-emerald-200">
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-bold text-lg text-gray-800 truncate">${user.display_name || user.username || 'Anonymous'}</h3>
+                            <p class="text-sm text-gray-500 truncate">@${user.username || 'user'}</p>
+                            ${user.bio ? `<p class="text-sm text-gray-600 mt-2 line-clamp-2">${user.bio}</p>` : ''}
+                            ${user.location ? `<div class="flex items-center gap-1 mt-2 text-xs text-gray-500"><i data-lucide="map-pin" class="w-3 h-3"></i>${user.location}</div>` : ''}
+                            ${user.website ? `<a href="${user.website}" target="_blank" class="flex items-center gap-1 mt-1 text-xs text-emerald-600 hover:underline"><i data-lucide="link" class="w-3 h-3"></i>${user.website}</a>` : ''}
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+                        <span>${user.followers?.length || 0} followers</span>
+                        <span>${user.following?.length || 0} following</span>
+                    </div>
+                `;
+
+                container.appendChild(div);
+            });
+
+            lucide.createIcons();
+        }
+
+        function searchUsers() {
+            const query = document.getElementById('userSearch').value.toLowerCase();
+            const filtered = allUsers.filter(user =>
+                (user.username && user.username.toLowerCase().includes(query)) ||
+                (user.display_name && user.display_name.toLowerCase().includes(query)) ||
+                (user.bio && user.bio.toLowerCase().includes(query))
+            );
+            displayUsers(filtered);
+        }
+
+        // --- CHAT ---
+        let chatMessages = [];
+        let chatSubscription = null;
+        let chatPollingInterval = null;
+
+        async function loadChat() {
+            try {
+                // First, try to create the table if it doesn't exist
+                await ensureChatTable();
+
+                const { data: messages, error } = await supabaseClient
+                    .from('chat_messages')
+                    .select('*')
+                    .order('created_at', { ascending: true })
+                    .limit(100);
+
+                if (error) {
+                    console.error('Error loading chat:', error);
+                    displayChatError();
+                    return;
+                }
+
+                // Fetch profiles for each message
+                if (messages && messages.length > 0) {
+                    const userIds = [...new Set(messages.map(m => m.user_id))];
+                    const { data: profiles } = await supabaseClient
+                        .from('profiles')
+                        .select('id, username, display_name, profile_pic')
+                        .in('id', userIds);
+
+                    const profileMap = {};
+                    if (profiles) {
+                        profiles.forEach(p => profileMap[p.id] = p);
+                    }
+
+                    chatMessages = messages.map(m => ({
+                        ...m,
+                        profiles: profileMap[m.user_id] || {}
+                    }));
+                } else {
+                    chatMessages = [];
+                }
+
+                displayChatMessages();
+                subscribeToChat();
+                startChatPolling();
+            } catch (err) {
+                console.error('Chat error:', err);
+                displayChatError();
+            }
+        }
+
+        async function ensureChatTable() {
+            // This will fail silently if table doesn't exist, but that's ok
+            // The user needs to create the table manually
+            return true;
+        }
+
+        function startChatPolling() {
+            // Poll for new messages every 3 seconds as backup
+            if (chatPollingInterval) clearInterval(chatPollingInterval);
+
+            chatPollingInterval = setInterval(async () => {
+                const lastMessageTime = chatMessages.length > 0
+                    ? chatMessages[chatMessages.length - 1].created_at
+                    : new Date(0).toISOString();
+
+                const { data: newMessages } = await supabaseClient
+                    .from('chat_messages')
+                    .select('*')
+                    .gt('created_at', lastMessageTime)
+                    .order('created_at', { ascending: true });
+
+                if (newMessages && newMessages.length > 0) {
+                    const userIds = [...new Set(newMessages.map(m => m.user_id))];
+                    const { data: profiles } = await supabaseClient
+                        .from('profiles')
+                        .select('id, username, display_name, profile_pic')
+                        .in('id', userIds);
+
+                    const profileMap = {};
+                    if (profiles) {
+                        profiles.forEach(p => profileMap[p.id] = p);
+                    }
+
+                    newMessages.forEach(m => {
+                        chatMessages.push({
+                            ...m,
+                            profiles: profileMap[m.user_id] || {}
+                        });
+                    });
+
+                    displayChatMessages();
+                }
+            }, 3000);
+        }
+
+        function subscribeToChat() {
+            if (chatSubscription) {
+                chatSubscription.unsubscribe();
+            }
+
+            try {
+                chatSubscription = supabaseClient
+                    .channel('public:chat_messages')
+                    .on('postgres_changes', {
+                        event: 'INSERT',
+                        schema: 'public',
+                        table: 'chat_messages'
+                    }, async (payload) => {
+                        const { data: profile } = await supabaseClient
+                            .from('profiles')
+                            .select('id, username, display_name, profile_pic')
+                            .eq('id', payload.new.user_id)
+                            .single();
+
+                        chatMessages.push({
+                            ...payload.new,
+                            profiles: profile || {}
+                        });
+                        displayChatMessages();
+                    })
+                    .subscribe();
+            } catch (err) {
+                console.error('Subscription error:', err);
+            }
+        }
+
+        function displayChatError() {
+            const container = document.getElementById('chatMessages');
+            container.innerHTML = `
+                <div class="text-center py-10">
+                    <i data-lucide="alert-circle" class="w-12 h-12 mx-auto mb-4 text-red-400"></i>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Chat Table Not Found</h3>
+                    <p class="text-gray-600 mb-4">Please create the chat_messages table first.</p>
+                    <div class="bg-gray-50 p-4 rounded-lg text-left max-w-2xl mx-auto">
+                        <p class="text-xs font-mono text-gray-700 mb-2">Run this SQL in Supabase:</p>
+                        <pre class="text-xs bg-gray-800 text-green-400 p-3 rounded overflow-x-auto">create table public.chat_messages (
+  id bigserial primary key,
+  user_id uuid references auth.users(id) on delete cascade,
+  message text not null,
+  created_at timestamp with time zone default now()
+);
+
+create index chat_messages_created_at_idx 
+  on public.chat_messages(created_at);</pre>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        function displayChatMessages() {
+            const container = document.getElementById('chatMessages');
+            container.innerHTML = '';
+
+            if (chatMessages.length === 0) {
+                container.innerHTML = '<div class="text-center py-10 text-gray-400"><i data-lucide="message-circle" class="w-12 h-12 mx-auto mb-2 opacity-50"></i><p>No messages yet. Start the conversation!</p></div>';
+                lucide.createIcons();
+                return;
+            }
+
+            chatMessages.forEach(msg => {
+                const isOwn = msg.user_id === currentUser.id;
+                const profile = msg.profiles || {};
+                const username = profile.username || 'user';
+                const profilePic = profile.profile_pic || `https://ui-avatars.com/api/?name=${encodeURIComponent(username)}&background=10b981&color=fff`;
+                const displayName = profile.display_name || profile.username || 'Anonymous';
+
+                const div = document.createElement('div');
+                div.className = `flex gap-3 ${isOwn ? 'flex-row-reverse' : ''}`;
+
+                div.innerHTML = `
+                    <img src="${profilePic}" alt="${displayName}" class="w-10 h-10 rounded-full object-cover flex-shrink-0" onerror="this.src='https://ui-avatars.com/api/?name=User&background=10b981&color=fff'">
+                    <div class="flex-1 ${isOwn ? 'text-right' : ''}">
+                        <div class="flex items-center gap-2 mb-1 ${isOwn ? 'justify-end' : ''}">
+                            <span class="text-sm font-medium text-gray-800">${displayName}</span>
+                            <span class="text-xs text-gray-400">${new Date(msg.created_at).toLocaleTimeString()}</span>
+                        </div>
+                        <div class="inline-block px-4 py-2 rounded-2xl max-w-md ${isOwn ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-800'}">
+                            <p class="text-sm break-words">${escapeHtml(msg.message)}</p>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(div);
+            });
+
+            container.scrollTop = container.scrollHeight;
+            lucide.createIcons();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        document.getElementById('chatForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            const { error } = await supabaseClient.from('chat_messages').insert([{
+                user_id: currentUser.id,
+                message: message
+            }]);
+
+            if (error) {
+                console.error('Send error:', error);
+                alert('Error sending message: ' + error.message);
+            } else {
+                input.value = '';
+            }
+        });
+
         // --- CALENDAR ---
         let currentCalendarDate = new Date();
         let calendarTasks = [];
+
+        // --- CHATROOMS ---
+        let currentRoomId = null;
+        let roomMessages = [];
+        let roomSubscription = null;
+
+        function showCreateRoomForm() { document.getElementById('createRoomForm').classList.remove('hidden'); }
+        function hideCreateRoomForm() { document.getElementById('createRoomForm').classList.add('hidden'); document.getElementById('roomForm').reset(); }
+
+        document.getElementById('roomForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const { error } = await supabaseClient.from('chat_rooms').insert([{
+                name: document.getElementById('roomName').value,
+                description: document.getElementById('roomDesc').value,
+                subject: document.getElementById('roomSubject').value,
+                created_by: currentUser.id
+            }]);
+            if (error) alert('Error: ' + error.message);
+            else { hideCreateRoomForm(); loadChatRooms(); }
+        });
+
+        async function loadChatRooms() {
+            const { data: rooms, error } = await supabaseClient.from('chat_rooms').select('*').order('created_at', { ascending: false });
+            
+            if (error) {
+                console.error('Error loading rooms:', error);
+                document.getElementById('roomsList').innerHTML = '<div class="col-span-3 text-center py-10 text-red-400"><p>Error loading rooms</p></div>';
+                return;
+            }
+            
+            const container = document.getElementById('roomsList');
+            container.innerHTML = '';
+            
+            if (!rooms || rooms.length === 0) {
+                container.innerHTML = '<div class="col-span-3 text-center py-10 text-gray-400"><i data-lucide="messages-square" class="w-12 h-12 mx-auto mb-2 opacity-50"></i><p>No rooms yet. Create one!</p></div>';
+                lucide.createIcons();
+                return;
+            }
+            
+            // Fetch creator profiles
+            const creatorIds = [...new Set(rooms.map(r => r.created_by).filter(Boolean))];
+            let profileMap = {};
+            
+            if (creatorIds.length > 0) {
+                const { data: profiles } = await supabaseClient.from('profiles').select('id, username, display_name').in('id', creatorIds);
+                if (profiles) {
+                    profiles.forEach(p => profileMap[p.id] = p);
+                }
+            }
+            
+            rooms.forEach(room => {
+                const creator = profileMap[room.created_by];
+                const div = document.createElement('div');
+                div.className = 'glass p-6 rounded-2xl hover:shadow-lg transition cursor-pointer';
+                div.onclick = () => joinRoom(room.id);
+                div.innerHTML = `
+                    <div class="flex items-start justify-between mb-3">
+                        <h3 class="font-bold text-lg text-gray-800">${room.name}</h3>
+                        ${room.subject ? `<span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">${room.subject}</span>` : ''}
+                    </div>
+                    ${room.description ? `<p class="text-sm text-gray-600 mb-3">${room.description}</p>` : ''}
+                    <div class="flex items-center gap-2 text-xs text-gray-500">
+                        <i data-lucide="user" class="w-3 h-3"></i>
+                        <span>by ${creator?.display_name || creator?.username || 'User'}</span>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            lucide.createIcons();
+        }
+
+        async function joinRoom(roomId) {
+            currentRoomId = roomId;
+            const { data: room, error } = await supabaseClient.from('chat_rooms').select('*').eq('id', roomId).single();
+            
+            if (error || !room) {
+                console.error('Error loading room:', error);
+                alert('Could not load room');
+                return;
+            }
+            
+            const { error: memberError } = await supabaseClient.from('chat_room_members').insert(
+                [{ room_id: roomId, user_id: currentUser.id }]
+            ).select();
+            
+            if (memberError && !memberError.message.includes('duplicate')) {
+                console.error('Error joining room:', memberError);
+            }
+            
+            document.getElementById('roomsListView').classList.add('hidden');
+            document.getElementById('roomChatView').classList.remove('hidden');
+            document.getElementById('currentRoomName').textContent = room.name;
+            document.getElementById('currentRoomDesc').textContent = room.description || '';
+            
+            loadRoomMessages();
+            subscribeToRoom();
+        }
+
+        function exitRoom() {
+            if (roomSubscription) roomSubscription.unsubscribe();
+            currentRoomId = null;
+            roomMessages = [];
+            document.getElementById('roomChatView').classList.add('hidden');
+            document.getElementById('roomsListView').classList.remove('hidden');
+        }
+
+        async function loadRoomMessages() {
+            const { data: messages, error } = await supabaseClient.from('chat_room_messages').select('*').eq('room_id', currentRoomId).order('sent_at', { ascending: true }).limit(100);
+            
+            if (error) {
+                console.error('Error loading messages:', error);
+                roomMessages = [];
+                displayRoomMessages();
+                return;
+            }
+            
+            if (!messages || messages.length === 0) {
+                roomMessages = [];
+                displayRoomMessages();
+                return;
+            }
+            
+            // Fetch user profiles
+            const userIds = [...new Set(messages.map(m => m.user_id))];
+            const { data: profiles } = await supabaseClient.from('profiles').select('id, username, display_name, profile_pic').in('id', userIds);
+            
+            const profileMap = {};
+            if (profiles) {
+                profiles.forEach(p => profileMap[p.id] = p);
+            }
+            
+            roomMessages = messages.map(m => ({
+                ...m,
+                profiles: profileMap[m.user_id] || {}
+            }));
+            
+            displayRoomMessages();
+        }
+
+        function subscribeToRoom() {
+            if (roomSubscription) roomSubscription.unsubscribe();
+            roomSubscription = supabaseClient.channel(`room:${currentRoomId}`).on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_room_messages', filter: `room_id=eq.${currentRoomId}` }, async (payload) => {
+                const { data: profile } = await supabaseClient.from('profiles').select('username, display_name, profile_pic').eq('id', payload.new.user_id).single();
+                roomMessages.push({ ...payload.new, profiles: profile || {} });
+                displayRoomMessages();
+            }).subscribe();
+        }
+
+        function displayRoomMessages() {
+            const container = document.getElementById('roomMessages');
+            container.innerHTML = '';
+            if (roomMessages.length === 0) {
+                container.innerHTML = '<div class="text-center py-10 text-gray-400"><i data-lucide="message-circle" class="w-12 h-12 mx-auto mb-2 opacity-50"></i><p>No messages yet. Start chatting!</p></div>';
+                lucide.createIcons();
+                return;
+            }
+            roomMessages.forEach(msg => {
+                const isOwn = msg.user_id === currentUser.id;
+                const profile = msg.profiles || {};
+                const username = profile.username || 'user';
+                const profilePic = profile.profile_pic || `https://ui-avatars.com/api/?name=${encodeURIComponent(username)}&background=10b981&color=fff`;
+                const displayName = profile.display_name || profile.username || 'Anonymous';
+                const div = document.createElement('div');
+                div.className = `flex gap-3 ${isOwn ? 'flex-row-reverse' : ''}`;
+                div.innerHTML = `
+                    <img src="${profilePic}" alt="${displayName}" class="w-10 h-10 rounded-full object-cover flex-shrink-0" onerror="this.src='https://ui-avatars.com/api/?name=User&background=10b981&color=fff'">
+                    <div class="flex-1 ${isOwn ? 'text-right' : ''}">
+                        <div class="flex items-center gap-2 mb-1 ${isOwn ? 'justify-end' : ''}">
+                            <span class="text-sm font-medium text-gray-800">${displayName}</span>
+                            <span class="text-xs text-gray-400">${new Date(msg.sent_at).toLocaleTimeString()}</span>
+                        </div>
+                        <div class="inline-block px-4 py-2 rounded-2xl max-w-md ${isOwn ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-800'}">
+                            <p class="text-sm break-words">${escapeHtml(msg.message)}</p>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            container.scrollTop = container.scrollHeight;
+            lucide.createIcons();
+        }
+
+        document.getElementById('roomChatForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('roomChatInput');
+            const message = input.value.trim();
+            if (!message || !currentRoomId) return;
+            const { error } = await supabaseClient.from('chat_room_messages').insert([{ room_id: currentRoomId, user_id: currentUser.id, message: message }]);
+            if (error) alert('Error: ' + error.message);
+            else input.value = '';
+        });
 
         async function loadCalendar() {
             const { data: tasks } = await supabaseClient.from('learner_tasks').select('*').eq('user_id', currentUser.id);
@@ -1864,29 +2498,29 @@
         function renderCalendar() {
             const year = currentCalendarDate.getFullYear();
             const month = currentCalendarDate.getMonth();
-            
+
             const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
             document.getElementById('calendarMonth').textContent = `${monthNames[month]} ${year}`;
-            
+
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
-            
+
             const container = document.getElementById('calendarDays');
             container.innerHTML = '';
-            
+
             for (let i = 0; i < firstDay; i++) {
                 const emptyDiv = document.createElement('div');
                 container.appendChild(emptyDiv);
             }
-            
+
             const today = new Date();
-            
+
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const tasksForDay = calendarTasks.filter(task => task.due_date === dateStr);
-                
+
                 const isToday = today.getDate() === day && today.getMonth() === month && today.getFullYear() === year;
-                
+
                 const div = document.createElement('div');
                 div.className = `calendar-day ${isToday ? 'today' : ''} ${tasksForDay.length > 0 ? 'has-tasks' : 'bg-white border border-gray-200'}`;
                 div.innerHTML = `
@@ -1896,7 +2530,7 @@
                 div.onclick = () => showTasksForDate(dateStr, day);
                 container.appendChild(div);
             }
-            
+
             lucide.createIcons();
         }
 
@@ -1908,13 +2542,13 @@
 
         function showTasksForDate(dateStr, day) {
             const tasksForDay = calendarTasks.filter(task => task.due_date === dateStr);
-            
+
             const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
             document.getElementById('selectedDateDisplay').textContent = `${monthNames[currentCalendarDate.getMonth()]} ${day}, ${currentCalendarDate.getFullYear()}`;
-            
+
             const container = document.getElementById('dateTasksList');
             container.innerHTML = '';
-            
+
             if (tasksForDay.length === 0) {
                 container.innerHTML = '<p class="text-gray-400 text-center py-4">No tasks for this date</p>';
             } else {
@@ -1935,7 +2569,7 @@
                     container.appendChild(div);
                 });
             }
-            
+
             document.getElementById('selectedDateTasks').classList.remove('hidden');
             lucide.createIcons();
         }
