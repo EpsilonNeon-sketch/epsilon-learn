@@ -1,0 +1,2770 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epsilon Learner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#10b981">
+    <link rel="icon" href="./icon.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        .bg-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.15) 0, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(52, 211, 153, 0.15) 0, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(167, 243, 208, 0.1) 0, transparent 50%);
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        #authPage {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #dashboardPage {
+            display: none;
+        }
+
+        #dashboardPage.active {
+            display: block;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 260px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(16, 185, 129, 0.2);
+            transition: transform 0.3s ease;
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .sidebar.closed {
+            transform: translateX(-100%);
+        }
+
+        .main-content {
+            margin-left: 260px;
+            transition: margin-left 0.3s ease;
+            padding: 2rem;
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        .menu-toggle {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 101;
+            background: #10b981;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-toggle:hover {
+            background: #059669;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: 99;
+            display: none;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        .input-field {
+            width: 100%;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            background-color: #f9fafb;
+            border: 1px solid #d1d5db;
+            transition: all 0.2s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+        }
+
+        /* Calculator Styles */
+        .calc-btn {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-size: 1.25rem;
+            transition: all 0.1s;
+        }
+
+        .calc-btn:hover {
+            background-color: #f0fdf4;
+            border-color: #10b981;
+        }
+
+        .calc-btn.op {
+            background-color: #ecfdf5;
+            color: #047857;
+            font-weight: bold;
+        }
+
+        .calc-btn.eq {
+            background-color: #10b981;
+            color: white;
+            border-color: #10b981;
+        }
+
+        .calc-btn.eq:hover {
+            background-color: #059669;
+        }
+
+        /* Flashcard Styles */
+        .flashcard {
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front,
+        .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 2px solid #d1d5db;
+        }
+
+        .flashcard-front {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .flashcard-back {
+            background: white;
+            color: #1f2937;
+            transform: rotateY(180deg);
+        }
+
+        /* Music Player Styles */
+        .music-player {
+            position: sticky;
+            bottom: 0;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 1rem;
+            box-shadow: 0 10px 40px rgba(16, 185, 129, 0.3);
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            transition: width 0.1s;
+        }
+
+        .volume-slider {
+            width: 100px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        /* Calendar Styles */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .calendar-day:hover {
+            background: #f0fdf4;
+        }
+
+        .calendar-day.has-tasks {
+            background: #ecfdf5;
+            border: 2px solid #10b981;
+        }
+
+        .calendar-day.today {
+            background: #10b981;
+            color: white;
+            font-weight: bold;
+        }
+
+        .task-dot {
+            width: 6px;
+            height: 6px;
+            background: #10b981;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+    <div class="bg-mesh"></div>
+
+    <!-- Menu Toggle -->
+    <button id="menuToggle" class="menu-toggle hidden">
+        <i data-lucide="menu" class="w-6 h-6"></i>
+    </button>
+
+    <!-- Sidebar Overlay -->
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar closed">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-2xl font-bold text-gray-800">EPSILON<span class="text-emerald-500"> LEARNER</span></h2>
+                <button id="closeSidebar" class="md:hidden text-gray-500 hover:text-gray-800">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <nav class="space-y-2">
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="dashboard">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="tracker">
+                    <i data-lucide="check-square" class="w-5 h-5"></i>
+                    <span>Work Tracker</span>
+                </button>
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="tools">
+                    <i data-lucide="book-open" class="w-5 h-5"></i>
+                    <span>Study Tools</span>
+                </button>
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="quiz">
+                    <i data-lucide="help-circle" class="w-5 h-5"></i>
+                    <span>Quizzes</span>
+                </button>
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="calculator">
+                    <i data-lucide="calculator" class="w-5 h-5"></i>
+                    <span>Calculators</span>
+                </button>
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="pomodoro">
+                    <i data-lucide="timer" class="w-5 h-5"></i>
+                    <span>Pomodoro Timer</span>
+                </button>
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="flashcards">
+                    <i data-lucide="layers" class="w-5 h-5"></i>
+                    <span>Flashcards</span>
+                </button>
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="notes">
+                    <i data-lucide="file-text" class="w-5 h-5"></i>
+                    <span>Notes</span>
+                </button>
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="discover">
+                    <i data-lucide="compass" class="w-5 h-5"></i>
+                    <span>Discover Tools</span>
+                </button>
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="music">
+                    <i data-lucide="music" class="w-5 h-5"></i>
+                    <span>Study Music</span>
+                </button>
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="calendar">
+                    <i data-lucide="calendar" class="w-5 h-5"></i>
+                    <span>Calendar</span>
+                </button>
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="users">
+                    <i data-lucide="users" class="w-5 h-5"></i>
+                    <span>Study Partners</span>
+                </button>
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="chatrooms">
+                    <i data-lucide="messages-square" class="w-5 h-5"></i>
+                    <span>Chat Rooms</span>
+                </button>
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="videos">
+                    <i data-lucide="video" class="w-5 h-5"></i>
+                    <span>Study Videos</span>
+                </button>
+            </nav>
+
+            <div class="mt-4 pt-4 border-t border-gray-200">
+                <button id="logoutBtn"
+                    class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 hover:text-red-600 transition text-left text-gray-600">
+                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Auth Page -->
+    <div id="authPage" class="page active px-6">
+        <div class="max-w-md w-full">
+            <div class="glass p-8 rounded-2xl">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-gray-800 mb-2">EPSILON<span class="text-emerald-500">
+                            LEARNER</span></h1>
+                    <p class="text-gray-500 text-sm">Track your progress and master your skills.</p>
+                </div>
+
+                <!-- Important Notice -->
+                <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="info" class="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0"></i>
+                        <div>
+                            <h3 class="font-bold text-blue-900 mb-1">Important: Create Account First</h3>
+                            <p class="text-sm text-blue-800 mb-3">Before signing in here, you must first create an
+                                account on EpsilonHub (our main platform). Use the same credentials to log in here.</p>
+                            <a href="https://epsilonhub.vercel.app" target="_blank"
+                                class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition shadow-sm">
+                                <i data-lucide="external-link" class="w-4 h-4"></i>
+                                Open EpsilonHub
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <form id="loginForm" class="space-y-4">
+                    <h2 class="text-lg font-bold text-gray-800 mb-4">Sign In</h2>
+                    <input id="loginEmail" type="email" placeholder="Email Address" class="input-field" required>
+                    <input id="loginPassword" type="password" placeholder="Password" class="input-field" required>
+                    <button type="submit"
+                        class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-3 rounded-lg transition shadow-md shadow-emerald-200">Sign
+                        In</button>
+                    <p class="text-center text-sm text-gray-500 mt-4">Don't have an account? <a href="#" id="showSignup"
+                            class="text-emerald-600 font-semibold hover:underline">Sign Up</a></p>
+                    <p id="loginError" class="text-red-500 text-sm text-center hidden"></p>
+                </form>
+
+                <form id="signupForm" class="space-y-4 hidden">
+                    <h2 class="text-lg font-bold text-gray-800 mb-4">Sign Up</h2>
+                    <div class="p-3 bg-yellow-50 border border-yellow-200 rounded-lg mb-4">
+                        <p class="text-xs text-yellow-800"><strong>Note:</strong> Make sure you've already created an
+                            account on EpsilonHub first!</p>
+                    </div>
+                    <input id="signupEmail" type="email" placeholder="Email Address" class="input-field" required>
+                    <input id="signupPassword" type="password" placeholder="Create Password" class="input-field"
+                        required>
+                    <button type="submit"
+                        class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-3 rounded-lg transition shadow-md shadow-emerald-200">Create
+                        Account</button>
+                    <p class="text-center text-sm text-gray-500 mt-4">Already have an account? <a href="#"
+                            id="showLogin" class="text-emerald-600 font-semibold hover:underline">Sign In</a></p>
+                    <p id="signupError" class="text-red-500 text-sm text-center hidden"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboardPage" class="page">
+        <div id="mainContent" class="main-content expanded">
+            <header class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800">Hello, <span id="userNameDisplay">Learner</span> 👋
+                    </h1>
+                    <p class="text-gray-500">Ready to learn something new today?</p>
+                </div>
+                <div id="userAvatar"
+                    class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-xl border-2 border-white shadow-sm">
+                </div>
+            </header>
+
+            <!-- DASHBOARD SECTION -->
+            <div id="dashboardSection" class="section">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="glass p-6 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Pending Tasks</p>
+                            <h3 id="statPending" class="text-3xl font-bold text-gray-800 mt-1">0</h3>
+                        </div>
+                        <div
+                            class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600">
+                            <i data-lucide="clock" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div class="glass p-6 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Completed</p>
+                            <h3 id="statCompleted" class="text-3xl font-bold text-gray-800 mt-1">0</h3>
+                        </div>
+                        <div
+                            class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600">
+                            <i data-lucide="check-circle" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div class="glass p-6 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Resources</p>
+                            <h3 id="statResources" class="text-3xl font-bold text-gray-800 mt-1">0</h3>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                            <i data-lucide="bookmark" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div class="glass p-6 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Quizzes</p>
+                            <h3 id="statQuizzes" class="text-3xl font-bold text-gray-800 mt-1">0</h3>
+                        </div>
+                        <div
+                            class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-purple-600">
+                            <i data-lucide="help-circle" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass p-6 rounded-2xl">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Productivity Overview</h3>
+                    <canvas id="productivityChart"></canvas>
+                </div>
+            </div>
+
+            <!-- WORK TRACKER SECTION -->
+            <div id="trackerSection" class="section hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-1">
+                        <div class="glass p-6 rounded-2xl sticky top-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4">Add New Task</h2>
+                            <form id="taskForm" class="space-y-4">
+                                <div><label class="block text-sm font-medium text-gray-600 mb-1">Task
+                                        Title</label><input id="taskTitle" type="text"
+                                        placeholder="e.g. Finish Math Chapter 4" class="input-field" required></div>
+                                <div><label
+                                        class="block text-sm font-medium text-gray-600 mb-1">Description</label><textarea
+                                        id="taskDesc" placeholder="Details..." class="input-field" rows="3"></textarea>
+                                </div>
+                                <div><label class="block text-sm font-medium text-gray-600 mb-1">Due Date</label><input
+                                        id="taskDate" type="date" class="input-field"></div>
+                                <button type="submit"
+                                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 rounded-lg transition">Add
+                                    Task</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2">
+                        <div class="glass p-6 rounded-2xl min-h-[500px]">
+                            <div class="flex justify-between items-center mb-6">
+                                <h2 class="text-xl font-bold text-gray-800">My Tasks</h2>
+                                <div class="flex gap-2 text-sm">
+                                    <button id="filterAll"
+                                        class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full font-medium">All</button>
+                                    <button id="filterPending"
+                                        class="px-3 py-1 text-gray-500 hover:bg-gray-100 rounded-full">Pending</button>
+                                    <button id="filterCompleted"
+                                        class="px-3 py-1 text-gray-500 hover:bg-gray-100 rounded-full">Done</button>
+                                </div>
+                            </div>
+                            <div id="tasksList" class="space-y-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STUDY TOOLS SECTION -->
+            <div id="toolsSection" class="section hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-1">
+                        <div class="glass p-6 rounded-2xl sticky top-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4">Save Resource</h2>
+                            <form id="resourceForm" class="space-y-4">
+                                <div><label class="block text-sm font-medium text-gray-600 mb-1">Title</label><input
+                                        id="resTitle" type="text" placeholder="e.g. Python Docs" class="input-field"
+                                        required></div>
+                                <div><label class="block text-sm font-medium text-gray-600 mb-1">URL</label><input
+                                        id="resUrl" type="url" placeholder="https://..." class="input-field" required>
+                                </div>
+                                <div><label class="block text-sm font-medium text-gray-600 mb-1">Category</label><select
+                                        id="resCategory" class="input-field">
+                                        <option value="reading">Reading</option>
+                                        <option value="video">Video</option>
+                                        <option value="course">Course</option>
+                                        <option value="tool">Tool</option>
+                                    </select></div>
+                                <button type="submit"
+                                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition">Save
+                                    Link</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2">
+                        <div class="glass p-6 rounded-2xl min-h-[500px]">
+                            <h2 class="text-xl font-bold text-gray-800 mb-6">Library</h2>
+                            <div id="resourcesList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUIZ SECTION -->
+            <div id="quizSection" class="section hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                    <!-- Quiz Creator / Menu -->
+                    <div class="lg:col-span-1">
+                        <div class="glass p-6 rounded-2xl sticky top-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4">Quiz Creator</h2>
+                            <form id="quizForm" class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Quiz Title</label>
+                                    <input id="quizTitle" type="text" placeholder="e.g. Science Chapter 5"
+                                        class="input-field" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Expiration Date</label>
+                                    <input id="quizExpire" type="datetime-local" class="input-field">
+                                    <p class="text-xs text-gray-400 mt-1">Leave empty for no expiration.</p>
+                                </div>
+
+                                <div class="border-t border-gray-100 pt-4">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="text-sm font-bold text-gray-700">Questions</label>
+                                        <button type="button" onclick="addQuizQuestion()"
+                                            class="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded hover:bg-emerald-200">+
+                                            Add Pair</button>
+                                    </div>
+                                    <div id="quizQuestionsContainer" class="space-y-3 max-h-60 overflow-y-auto pr-2">
+                                        <!-- Dynamic Q/A pairs go here -->
+                                        <div class="quiz-pair space-y-2 p-2 bg-gray-50 rounded border border-gray-100">
+                                            <input type="text" class="quiz-q input-field text-sm"
+                                                placeholder="Question">
+                                            <input type="text" class="quiz-a input-field text-sm" placeholder="Answer">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type="submit"
+                                    class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 rounded-lg transition">Create
+                                    Quiz</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Quiz List / Taker -->
+                    <div class="lg:col-span-2">
+                        <!-- Quiz List View -->
+                        <div id="quizListView" class="glass p-6 rounded-2xl min-h-[500px]">
+                            <h2 class="text-xl font-bold text-gray-800 mb-6">My Quizzes</h2>
+                            <div id="quizzesList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Quizzes injected here -->
+                            </div>
+                        </div>
+
+                        <!-- Quiz Taking View (Hidden) -->
+                        <div id="quizTakeView" class="glass p-6 rounded-2xl hidden">
+                            <button onclick="exitQuiz()"
+                                class="text-sm text-gray-500 hover:text-gray-800 mb-4 flex items-center gap-1">
+                                <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to List
+                            </button>
+                            <h2 id="activeQuizTitle" class="text-2xl font-bold text-gray-800 mb-6"></h2>
+                            <div id="activeQuizContent" class="space-y-6"></div>
+                            <button onclick="submitQuiz()"
+                                class="mt-8 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg shadow-lg">Submit
+                                Answers</button>
+                            <div id="quizResult"
+                                class="hidden mt-6 p-4 bg-emerald-50 rounded-xl text-center border border-emerald-100">
+                                <h3 class="text-2xl font-bold text-emerald-700">Score: <span id="scoreVal">0</span>%
+                                </h3>
+                                <p class="text-gray-600 text-sm mt-1">Great effort!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- POMODORO SECTION -->
+            <div id="pomodoroSection" class="section hidden">
+                <div class="max-w-2xl mx-auto">
+                    <div class="glass p-8 rounded-2xl text-center">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6">Pomodoro Timer</h2>
+                        <div class="mb-8">
+                            <div id="timerDisplay" class="text-7xl font-bold text-emerald-600 mb-4">25:00</div>
+                            <p id="timerStatus" class="text-gray-500">Ready to focus</p>
+                        </div>
+                        <div class="flex gap-3 justify-center mb-6">
+                            <button onclick="startTimer()" id="startBtn"
+                                class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition">Start</button>
+                            <button onclick="pauseTimer()" id="pauseBtn"
+                                class="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-lg transition hidden">Pause</button>
+                            <button onclick="resetTimer()"
+                                class="px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-lg transition">Reset</button>
+                        </div>
+                        <div class="grid grid-cols-3 gap-3 mb-6">
+                            <button onclick="setTimer(25)"
+                                class="p-3 bg-white hover:bg-emerald-50 border border-gray-200 rounded-lg transition">
+                                <div class="font-bold text-gray-800">25 min</div>
+                                <div class="text-xs text-gray-500">Focus</div>
+                            </button>
+                            <button onclick="setTimer(5)"
+                                class="p-3 bg-white hover:bg-emerald-50 border border-gray-200 rounded-lg transition">
+                                <div class="font-bold text-gray-800">5 min</div>
+                                <div class="text-xs text-gray-500">Short Break</div>
+                            </button>
+                            <button onclick="setTimer(15)"
+                                class="p-3 bg-white hover:bg-emerald-50 border border-gray-200 rounded-lg transition">
+                                <div class="font-bold text-gray-800">15 min</div>
+                                <div class="text-xs text-gray-500">Long Break</div>
+                            </button>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <label class="block text-sm font-medium text-gray-600 mb-2">Custom Timer (minutes)</label>
+                            <div class="flex gap-2">
+                                <input type="number" id="customMin" min="1" max="120" placeholder="30"
+                                    class="input-field flex-1">
+                                <button onclick="setCustomTimer()"
+                                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">Set</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FLASHCARDS SECTION -->
+            <div id="flashcardsSection" class="section hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-1">
+                        <div class="glass p-6 rounded-2xl sticky top-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4">Create Deck</h2>
+                            <form id="deckForm" class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Deck Name</label>
+                                    <input id="deckName" type="text" placeholder="e.g. Spanish Vocabulary"
+                                        class="input-field" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Subject</label>
+                                    <input id="deckSubject" type="text" placeholder="e.g. Language" class="input-field">
+                                </div>
+                                <button type="submit"
+                                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 rounded-lg transition">Create
+                                    Deck</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2">
+                        <div class="glass p-6 rounded-2xl min-h-[500px]">
+                            <h2 class="text-xl font-bold text-gray-800 mb-6">My Decks</h2>
+                            <div id="decksList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FLASHCARD STUDY VIEW -->
+            <div id="flashcardStudySection" class="section hidden">
+                <div class="max-w-4xl mx-auto">
+                    <button onclick="exitFlashcardStudy()"
+                        class="mb-4 text-gray-500 hover:text-gray-800 flex items-center gap-2">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Decks
+                    </button>
+                    <div class="glass p-8 rounded-2xl">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 id="studyDeckTitle" class="text-2xl font-bold text-gray-800"></h2>
+                            <button onclick="showAddCardForm()"
+                                class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2">
+                                <i data-lucide="plus" class="w-4 h-4"></i> Add Card
+                            </button>
+                        </div>
+
+                        <!-- Add Card Form -->
+                        <div id="addCardForm" class="hidden mb-6 p-4 bg-gray-50 rounded-xl">
+                            <form id="cardForm" class="space-y-3">
+                                <input id="cardFront" type="text" placeholder="Front (Question)" class="input-field"
+                                    required>
+                                <input id="cardBack" type="text" placeholder="Back (Answer)" class="input-field"
+                                    required>
+                                <div class="flex gap-2">
+                                    <button type="submit"
+                                        class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg">Add
+                                        Card</button>
+                                    <button type="button" onclick="hideAddCardForm()"
+                                        class="px-4 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-lg">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Flashcard Display -->
+                        <div id="flashcardDisplay" class="mb-6">
+                            <div class="flashcard" onclick="flipCard()">
+                                <div class="flashcard-inner">
+                                    <div class="flashcard-front">
+                                        <h3 id="cardFrontText" class="text-2xl font-bold text-center">Click to start
+                                        </h3>
+                                    </div>
+                                    <div class="flashcard-back">
+                                        <h3 id="cardBackText" class="text-2xl font-bold text-center"></h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <button onclick="prevCard()"
+                                class="px-6 py-3 bg-gray-200 hover:bg-gray-300 rounded-lg flex items-center gap-2">
+                                <i data-lucide="chevron-left" class="w-5 h-5"></i> Previous
+                            </button>
+                            <span id="cardProgress" class="text-gray-600 font-medium">0 / 0</span>
+                            <button onclick="nextCard()"
+                                class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg flex items-center gap-2">
+                                Next <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+
+                        <!-- Cards List -->
+                        <div class="mt-8 pt-8 border-t border-gray-200">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4">All Cards</h3>
+                            <div id="cardsList" class="space-y-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DISCOVER TOOLS SECTION -->
+            <div id="discoverSection" class="section hidden">
+                <div class="max-w-6xl mx-auto">
+                    <div class="glass p-8 rounded-2xl mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Discover Learning Tools</h2>
+                        <p class="text-gray-600 mb-6">Find the perfect learning resources for your goals</p>
+
+                        <div class="flex flex-col md:flex-row gap-4 mb-6">
+                            <div class="flex-1 relative">
+                                <i data-lucide="search"
+                                    class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <input type="text" id="toolSearch"
+                                    placeholder="Search by name or category (e.g., coding, cooking, design)"
+                                    class="input-field pl-10" oninput="filterTools()">
+                            </div>
+                            <select id="categoryFilter" class="input-field md:w-48" onchange="filterTools()">
+                                <option value="all">All Categories</option>
+                                <option value="coding">Coding</option>
+                                <option value="design">Design</option>
+                                <option value="language">Language</option>
+                                <option value="cooking">Cooking</option>
+                                <option value="music">Music</option>
+                            </select>
+                            <select id="priceFilter" class="input-field md:w-48" onchange="filterTools()">
+                                <option value="all">All Prices</option>
+                                <option value="free">Free</option>
+                                <option value="freemium">Freemium</option>
+                                <option value="subscription">Subscription</option>
+                                <option value="one-time">One-time</option>
+                            </select>
+                        </div>
+
+                        <div id="toolsCount" class="text-sm text-gray-500 mb-4"></div>
+                    </div>
+
+                    <div id="toolsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </div>
+            </div>
+
+            <!-- MUSIC PLAYER SECTION -->
+            <div id="musicSection" class="section hidden">
+                <div class="max-w-4xl mx-auto">
+                    <div class="glass p-8 rounded-2xl mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Study Music Player</h2>
+                        <p class="text-gray-600 mb-6">Upload your favorite music to play while studying</p>
+
+                        <div class="mb-6">
+                            <label class="block w-full">
+                                <div
+                                    class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-emerald-500 transition cursor-pointer">
+                                    <i data-lucide="upload" class="w-12 h-12 mx-auto mb-3 text-gray-400"></i>
+                                    <p class="text-gray-600 font-medium mb-1">Click to upload music</p>
+                                    <p class="text-sm text-gray-400">MP3, WAV, OGG supported</p>
+                                    <input type="file" id="musicUpload" accept="audio/*" class="hidden"
+                                        onchange="loadMusicFile(event)">
+                                </div>
+                            </label>
+                        </div>
+
+                        <div id="playlistContainer" class="mb-6">
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">Playlist</h3>
+                            <div id="playlist" class="space-y-2"></div>
+                        </div>
+                    </div>
+
+                    <!-- Music Player -->
+                    <div id="musicPlayerCard" class="music-player p-6 text-white hidden">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-16 h-16 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                                <i data-lucide="music" class="w-8 h-8"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h3 id="currentTrackName" class="font-bold text-lg">No track loaded</h3>
+                                <p id="currentTrackTime" class="text-sm opacity-80">0:00 / 0:00</p>
+                            </div>
+                        </div>
+
+                        <div class="progress-bar mb-4" id="progressBar" onclick="seekMusic(event)">
+                            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <button onclick="previousTrack()"
+                                    class="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition">
+                                    <i data-lucide="skip-back" class="w-5 h-5"></i>
+                                </button>
+                                <button id="playPauseBtn" onclick="togglePlayPause()"
+                                    class="p-3 bg-white text-emerald-600 rounded-full hover:scale-110 transition">
+                                    <i data-lucide="play" class="w-6 h-6"></i>
+                                </button>
+                                <button onclick="nextTrack()"
+                                    class="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition">
+                                    <i data-lucide="skip-forward" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="volume-2" class="w-5 h-5"></i>
+                                <input type="range" id="volumeSlider" min="0" max="100" value="70" class="w-24"
+                                    onchange="changeVolume(this.value)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CALENDAR SECTION -->
+            <div id="calendarSection" class="section hidden">
+                <div class="max-w-6xl mx-auto">
+                    <div class="glass p-8 rounded-2xl">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-2xl font-bold text-gray-800">Task Calendar</h2>
+                            <div class="flex items-center gap-3">
+                                <button onclick="changeMonth(-1)" class="p-2 hover:bg-gray-100 rounded-lg transition">
+                                    <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                                </button>
+                                <h3 id="calendarMonth"
+                                    class="text-xl font-semibold text-gray-700 min-w-[200px] text-center"></h3>
+                                <button onclick="changeMonth(1)" class="p-2 hover:bg-gray-100 rounded-lg transition">
+                                    <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="calendar-grid mb-4">
+                            <div class="text-center font-semibold text-gray-600 text-sm py-2">Sun</div>
+                            <div class="text-center font-semibold text-gray-600 text-sm py-2">Mon</div>
+                            <div class="text-center font-semibold text-gray-600 text-sm py-2">Tue</div>
+                            <div class="text-center font-semibold text-gray-600 text-sm py-2">Wed</div>
+                            <div class="text-center font-semibold text-gray-600 text-sm py-2">Thu</div>
+                            <div class="text-center font-semibold text-gray-600 text-sm py-2">Fri</div>
+                            <div class="text-center font-semibold text-gray-600 text-sm py-2">Sat</div>
+                        </div>
+
+                        <div id="calendarDays" class="calendar-grid mb-6"></div>
+
+                        <div id="selectedDateTasks" class="hidden">
+                            <div class="border-t border-gray-200 pt-6">
+                                <h3 class="text-lg font-bold text-gray-800 mb-4">Tasks for <span
+                                        id="selectedDateDisplay"></span></h3>
+                                <div id="dateTasksList" class="space-y-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NOTES SECTION -->
+            <div id="notesSection" class="section hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-1">
+                        <div class="glass p-6 rounded-2xl sticky top-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4">Create Note</h2>
+                            <form id="noteForm" class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Title</label>
+                                    <input id="noteTitle" type="text" placeholder="Note title" class="input-field"
+                                        required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Category</label>
+                                    <select id="noteCategory" class="input-field">
+                                        <option value="general">General</option>
+                                        <option value="lecture">Lecture</option>
+                                        <option value="reading">Reading</option>
+                                        <option value="idea">Idea</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Content</label>
+                                    <textarea id="noteContent" placeholder="Write your notes here..."
+                                        class="input-field" rows="8" required></textarea>
+                                </div>
+                                <button type="submit"
+                                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition">Save
+                                    Note</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2">
+                        <div class="glass p-6 rounded-2xl min-h-[500px]">
+                            <div class="flex justify-between items-center mb-6">
+                                <h2 class="text-xl font-bold text-gray-800">My Notes</h2>
+                                <input type="text" id="noteSearch" placeholder="Search notes..."
+                                    class="input-field max-w-xs" oninput="searchNotes()">
+                            </div>
+                            <div id="notesList" class="space-y-4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- USERS SECTION -->
+            <div id="usersSection" class="section hidden">
+                <div class="max-w-6xl mx-auto">
+                    <div class="glass p-8 rounded-2xl mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Study Partners</h2>
+                        <p class="text-gray-600 mb-6">Connect with other learners and study together</p>
+                        <input type="text" id="userSearch" placeholder="Search by username..."
+                            class="input-field max-w-md" oninput="searchUsers()">
+                    </div>
+                    <div id="usersList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </div>
+            </div>
+
+            <!-- CHAT SECTION -->
+            <div id="chatSection" class="section hidden">
+                <div class="max-w-6xl mx-auto h-[calc(100vh-12rem)]">
+                    <div class="glass rounded-2xl h-full flex flex-col">
+                        <div class="p-6 border-b border-gray-200">
+                            <h2 class="text-2xl font-bold text-gray-800">Study Chat</h2>
+                            <p class="text-gray-600 text-sm">Collaborate and learn together</p>
+                        </div>
+                        <div id="chatMessages" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
+                        <div class="p-6 border-t border-gray-200">
+                            <form id="chatForm" class="flex gap-3">
+                                <input type="text" id="chatInput" placeholder="Type your message..."
+                                    class="input-field flex-1" required>
+                                <button type="submit"
+                                    class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition">
+                                    <i data-lucide="send" class="w-5 h-5"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHATROOMS SECTION -->
+            <div id="chatroomsSection" class="section hidden">
+                <div class="max-w-6xl mx-auto">
+                    <!-- Rooms List View -->
+                    <div id="roomsListView">
+                        <div class="glass p-6 rounded-2xl mb-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <div>
+                                    <h2 class="text-2xl font-bold text-gray-800">Chat Rooms</h2>
+                                    <p class="text-gray-600 text-sm">Join or create study rooms</p>
+                                </div>
+                                <button onclick="showCreateRoomForm()"
+                                    class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center gap-2">
+                                    <i data-lucide="plus" class="w-5 h-5"></i> Create Room
+                                </button>
+                            </div>
+                            <div id="createRoomForm" class="hidden mt-4 p-4 bg-gray-50 rounded-xl">
+                                <form id="roomForm" class="space-y-3">
+                                    <input id="roomName" type="text" placeholder="Room Name" class="input-field"
+                                        required>
+                                    <textarea id="roomDesc" placeholder="Description" class="input-field"
+                                        rows="2"></textarea>
+                                    <input id="roomSubject" type="text" placeholder="Subject (e.g., Math, Science)"
+                                        class="input-field">
+                                    <div class="flex gap-2">
+                                        <button type="submit"
+                                            class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg">Create</button>
+                                        <button type="button" onclick="hideCreateRoomForm()"
+                                            class="px-4 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-lg">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div id="roomsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                    </div>
+
+                    <!-- Room Chat View -->
+                    <div id="roomChatView" class="hidden">
+                        <div class="glass rounded-2xl h-[calc(100vh-12rem)] flex flex-col">
+                            <div class="p-6 border-b border-gray-200">
+                                <button onclick="exitRoom()"
+                                    class="text-gray-500 hover:text-gray-800 mb-3 flex items-center gap-2">
+                                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Rooms
+                                </button>
+                                <h2 id="currentRoomName" class="text-2xl font-bold text-gray-800"></h2>
+                                <p id="currentRoomDesc" class="text-gray-600 text-sm"></p>
+                            </div>
+                            <div id="roomMessages" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
+                            <div class="p-6 border-t border-gray-200">
+                                <form id="roomChatForm" class="flex gap-3">
+                                    <input type="text" id="roomChatInput" placeholder="Type your message..."
+                                        class="input-field flex-1" required>
+                                    <button type="submit"
+                                        class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition">
+                                        <i data-lucide="send" class="w-5 h-5"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIDEOS SECTION -->
+            <div id="videosSection" class="section hidden">
+                <div class="max-w-7xl mx-auto">
+                    <div class="glass p-6 rounded-2xl mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Study Videos</h2>
+                        <p class="text-gray-600 mb-6">Watch curated educational videos</p>
+
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <div class="flex-1 relative">
+                                <i data-lucide="search"
+                                    class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <input type="text" id="videoSearch" placeholder="Search videos by title or subject..."
+                                    class="input-field pl-10" oninput="filterVideos()">
+                            </div>
+                            <select id="videoSubjectFilter" class="input-field md:w-48" onchange="filterVideos()">
+                                <option value="all">All Subjects</option>
+                                <option value="Math">Math</option>
+                                <option value="Science">Science</option>
+                                <option value="Programming">Programming</option>
+                                <option value="History">History</option>
+                                <option value="Language">Language</option>
+                            </select>
+                        </div>
+                        <div id="videoCount" class="text-sm text-gray-500 mt-4"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Video Player -->
+                        <div class="lg:col-span-2">
+                            <div id="videoPlayerContainer" class="glass p-6 rounded-2xl">
+                                <div id="videoPlayerPlaceholder"
+                                    class="aspect-video bg-gray-100 rounded-xl flex items-center justify-center">
+                                    <div class="text-center text-gray-400">
+                                        <i data-lucide="play-circle" class="w-16 h-16 mx-auto mb-3 opacity-50"></i>
+                                        <p>Select a video to watch</p>
+                                    </div>
+                                </div>
+                                <div id="videoPlayer" class="hidden">
+                                    <div class="aspect-video rounded-xl overflow-hidden mb-4">
+                                        <iframe id="videoIframe" width="100%" height="100%" frameborder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowfullscreen></iframe>
+                                    </div>
+                                    <div>
+                                        <h3 id="currentVideoTitle" class="text-2xl font-bold text-gray-800 mb-2"></h3>
+                                        <div class="flex items-center gap-4 text-sm text-gray-500 mb-3">
+                                            <span id="currentVideoSubject"
+                                                class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full font-medium"></span>
+                                            <span id="currentVideoLength" class="flex items-center gap-1"><i
+                                                    data-lucide="clock" class="w-4 h-4"></i></span>
+                                            <span id="currentVideoOwner" class="flex items-center gap-1"><i
+                                                    data-lucide="user" class="w-4 h-4"></i></span>
+                                        </div>
+                                        <p id="currentVideoDesc" class="text-gray-600"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Video List -->
+                        <div class="lg:col-span-1">
+                            <div class="glass p-6 rounded-2xl max-h-[800px] overflow-y-auto">
+                                <h3 class="text-lg font-bold text-gray-800 mb-4">Video Library</h3>
+                                <div id="videosList" class="space-y-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CALCULATOR SECTION -->
+            <div id="calculatorSection" class="section hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
+                    <div class="lg:col-span-1">
+                        <div class="glass p-6 rounded-2xl sticky top-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4">Tools</h2>
+                            <div class="space-y-2">
+                                <button onclick="switchCalcTab('standard')" id="tab-standard"
+                                    class="w-full text-left p-3 rounded-lg bg-emerald-100 text-emerald-800 font-medium transition">Standard
+                                    Calculator</button>
+                                <button onclick="switchCalcTab('converter')" id="tab-converter"
+                                    class="w-full text-left p-3 rounded-lg hover:bg-gray-50 text-gray-600 font-medium transition">Unit
+                                    Converter</button>
+                                <button onclick="switchCalcTab('business')" id="tab-business"
+                                    class="w-full text-left p-3 rounded-lg hover:bg-gray-50 text-gray-600 font-medium transition">Business
+                                    Tools</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2">
+                        <!-- Standard -->
+                        <div id="calc-standard" class="glass p-6 rounded-2xl">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4">Standard Calculator</h3>
+                            <div class="max-w-sm mx-auto">
+                                <input type="text" id="calcDisplay" readonly
+                                    class="w-full text-right text-3xl p-4 mb-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-800">
+                                <div class="grid grid-cols-4 gap-2">
+                                    <button onclick="clearCalc()" class="calc-btn p-4 text-red-500">C</button>
+                                    <button onclick="appendCalc('/')" class="calc-btn op p-4">/</button>
+                                    <button onclick="appendCalc('*')" class="calc-btn op p-4">×</button>
+                                    <button onclick="deleteCalc()" class="calc-btn p-4 text-red-400">⌫</button>
+                                    <button onclick="appendCalc('7')" class="calc-btn p-4">7</button>
+                                    <button onclick="appendCalc('8')" class="calc-btn p-4">8</button>
+                                    <button onclick="appendCalc('9')" class="calc-btn p-4">9</button>
+                                    <button onclick="appendCalc('-')" class="calc-btn op p-4">-</button>
+                                    <button onclick="appendCalc('4')" class="calc-btn p-4">4</button>
+                                    <button onclick="appendCalc('5')" class="calc-btn p-4">5</button>
+                                    <button onclick="appendCalc('6')" class="calc-btn p-4">6</button>
+                                    <button onclick="appendCalc('+')" class="calc-btn op p-4">+</button>
+                                    <button onclick="appendCalc('1')" class="calc-btn p-4">1</button>
+                                    <button onclick="appendCalc('2')" class="calc-btn p-4">2</button>
+                                    <button onclick="appendCalc('3')" class="calc-btn p-4">3</button>
+                                    <button onclick="calculateResult()"
+                                        class="calc-btn eq p-4 row-span-2 flex items-center justify-center">=</button>
+                                    <button onclick="appendCalc('0')" class="calc-btn p-4 col-span-2">0</button>
+                                    <button onclick="appendCalc('.')" class="calc-btn p-4">.</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Converter -->
+                        <div id="calc-converter" class="glass p-6 rounded-2xl hidden">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4">Unit Converter</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+                                <div><label class="block text-sm font-medium text-gray-600 mb-1">Value</label><input
+                                        type="number" id="convInput" value="1" class="input-field"
+                                        oninput="convertUnit()"></div>
+                                <div><label class="block text-sm font-medium text-gray-600 mb-1">Category</label><select
+                                        id="convCategory" class="input-field" onchange="populateUnits(); convertUnit()">
+                                        <option value="length">Length</option>
+                                        <option value="weight">Weight</option>
+                                        <option value="temp">Temperature</option>
+                                    </select></div>
+                                <div><label class="block text-sm font-medium text-gray-600 mb-1">From</label><select
+                                        id="convFrom" class="input-field" onchange="convertUnit()"></select></div>
+                                <div><label class="block text-sm font-medium text-gray-600 mb-1">To</label><select
+                                        id="convTo" class="input-field" onchange="convertUnit()"></select></div>
+                                <div
+                                    class="md:col-span-2 mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-100 text-center">
+                                    <p class="text-sm text-gray-500">Result</p>
+                                    <h2 id="convResult" class="text-2xl font-bold text-emerald-700">--</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Business -->
+                        <div id="calc-business" class="glass p-6 rounded-2xl hidden">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4">Business Tools</h3>
+                            <div class="mb-8 border-b border-gray-100 pb-6">
+                                <h4 class="font-semibold text-gray-700 mb-3">ROI Calculator</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <input id="roiInvested" type="number" placeholder="Amount Invested"
+                                        class="input-field" oninput="calcROI()">
+                                    <input id="roiReturned" type="number" placeholder="Amount Returned"
+                                        class="input-field" oninput="calcROI()">
+                                    <div class="bg-white p-3 rounded-lg border border-gray-200 text-center">
+                                        <p class="text-xs text-gray-500">ROI %</p>
+                                        <p id="roiResult" class="text-xl font-bold text-emerald-600">0%</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-8 border-b border-gray-100 pb-6">
+                                <h4 class="font-semibold text-gray-700 mb-3">Margin Calculator</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <input id="marginCost" type="number" placeholder="Cost of Goods" class="input-field"
+                                        oninput="calcMargin()">
+                                    <input id="marginRevenue" type="number" placeholder="Selling Price"
+                                        class="input-field" oninput="calcMargin()">
+                                    <div class="bg-white p-3 rounded-lg border border-gray-200 text-center">
+                                        <p class="text-xs text-gray-500">Margin %</p>
+                                        <p id="marginResult" class="text-xl font-bold text-blue-600">0%</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-700 mb-3">Break-Even Point</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <input id="beFixed" type="number" placeholder="Fixed Costs" class="input-field"
+                                        oninput="calcBreakEven()">
+                                    <input id="bePrice" type="number" placeholder="Price per Unit" class="input-field"
+                                        oninput="calcBreakEven()">
+                                    <input id="beVar" type="number" placeholder="Variable Cost/Unit" class="input-field"
+                                        oninput="calcBreakEven()">
+                                    <div
+                                        class="md:col-span-3 bg-white p-3 rounded-lg border border-gray-200 text-center">
+                                        <p class="text-xs text-gray-500">Units to Sell</p>
+                                        <p id="beResult" class="text-xl font-bold text-purple-600">0</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIG ---
+        const { createClient } = supabase;
+        const supabaseClient = createClient('https://gfsqzkyviivhvyqadpeg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdmc3F6a3l2aWl2aHZ5cWFkcGVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0NDI0NDQsImV4cCI6MjA4NjAxODQ0NH0.MwC6dMZKFZMyklCJKqr4DPek8dxR-EswBZSd1L_AkMA', {
+            auth: { persistSession: true, storageKey: 'epsilon-learner-auth' }
+        });
+        lucide.createIcons();
+        let currentUser = null;
+        let productivityChart = null;
+        let tasksFilter = 'all';
+        let activeQuizData = null;
+
+        // --- UI LOGIC ---
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+        const menuToggle = document.getElementById('menuToggle');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('closed'); sidebar.classList.toggle('open'); mainContent.classList.toggle('expanded'); sidebarOverlay.classList.toggle('active');
+        }
+        menuToggle.addEventListener('click', toggleSidebar);
+        closeSidebar.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const page = btn.dataset.page;
+                document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+                document.getElementById(`${page}Section`).classList.remove('hidden');
+                document.querySelectorAll('.nav-btn').forEach(b => { b.classList.remove('bg-emerald-50', 'text-emerald-700'); b.classList.add('text-gray-600'); });
+                btn.classList.remove('text-gray-600'); btn.classList.add('bg-emerald-50', 'text-emerald-700');
+                if (window.innerWidth < 768) toggleSidebar();
+                if (page === 'dashboard') loadDashboardData();
+                if (page === 'tracker') loadTasks();
+                if (page === 'tools') loadResources();
+                if (page === 'quiz') loadQuizzes();
+                if (page === 'flashcards') loadDecks();
+                if (page === 'notes') loadNotes();
+                if (page === 'discover') loadDiscoverTools();
+                if (page === 'calendar') loadCalendar();
+                if (page === 'users') loadUsers();
+                if (page === 'chat') loadChat();
+                if (page === 'chatrooms') loadChatRooms();
+                if (page === 'videos') loadVideos();
+            });
+        });
+
+        // --- CALCULATOR LOGIC ---
+        let calcExpression = ""; const display = document.getElementById('calcDisplay');
+        function appendCalc(val) { calcExpression += val; display.value = calcExpression; }
+        function clearCalc() { calcExpression = ""; display.value = ""; }
+        function deleteCalc() { calcExpression = calcExpression.slice(0, -1); display.value = calcExpression; }
+        function calculateResult() { try { calcExpression = eval(calcExpression).toString(); display.value = calcExpression; } catch (e) { display.value = "Error"; calcExpression = ""; } }
+
+        const units = { length: { 'm': 1, 'km': 1000, 'cm': 0.01, 'mm': 0.001, 'ft': 0.3048, 'in': 0.0254, 'mi': 1609.34 }, weight: { 'kg': 1, 'g': 0.001, 'mg': 0.000001, 'lb': 0.453592, 'oz': 0.0283495 }, temp: { 'c': 'c', 'f': 'f', 'k': 'k' } };
+        function populateUnits() {
+            const cat = document.getElementById('convCategory').value; const fromSel = document.getElementById('convFrom'); const toSel = document.getElementById('convTo');
+            fromSel.innerHTML = ""; toSel.innerHTML = ""; Object.keys(units[cat]).forEach(u => { fromSel.add(new Option(u.toUpperCase(), u)); toSel.add(new Option(u.toUpperCase(), u)); });
+            if (toSel.options.length > 1) toSel.selectedIndex = 1;
+        }
+        function convertUnit() {
+            const val = parseFloat(document.getElementById('convInput').value); const cat = document.getElementById('convCategory').value; const from = document.getElementById('convFrom').value; const to = document.getElementById('convTo').value; const resEl = document.getElementById('convResult');
+            if (isNaN(val)) { resEl.innerText = "--"; return; } let result;
+            if (cat === 'temp') { let inC = (from === 'c' ? val : (from === 'f' ? (val - 32) * 5 / 9 : val - 273.15)); result = (to === 'c' ? inC : (to === 'f' ? (inC * 9 / 5) + 32 : inC + 273.15)); } else { const rate = units[cat][to] / units[cat][from]; result = val * rate; }
+            resEl.innerText = parseFloat(result.toFixed(4));
+        }
+        function calcROI() { const inv = parseFloat(document.getElementById('roiInvested').value); const ret = parseFloat(document.getElementById('roiReturned').value); const res = document.getElementById('roiResult'); if (inv && ret) { const roi = ((ret - inv) / inv) * 100; res.innerText = roi.toFixed(2) + "%"; res.className = roi >= 0 ? "text-xl font-bold text-emerald-600" : "text-xl font-bold text-red-600"; } else { res.innerText = "0%"; } }
+        function calcMargin() { const cost = parseFloat(document.getElementById('marginCost').value); const rev = parseFloat(document.getElementById('marginRevenue').value); const res = document.getElementById('marginResult'); if (cost && rev) { res.innerText = (((rev - cost) / rev) * 100).toFixed(2) + "%"; } else { res.innerText = "0%"; } }
+        function calcBreakEven() { const fixed = parseFloat(document.getElementById('beFixed').value); const price = parseFloat(document.getElementById('bePrice').value); const variable = parseFloat(document.getElementById('beVar').value); const res = document.getElementById('beResult'); if (fixed && price && variable) { if (price <= variable) { res.innerText = "Impossible"; res.className = "text-xl font-bold text-red-600"; } else { res.innerText = Math.ceil(fixed / (price - variable)) + " units"; res.className = "text-xl font-bold text-purple-600"; } } else { res.innerText = "0"; } }
+        function switchCalcTab(tab) { ['standard', 'converter', 'business'].forEach(t => { document.getElementById(`calc-${t}`).classList.add('hidden'); document.getElementById(`tab-${t}`).classList.remove('bg-emerald-100', 'text-emerald-800'); document.getElementById(`tab-${t}`).classList.add('hover:bg-gray-50', 'text-gray-600'); }); document.getElementById(`calc-${tab}`).classList.remove('hidden'); document.getElementById(`tab-${tab}`).classList.add('bg-emerald-100', 'text-emerald-800'); document.getElementById(`tab-${tab}`).classList.remove('hover:bg-gray-50', 'text-gray-600'); }
+        populateUnits(); convertUnit();
+
+        // --- QUIZ LOGIC ---
+        function addQuizQuestion() {
+            const container = document.getElementById('quizQuestionsContainer');
+            const div = document.createElement('div');
+            div.className = 'quiz-pair space-y-2 p-2 bg-gray-50 rounded border border-gray-100 relative group';
+            div.innerHTML = `
+                <button type="button" onclick="this.parentElement.remove()" class="absolute -top-2 -right-2 bg-red-100 text-red-500 rounded-full p-1 opacity-0 group-hover:opacity-100 transition"><i data-lucide="x" class="w-3 h-3"></i></button>
+                <input type="text" class="quiz-q input-field text-sm" placeholder="Question">
+                <input type="text" class="quiz-a input-field text-sm" placeholder="Answer">
+            `;
+            container.appendChild(div);
+            lucide.createIcons();
+        }
+        document.getElementById('quizForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const qInputs = document.querySelectorAll('.quiz-q');
+            const aInputs = document.querySelectorAll('.quiz-a');
+            const questions = Array.from(qInputs).map(i => i.value).filter(v => v.trim() !== "");
+            const answers = Array.from(aInputs).map(i => i.value).filter(v => v.trim() !== "");
+
+            if (questions.length === 0) return alert("Please add at least one question.");
+
+            const expireVal = document.getElementById('quizExpire').value;
+            const expires_at = expireVal ? new Date(expireVal).toISOString() : null;
+
+            const { error } = await supabaseClient.from('learner_quizzes').insert([{
+                user_id: currentUser.id,
+                title: document.getElementById('quizTitle').value,
+                questions,
+                answers,
+                expires_at
+            }]);
+            if (error) alert("Error: " + error.message);
+            else {
+                e.target.reset();
+                document.getElementById('quizQuestionsContainer').innerHTML = '<div class="quiz-pair space-y-2 p-2 bg-gray-50 rounded border border-gray-100"><input type="text" class="quiz-q input-field text-sm" placeholder="Question"><input type="text" class="quiz-a input-field text-sm" placeholder="Answer"></div>';
+                loadQuizzes();
+            }
+        });
+
+        async function loadQuizzes() {
+            const { data: quizzes, count } = await supabaseClient.from('learner_quizzes').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+            document.getElementById('statQuizzes').innerText = count || 0;
+            const container = document.getElementById('quizzesList');
+            container.innerHTML = '';
+
+            if (!quizzes || quizzes.length === 0) {
+                container.innerHTML = '<p class="text-gray-400 col-span-2 text-center py-10">No quizzes created yet.</p>';
+                return;
+            }
+
+            quizzes.forEach(q => {
+                const isExpired = q.expires_at && new Date(q.expires_at) < new Date();
+                const div = document.createElement('div');
+                div.className = 'p-5 rounded-xl border bg-white hover:shadow-md transition relative overflow-hidden';
+                div.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-bold text-lg text-gray-800">${q.title}</h3>
+                        ${isExpired ? '<span class="bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full uppercase font-bold">Expired</span>' : '<span class="bg-emerald-100 text-emerald-600 text-xs px-2 py-1 rounded-full uppercase font-bold">Active</span>'}
+                    </div>
+                    <p class="text-sm text-gray-500 mb-4">${q.questions.length} Questions</p>
+                    <div class="flex gap-2">
+                        <button onclick="startQuiz(${q.id})" class="flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 py-2 rounded-lg text-sm font-medium transition" ${isExpired ? 'disabled class="opacity-50 cursor-not-allowed"' : ''}>Start</button>
+                        <button onclick="deleteQuiz(${q.id})" class="px-3 py-2 bg-gray-50 hover:bg-red-50 text-gray-500 hover:text-red-500 rounded-lg transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            lucide.createIcons();
+        }
+
+        async function deleteQuiz(id) {
+            if (confirm("Delete this quiz?")) {
+                await supabaseClient.from('learner_quizzes').delete().eq('id', id);
+                loadQuizzes();
+            }
+        }
+
+        async function startQuiz(id) {
+            const { data: q } = await supabaseClient.from('learner_quizzes').select('*').eq('id', id).single();
+            if (!q) return;
+            activeQuizData = q;
+
+            // UI Toggle
+            document.getElementById('quizListView').classList.add('hidden');
+            document.getElementById('quizTakeView').classList.remove('hidden');
+            document.getElementById('quizResult').classList.add('hidden');
+            document.getElementById('activeQuizTitle').innerText = q.title;
+            const content = document.getElementById('activeQuizContent');
+            content.innerHTML = '';
+
+            q.questions.forEach((quest, idx) => {
+                content.innerHTML += `
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                        <p class="font-medium text-gray-800 mb-2">${idx + 1}. ${quest}</p>
+                        <input type="text" data-idx="${idx}" class="user-answer input-field text-sm" placeholder="Your answer">
+                    </div>
+                `;
+            });
+        }
+
+        function exitQuiz() {
+            document.getElementById('quizTakeView').classList.add('hidden');
+            document.getElementById('quizListView').classList.remove('hidden');
+            activeQuizData = null;
+        }
+
+        function submitQuiz() {
+            if (!activeQuizData) return;
+            const userInputs = document.querySelectorAll('.user-answer');
+            let score = 0;
+
+            userInputs.forEach(input => {
+                const idx = input.getAttribute('data-idx');
+                const correct = activeQuizData.answers[idx];
+                // Simple string comparison (case-insensitive, trimmed)
+                if (input.value.trim().toLowerCase() === correct.trim().toLowerCase()) {
+                    score++;
+                    input.parentElement.classList.add('border-emerald-500', 'bg-emerald-50');
+                    input.parentElement.classList.remove('border-gray-100', 'bg-gray-50');
+                } else {
+                    input.parentElement.classList.add('border-red-300', 'bg-red-50');
+                    input.parentElement.classList.remove('border-gray-100', 'bg-gray-50');
+                    input.value += ` (Correct: ${correct})`;
+                }
+            });
+
+            const percent = Math.round((score / activeQuizData.questions.length) * 100);
+            document.getElementById('scoreVal').innerText = percent;
+            document.getElementById('quizResult').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        // --- AUTH LOGIC ---
+        async function checkSession() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) { currentUser = session.user; setupUserInterface(); } else { showAuthPage(); }
+        }
+        function showAuthPage() { document.getElementById('authPage').classList.add('active'); document.getElementById('dashboardPage').classList.remove('active'); menuToggle.classList.add('hidden'); }
+        function setupUserInterface() {
+            document.getElementById('authPage').classList.remove('active'); document.getElementById('dashboardPage').classList.add('active'); menuToggle.classList.remove('hidden'); sidebar.classList.remove('closed'); mainContent.classList.remove('expanded');
+            const email = currentUser.email; const name = email.split('@')[0];
+            document.getElementById('userNameDisplay').textContent = name.charAt(0).toUpperCase() + name.slice(1);
+            document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+            document.querySelector('[data-page="dashboard"]').click();
+        }
+        document.getElementById('showSignup').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('loginForm').classList.add('hidden'); document.getElementById('signupForm').classList.remove('hidden'); lucide.createIcons(); });
+        document.getElementById('showLogin').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('signupForm').classList.add('hidden'); document.getElementById('loginForm').classList.remove('hidden'); });
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); const email = document.getElementById('signupEmail').value; const password = document.getElementById('signupPassword').value;
+            const { data, error } = await supabaseClient.auth.signUp({ email, password });
+            if (error) { document.getElementById('signupError').textContent = error.message; document.getElementById('signupError').classList.remove('hidden'); } else { document.getElementById('signupForm').classList.add('hidden'); document.getElementById('loginForm').classList.remove('hidden'); alert("Account created! Please sign in."); }
+        });
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); const email = document.getElementById('loginEmail').value; const password = document.getElementById('loginPassword').value;
+            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+            if (error) { document.getElementById('loginError').textContent = error.message; document.getElementById('loginError').classList.remove('hidden'); } else { currentUser = data.user; setupUserInterface(); }
+        });
+        document.getElementById('logoutBtn').addEventListener('click', async () => { await supabaseClient.auth.signOut(); currentUser = null; window.location.reload(); });
+
+        // --- DASHBOARD DATA ---
+        async function loadDashboardData() {
+            const { count: pendingCount } = await supabaseClient.from('learner_tasks').select('*', { count: 'exact', head: true }).eq('user_id', currentUser.id).eq('completed', false);
+            const { count: completedCount } = await supabaseClient.from('learner_tasks').select('*', { count: 'exact', head: true }).eq('user_id', currentUser.id).eq('completed', true);
+            const { count: resourcesCount } = await supabaseClient.from('learner_resources').select('*', { count: 'exact', head: true }).eq('user_id', currentUser.id);
+            const { count: quizzesCount } = await supabaseClient.from('learner_quizzes').select('*', { count: 'exact', head: true }).eq('user_id', currentUser.id);
+            document.getElementById('statPending').textContent = pendingCount || 0; document.getElementById('statCompleted').textContent = completedCount || 0;
+            document.getElementById('statResources').textContent = resourcesCount || 0; document.getElementById('statQuizzes').textContent = quizzesCount || 0;
+            updateChart(completedCount || 0, pendingCount || 0);
+        }
+        function updateChart(completed, pending) {
+            const ctx = document.getElementById('productivityChart').getContext('2d'); if (productivityChart) productivityChart.destroy();
+            productivityChart = new Chart(ctx, {
+                type: 'doughnut', data: { labels: ['Completed', 'Pending'], datasets: [{ data: [completed, pending], backgroundColor: ['#10b981', '#fbbf24'], borderWidth: 0, hoverOffset: 4 }] },
+                options: { responsive: true, cutout: '70%', plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20, font: { family: 'Inter', size: 12 } } } } }
+            });
+        }
+
+        // --- TRACKER ---
+        document.getElementById('taskForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); const { error } = await supabaseClient.from('learner_tasks').insert([{ user_id: currentUser.id, title: document.getElementById('taskTitle').value, description: document.getElementById('taskDesc').value, due_date: document.getElementById('taskDate').value, completed: false }]);
+            if (error) alert("Error saving task: " + error.message); else { e.target.reset(); loadTasks(); }
+        });
+        async function loadTasks() {
+            let query = supabaseClient.from('learner_tasks').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+            if (tasksFilter === 'pending') query = query.eq('completed', false); if (tasksFilter === 'completed') query = query.eq('completed', true);
+            const { data: tasks } = await query; const container = document.getElementById('tasksList'); container.innerHTML = '';
+            if (!tasks || tasks.length === 0) { container.innerHTML = `<div class="text-center py-10 text-gray-400"><i data-lucide="coffee" class="w-12 h-12 mx-auto mb-2 opacity-50"></i><p>No tasks found.</p></div>`; lucide.createIcons(); return; }
+            tasks.forEach(task => {
+                const div = document.createElement('div');
+                div.className = `p-4 rounded-xl border transition-all ${task.completed ? 'bg-gray-50 border-gray-200' : 'bg-white border-emerald-100 shadow-sm'}`;
+                div.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <button onclick="toggleTaskStatus(${task.id}, ${task.completed})" class="mt-1 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${task.completed ? 'bg-emerald-500 border-emerald-500' : 'border-gray-300 hover:border-emerald-500'}">${task.completed ? '<i data-lucide="check" class="w-3 h-3 text-white"></i>' : ''}</button>
+                        <div class="flex-1"><h3 class="${task.completed ? 'text-gray-400 line-through' : 'text-gray-800 font-medium'}">${task.title}</h3>${task.description ? `<p class="text-sm text-gray-500 mt-1">${task.description}</p>` : ''}${task.due_date ? `<div class="flex items-center gap-1 mt-2 text-xs text-gray-400"><i data-lucide="calendar" class="w-3 h-3"></i> ${task.due_date}</div>` : ''}</div>
+                        <button onclick="deleteTask(${task.id})" class="text-gray-300 hover:text-red-500 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div>`;
+                container.appendChild(div);
+            }); lucide.createIcons();
+        }
+        async function toggleTaskStatus(id, currentStatus) { await supabaseClient.from('learner_tasks').update({ completed: !currentStatus }).eq('id', id); loadTasks(); }
+        async function deleteTask(id) { if (confirm('Delete this task?')) { await supabaseClient.from('learner_tasks').delete().eq('id', id); loadTasks(); } }
+        const filterBtns = { 'filterAll': 'all', 'filterPending': 'pending', 'filterCompleted': 'completed' };
+        Object.keys(filterBtns).forEach(btnId => {
+            document.getElementById(btnId).addEventListener('click', (e) => {
+                tasksFilter = filterBtns[btnId];
+                Object.keys(filterBtns).forEach(id => { const btn = document.getElementById(id); btn.className = 'px-3 py-1 rounded-full font-medium transition ' + (id === btnId ? 'bg-emerald-100 text-emerald-700' : 'text-gray-500 hover:bg-gray-100'); }); loadTasks();
+            });
+        });
+
+        // --- TOOLS ---
+        document.getElementById('resourceForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); const { error } = await supabaseClient.from('learner_resources').insert([{ user_id: currentUser.id, title: document.getElementById('resTitle').value, url: document.getElementById('resUrl').value, category: document.getElementById('resCategory').value }]);
+            if (error) alert("Error saving resource: " + error.message); else { e.target.reset(); loadResources(); }
+        });
+        async function loadResources() {
+            const { data: resources } = await supabaseClient.from('learner_resources').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+            const container = document.getElementById('resourcesList'); container.innerHTML = '';
+            if (!resources || resources.length === 0) { container.innerHTML = `<div class="col-span-full text-center py-10 text-gray-400"><i data-lucide="library" class="w-12 h-12 mx-auto mb-2 opacity-50"></i><p>No resources saved yet.</p></div>`; lucide.createIcons(); return; }
+            resources.forEach(res => {
+                const div = document.createElement('div'); div.className = 'p-4 rounded-xl bg-white border border-gray-100 hover:border-emerald-200 hover:shadow-md transition group';
+                const catColors = { 'reading': 'bg-orange-100 text-orange-600', 'video': 'bg-red-100 text-red-600', 'course': 'bg-blue-100 text-blue-600', 'tool': 'bg-purple-100 text-purple-600' }; const badgeClass = catColors[res.category] || 'bg-gray-100 text-gray-600';
+                div.innerHTML = `<div class="flex justify-between items-start"><span class="text-xs font-semibold px-2 py-1 rounded-md uppercase tracking-wide ${badgeClass}">${res.category}</span><button onclick="deleteResource(${res.id})" class="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition"><i data-lucide="x" class="w-4 h-4"></i></button></div><h3 class="font-bold text-gray-800 mt-2 mb-1 leading-tight">${res.title}</h3><a href="${res.url}" target="_blank" class="text-sm text-emerald-600 hover:text-emerald-700 hover:underline truncate block">${res.url}</a>`;
+                container.appendChild(div);
+            }); lucide.createIcons();
+        }
+        async function deleteResource(id) { if (confirm('Remove this resource?')) { await supabaseClient.from('learner_resources').delete().eq('id', id); loadResources(); } }
+
+        // --- POMODORO TIMER ---
+        let timerInterval = null; let timeLeft = 25 * 60; let isRunning = false;
+        function updateDisplay() { const mins = Math.floor(timeLeft / 60); const secs = timeLeft % 60; document.getElementById('timerDisplay').textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`; }
+        function startTimer() { if (isRunning) return; isRunning = true; document.getElementById('startBtn').classList.add('hidden'); document.getElementById('pauseBtn').classList.remove('hidden'); document.getElementById('timerStatus').textContent = 'Focus time!'; timerInterval = setInterval(() => { if (timeLeft > 0) { timeLeft--; updateDisplay(); } else { clearInterval(timerInterval); isRunning = false; document.getElementById('startBtn').classList.remove('hidden'); document.getElementById('pauseBtn').classList.add('hidden'); document.getElementById('timerStatus').textContent = 'Time\'s up! Take a break.'; alert('Pomodoro complete!'); } }, 1000); }
+        function pauseTimer() { clearInterval(timerInterval); isRunning = false; document.getElementById('startBtn').classList.remove('hidden'); document.getElementById('pauseBtn').classList.add('hidden'); document.getElementById('timerStatus').textContent = 'Paused'; }
+        function resetTimer() { clearInterval(timerInterval); isRunning = false; timeLeft = 25 * 60; updateDisplay(); document.getElementById('startBtn').classList.remove('hidden'); document.getElementById('pauseBtn').classList.add('hidden'); document.getElementById('timerStatus').textContent = 'Ready to focus'; }
+        function setTimer(mins) { if (isRunning) pauseTimer(); timeLeft = mins * 60; updateDisplay(); document.getElementById('timerStatus').textContent = 'Ready to focus'; }
+        function setCustomTimer() { const mins = parseInt(document.getElementById('customMin').value); if (mins && mins > 0 && mins <= 120) { setTimer(mins); document.getElementById('customMin').value = ''; } }
+
+        // --- FLASHCARDS ---
+        let currentDeckId = null;
+        let currentCards = [];
+        let currentCardIndex = 0;
+
+        document.getElementById('deckForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const { error } = await supabaseClient.from('learner_decks').insert([{
+                user_id: currentUser.id,
+                name: document.getElementById('deckName').value,
+                subject: document.getElementById('deckSubject').value
+            }]);
+            if (error) alert("Error: " + error.message);
+            else { e.target.reset(); loadDecks(); }
+        });
+
+        async function loadDecks() {
+            const { data: decks } = await supabaseClient.from('learner_decks').select('*, learner_cards(count)').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+            const container = document.getElementById('decksList');
+            container.innerHTML = '';
+            if (!decks || decks.length === 0) {
+                container.innerHTML = '<p class="text-gray-400 col-span-2 text-center py-10">No decks created yet.</p>';
+                return;
+            }
+            decks.forEach(deck => {
+                const cardCount = deck.learner_cards[0]?.count || 0;
+                const div = document.createElement('div');
+                div.className = 'p-5 rounded-xl border bg-white hover:shadow-md transition';
+                div.innerHTML = `
+                    <h3 class="font-bold text-lg text-gray-800 mb-1">${deck.name}</h3>
+                    <p class="text-sm text-gray-500 mb-4">${deck.subject || 'No subject'} • ${cardCount} cards</p>
+                    <div class="flex gap-2">
+                        <button onclick="studyDeck(${deck.id})" class="flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 py-2 rounded-lg text-sm font-medium">Study</button>
+                        <button onclick="deleteDeck(${deck.id})" class="px-3 py-2 bg-gray-50 hover:bg-red-50 text-gray-500 hover:text-red-500 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            lucide.createIcons();
+        }
+
+        async function deleteDeck(id) {
+            if (confirm('Delete this deck and all its cards?')) {
+                await supabaseClient.from('learner_decks').delete().eq('id', id);
+                loadDecks();
+            }
+        }
+
+        async function studyDeck(deckId) {
+            currentDeckId = deckId;
+            const { data: deck } = await supabaseClient.from('learner_decks').select('*').eq('id', deckId).single();
+            const { data: cards } = await supabaseClient.from('learner_cards').select('*').eq('deck_id', deckId).order('created_at', { ascending: true });
+
+            currentCards = cards || [];
+            currentCardIndex = 0;
+
+            document.getElementById('flashcardsSection').classList.add('hidden');
+            document.getElementById('flashcardStudySection').classList.remove('hidden');
+            document.getElementById('studyDeckTitle').textContent = deck.name;
+
+            displayCurrentCard();
+            updateCardsList();
+        }
+
+        function exitFlashcardStudy() {
+            document.getElementById('flashcardStudySection').classList.add('hidden');
+            document.getElementById('flashcardsSection').classList.remove('hidden');
+            currentDeckId = null;
+            currentCards = [];
+        }
+
+        function showAddCardForm() {
+            document.getElementById('addCardForm').classList.remove('hidden');
+        }
+
+        function hideAddCardForm() {
+            document.getElementById('addCardForm').classList.add('hidden');
+            document.getElementById('cardForm').reset();
+        }
+
+        document.getElementById('cardForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const { error } = await supabaseClient.from('learner_cards').insert([{
+                deck_id: currentDeckId,
+                front: document.getElementById('cardFront').value,
+                back: document.getElementById('cardBack').value
+            }]);
+            if (error) alert("Error: " + error.message);
+            else {
+                hideAddCardForm();
+                studyDeck(currentDeckId);
+            }
+        });
+
+        function displayCurrentCard() {
+            const card = currentCards[currentCardIndex];
+            if (!card) {
+                document.getElementById('cardFrontText').textContent = 'No cards yet';
+                document.getElementById('cardBackText').textContent = 'Add some cards to start studying';
+                document.getElementById('cardProgress').textContent = '0 / 0';
+                return;
+            }
+            document.getElementById('cardFrontText').textContent = card.front;
+            document.getElementById('cardBackText').textContent = card.back;
+            document.getElementById('cardProgress').textContent = `${currentCardIndex + 1} / ${currentCards.length}`;
+            document.querySelector('.flashcard').classList.remove('flipped');
+        }
+
+        function flipCard() {
+            document.querySelector('.flashcard').classList.toggle('flipped');
+        }
+
+        function nextCard() {
+            if (currentCardIndex < currentCards.length - 1) {
+                currentCardIndex++;
+                displayCurrentCard();
+            }
+        }
+
+        function prevCard() {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                displayCurrentCard();
+            }
+        }
+
+        async function deleteCard(cardId) {
+            if (confirm('Delete this card?')) {
+                await supabaseClient.from('learner_cards').delete().eq('id', cardId);
+                studyDeck(currentDeckId);
+            }
+        }
+
+        function updateCardsList() {
+            const container = document.getElementById('cardsList');
+            container.innerHTML = '';
+            if (currentCards.length === 0) {
+                container.innerHTML = '<p class="text-gray-400 text-center py-4">No cards in this deck</p>';
+                return;
+            }
+            currentCards.forEach((card, idx) => {
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition';
+                div.innerHTML = `
+                    <div class="flex-1">
+                        <span class="text-sm font-medium text-gray-800">${card.front}</span>
+                        <span class="text-xs text-gray-400 mx-2">→</span>
+                        <span class="text-sm text-gray-600">${card.back}</span>
+                    </div>
+                    <button onclick="deleteCard(${card.id})" class="text-gray-400 hover:text-red-500"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                `;
+                container.appendChild(div);
+            });
+            lucide.createIcons();
+        }
+
+        // --- NOTES ---
+        let allNotes = [];
+
+        document.getElementById('noteForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const { error } = await supabaseClient.from('learner_notes').insert([{
+                user_id: currentUser.id,
+                title: document.getElementById('noteTitle').value,
+                content: document.getElementById('noteContent').value,
+                category: document.getElementById('noteCategory').value
+            }]);
+            if (error) alert("Error: " + error.message);
+            else { e.target.reset(); loadNotes(); }
+        });
+
+        async function loadNotes() {
+            const { data: notes } = await supabaseClient.from('learner_notes').select('*').eq('user_id', currentUser.id).order('updated_at', { ascending: false });
+            allNotes = notes || [];
+            displayNotes(allNotes);
+        }
+
+        function displayNotes(notes) {
+            const container = document.getElementById('notesList');
+            container.innerHTML = '';
+            if (!notes || notes.length === 0) {
+                container.innerHTML = '<div class="text-center py-10 text-gray-400"><i data-lucide="file-text" class="w-12 h-12 mx-auto mb-2 opacity-50"></i><p>No notes yet.</p></div>';
+                lucide.createIcons();
+                return;
+            }
+            notes.forEach(note => {
+                const catColors = { 'general': 'bg-gray-100 text-gray-600', 'lecture': 'bg-blue-100 text-blue-600', 'reading': 'bg-green-100 text-green-600', 'idea': 'bg-purple-100 text-purple-600' };
+                const div = document.createElement('div');
+                div.className = 'p-5 rounded-xl bg-white border border-gray-100 hover:shadow-md transition';
+                div.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg text-gray-800 mb-1">${note.title}</h3>
+                            <span class="text-xs font-semibold px-2 py-1 rounded-md uppercase ${catColors[note.category]}">${note.category}</span>
+                        </div>
+                        <button onclick="deleteNote(${note.id})" class="text-gray-300 hover:text-red-500"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div>
+                    <p class="text-sm text-gray-600 line-clamp-3">${note.content}</p>
+                    <p class="text-xs text-gray-400 mt-3">${new Date(note.updated_at).toLocaleDateString()}</p>
+                `;
+                container.appendChild(div);
+            });
+            lucide.createIcons();
+        }
+
+        async function deleteNote(id) {
+            if (confirm('Delete this note?')) {
+                await supabaseClient.from('learner_notes').delete().eq('id', id);
+                loadNotes();
+            }
+        }
+
+        function searchNotes() {
+            const query = document.getElementById('noteSearch').value.toLowerCase();
+            const filtered = allNotes.filter(note =>
+                note.title.toLowerCase().includes(query) ||
+                note.content.toLowerCase().includes(query)
+            );
+            displayNotes(filtered);
+        }
+
+        // --- DISCOVER TOOLS ---
+        let allTools = [];
+
+        async function loadDiscoverTools() {
+            try {
+                const response = await fetch('./data.json');
+                allTools = await response.json();
+                filterTools();
+            } catch (error) {
+                console.error('Error loading tools:', error);
+                document.getElementById('toolsGrid').innerHTML = '<p class="text-red-500 col-span-3 text-center py-10">Error loading tools. Please check data.json file.</p>';
+            }
+        }
+
+        function filterTools() {
+            const searchQuery = document.getElementById('toolSearch').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const priceFilter = document.getElementById('priceFilter').value;
+
+            let filtered = allTools.filter(tool => {
+                const matchesSearch = tool.name.toLowerCase().includes(searchQuery) ||
+                    tool.description.toLowerCase().includes(searchQuery) ||
+                    tool.category.toLowerCase().includes(searchQuery);
+                const matchesCategory = categoryFilter === 'all' || tool.category === categoryFilter;
+                const matchesPrice = priceFilter === 'all' || tool.price === priceFilter;
+
+                return matchesSearch && matchesCategory && matchesPrice;
+            });
+
+            displayTools(filtered);
+        }
+
+        function displayTools(tools) {
+            const container = document.getElementById('toolsGrid');
+            const countEl = document.getElementById('toolsCount');
+
+            countEl.textContent = `Showing ${tools.length} tool${tools.length !== 1 ? 's' : ''}`;
+
+            container.innerHTML = '';
+
+            if (tools.length === 0) {
+                container.innerHTML = '<div class="col-span-3 text-center py-10 text-gray-400"><i data-lucide="search-x" class="w-12 h-12 mx-auto mb-2 opacity-50"></i><p>No tools found. Try different filters.</p></div>';
+                lucide.createIcons();
+                return;
+            }
+
+            const categoryColors = {
+                'coding': 'bg-blue-100 text-blue-700 border-blue-200',
+                'design': 'bg-purple-100 text-purple-700 border-purple-200',
+                'language': 'bg-green-100 text-green-700 border-green-200',
+                'cooking': 'bg-orange-100 text-orange-700 border-orange-200',
+                'music': 'bg-pink-100 text-pink-700 border-pink-200'
+            };
+
+            const priceColors = {
+                'free': 'bg-emerald-100 text-emerald-700',
+                'freemium': 'bg-cyan-100 text-cyan-700',
+                'subscription': 'bg-yellow-100 text-yellow-700',
+                'one-time': 'bg-indigo-100 text-indigo-700'
+            };
+
+            tools.forEach(tool => {
+                const div = document.createElement('div');
+                div.className = 'glass p-6 rounded-2xl hover:shadow-lg transition-all border-2 border-transparent hover:border-emerald-200';
+
+                const categoryClass = categoryColors[tool.category] || 'bg-gray-100 text-gray-700 border-gray-200';
+                const priceClass = priceColors[tool.price] || 'bg-gray-100 text-gray-700';
+
+                div.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide border ${categoryClass}">
+                            ${tool.category}
+                        </span>
+                        <span class="text-xs font-semibold px-2 py-1 rounded-md ${priceClass}">
+                            ${tool.price === 'one-time' ? 'One-time' : tool.price.charAt(0).toUpperCase() + tool.price.slice(1)}
+                        </span>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">${tool.name}</h3>
+                    <p class="text-sm text-gray-600 mb-4 line-clamp-2">${tool.description}</p>
+                    
+                    <div class="flex items-center gap-2 text-xs text-gray-500 mb-4">
+                        <i data-lucide="star" class="w-4 h-4 fill-yellow-400 text-yellow-400"></i>
+                        <span class="font-medium">${tool.rating || 'N/A'}</span>
+                        ${tool.users ? `<span class="ml-2">• ${tool.users}</span>` : ''}
+                    </div>
+                    
+                    <a href="${tool.link}" target="_blank" 
+                        class="block w-full text-center bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 rounded-lg transition shadow-sm">
+                        <span class="flex items-center justify-center gap-2">
+                            Visit Site
+                            <i data-lucide="external-link" class="w-4 h-4"></i>
+                        </span>
+                    </a>
+                `;
+
+                container.appendChild(div);
+            });
+
+            lucide.createIcons();
+        }
+
+        // --- MUSIC PLAYER ---
+        let audioPlayer = new Audio();
+        let playlist = [];
+        let currentTrackIndex = 0;
+
+        function loadMusicFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const url = URL.createObjectURL(file);
+            playlist.push({ name: file.name, url: url });
+            updatePlaylist();
+
+            if (playlist.length === 1) {
+                loadTrack(0);
+            }
+        }
+
+        function updatePlaylist() {
+            const container = document.getElementById('playlist');
+            container.innerHTML = '';
+
+            if (playlist.length === 0) {
+                container.innerHTML = '<p class="text-gray-400 text-center py-4">No tracks uploaded yet</p>';
+                return;
+            }
+
+            playlist.forEach((track, idx) => {
+                const div = document.createElement('div');
+                div.className = `flex items-center justify-between p-3 rounded-lg transition ${idx === currentTrackIndex ? 'bg-emerald-50 border border-emerald-200' : 'bg-gray-50 hover:bg-gray-100'}`;
+                div.innerHTML = `
+                    <div class="flex items-center gap-3 flex-1">
+                        <i data-lucide="music" class="w-4 h-4 text-gray-500"></i>
+                        <span class="text-sm font-medium text-gray-700 truncate">${track.name}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="loadTrack(${idx})" class="p-2 hover:bg-emerald-100 rounded-lg transition">
+                            <i data-lucide="play" class="w-4 h-4 text-emerald-600"></i>
+                        </button>
+                        <button onclick="removeTrack(${idx})" class="p-2 hover:bg-red-100 rounded-lg transition">
+                            <i data-lucide="trash-2" class="w-4 h-4 text-red-500"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            lucide.createIcons();
+        }
+
+        function loadTrack(index) {
+            if (index < 0 || index >= playlist.length) return;
+
+            currentTrackIndex = index;
+            const track = playlist[index];
+
+            audioPlayer.src = track.url;
+            audioPlayer.volume = 0.7;
+            document.getElementById('currentTrackName').textContent = track.name;
+            document.getElementById('musicPlayerCard').classList.remove('hidden');
+            updatePlaylist();
+            lucide.createIcons();
+        }
+
+        function removeTrack(index) {
+            playlist.splice(index, 1);
+            if (index === currentTrackIndex && playlist.length > 0) {
+                loadTrack(0);
+            } else if (playlist.length === 0) {
+                audioPlayer.pause();
+                document.getElementById('musicPlayerCard').classList.add('hidden');
+            }
+            updatePlaylist();
+        }
+
+        function togglePlayPause() {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                document.querySelector('#playPauseBtn i').setAttribute('data-lucide', 'pause');
+            } else {
+                audioPlayer.pause();
+                document.querySelector('#playPauseBtn i').setAttribute('data-lucide', 'play');
+            }
+            lucide.createIcons();
+        }
+
+        function nextTrack() {
+            if (currentTrackIndex < playlist.length - 1) {
+                loadTrack(currentTrackIndex + 1);
+                audioPlayer.play();
+                document.querySelector('#playPauseBtn i').setAttribute('data-lucide', 'pause');
+                lucide.createIcons();
+            }
+        }
+
+        function previousTrack() {
+            if (currentTrackIndex > 0) {
+                loadTrack(currentTrackIndex - 1);
+                audioPlayer.play();
+                document.querySelector('#playPauseBtn i').setAttribute('data-lucide', 'pause');
+                lucide.createIcons();
+            }
+        }
+
+        function changeVolume(value) {
+            audioPlayer.volume = value / 100;
+        }
+
+        function seekMusic(event) {
+            const bar = event.currentTarget;
+            const clickX = event.offsetX;
+            const width = bar.offsetWidth;
+            const percentage = clickX / width;
+            audioPlayer.currentTime = audioPlayer.duration * percentage;
+        }
+
+        audioPlayer.addEventListener('timeupdate', () => {
+            if (audioPlayer.duration) {
+                const percentage = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                document.getElementById('progressFill').style.width = percentage + '%';
+
+                const current = formatTime(audioPlayer.currentTime);
+                const total = formatTime(audioPlayer.duration);
+                document.getElementById('currentTrackTime').textContent = `${current} / ${total}`;
+            }
+        });
+
+        audioPlayer.addEventListener('ended', () => {
+            nextTrack();
+        });
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // --- USERS ---
+        let allUsers = [];
+
+        async function loadUsers() {
+            const { data: users } = await supabaseClient.from('profiles').select('*').order('created_at', { ascending: false });
+            allUsers = users || [];
+            displayUsers(allUsers);
+        }
+
+        function displayUsers(users) {
+            const container = document.getElementById('usersList');
+            container.innerHTML = '';
+
+            if (!users || users.length === 0) {
+                container.innerHTML = '<div class="col-span-3 text-center py-10 text-gray-400"><i data-lucide="users" class="w-12 h-12 mx-auto mb-2 opacity-50"></i><p>No users found.</p></div>';
+                lucide.createIcons();
+                return;
+            }
+
+            users.forEach(user => {
+                const div = document.createElement('div');
+                div.className = 'glass p-6 rounded-2xl hover:shadow-lg transition-all';
+
+                const profilePic = user.profile_pic || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username || 'User')}&background=10b981&color=fff`;
+
+                div.innerHTML = `
+                    <div class="flex items-start gap-4">
+                        <img src="${profilePic}" alt="${user.username}" class="w-16 h-16 rounded-full object-cover border-2 border-emerald-200">
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-bold text-lg text-gray-800 truncate">${user.display_name || user.username || 'Anonymous'}</h3>
+                            <p class="text-sm text-gray-500 truncate">@${user.username || 'user'}</p>
+                            ${user.bio ? `<p class="text-sm text-gray-600 mt-2 line-clamp-2">${user.bio}</p>` : ''}
+                            ${user.location ? `<div class="flex items-center gap-1 mt-2 text-xs text-gray-500"><i data-lucide="map-pin" class="w-3 h-3"></i>${user.location}</div>` : ''}
+                            ${user.website ? `<a href="${user.website}" target="_blank" class="flex items-center gap-1 mt-1 text-xs text-emerald-600 hover:underline"><i data-lucide="link" class="w-3 h-3"></i>${user.website}</a>` : ''}
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+                        <span>${user.followers?.length || 0} followers</span>
+                        <span>${user.following?.length || 0} following</span>
+                    </div>
+                `;
+
+                container.appendChild(div);
+            });
+
+            lucide.createIcons();
+        }
+
+        function searchUsers() {
+            const query = document.getElementById('userSearch').value.toLowerCase();
+            const filtered = allUsers.filter(user =>
+                (user.username && user.username.toLowerCase().includes(query)) ||
+                (user.display_name && user.display_name.toLowerCase().includes(query)) ||
+                (user.bio && user.bio.toLowerCase().includes(query))
+            );
+            displayUsers(filtered);
+        }
+
+        // --- CHAT ---
+        let chatMessages = [];
+        let chatSubscription = null;
+        let chatPollingInterval = null;
+
+        async function loadChat() {
+            try {
+                // First, try to create the table if it doesn't exist
+                await ensureChatTable();
+
+                const { data: messages, error } = await supabaseClient
+                    .from('chat_messages')
+                    .select('*')
+                    .order('created_at', { ascending: true })
+                    .limit(100);
+
+                if (error) {
+                    console.error('Error loading chat:', error);
+                    displayChatError();
+                    return;
+                }
+
+                // Fetch profiles for each message
+                if (messages && messages.length > 0) {
+                    const userIds = [...new Set(messages.map(m => m.user_id))];
+                    const { data: profiles } = await supabaseClient
+                        .from('profiles')
+                        .select('id, username, display_name, profile_pic')
+                        .in('id', userIds);
+
+                    const profileMap = {};
+                    if (profiles) {
+                        profiles.forEach(p => profileMap[p.id] = p);
+                    }
+
+                    chatMessages = messages.map(m => ({
+                        ...m,
+                        profiles: profileMap[m.user_id] || {}
+                    }));
+                } else {
+                    chatMessages = [];
+                }
+
+                displayChatMessages();
+                subscribeToChat();
+                startChatPolling();
+            } catch (err) {
+                console.error('Chat error:', err);
+                displayChatError();
+            }
+        }
+
+        async function ensureChatTable() {
+            // This will fail silently if table doesn't exist, but that's ok
+            // The user needs to create the table manually
+            return true;
+        }
+
+        function startChatPolling() {
+            // Poll for new messages every 3 seconds as backup
+            if (chatPollingInterval) clearInterval(chatPollingInterval);
+
+            chatPollingInterval = setInterval(async () => {
+                const lastMessageTime = chatMessages.length > 0
+                    ? chatMessages[chatMessages.length - 1].created_at
+                    : new Date(0).toISOString();
+
+                const { data: newMessages } = await supabaseClient
+                    .from('chat_messages')
+                    .select('*')
+                    .gt('created_at', lastMessageTime)
+                    .order('created_at', { ascending: true });
+
+                if (newMessages && newMessages.length > 0) {
+                    const userIds = [...new Set(newMessages.map(m => m.user_id))];
+                    const { data: profiles } = await supabaseClient
+                        .from('profiles')
+                        .select('id, username, display_name, profile_pic')
+                        .in('id', userIds);
+
+                    const profileMap = {};
+                    if (profiles) {
+                        profiles.forEach(p => profileMap[p.id] = p);
+                    }
+
+                    newMessages.forEach(m => {
+                        chatMessages.push({
+                            ...m,
+                            profiles: profileMap[m.user_id] || {}
+                        });
+                    });
+
+                    displayChatMessages();
+                }
+            }, 3000);
+        }
+
+        function subscribeToChat() {
+            if (chatSubscription) {
+                chatSubscription.unsubscribe();
+            }
+
+            try {
+                chatSubscription = supabaseClient
+                    .channel('public:chat_messages')
+                    .on('postgres_changes', {
+                        event: 'INSERT',
+                        schema: 'public',
+                        table: 'chat_messages'
+                    }, async (payload) => {
+                        const { data: profile } = await supabaseClient
+                            .from('profiles')
+                            .select('id, username, display_name, profile_pic')
+                            .eq('id', payload.new.user_id)
+                            .single();
+
+                        chatMessages.push({
+                            ...payload.new,
+                            profiles: profile || {}
+                        });
+                        displayChatMessages();
+                    })
+                    .subscribe();
+            } catch (err) {
+                console.error('Subscription error:', err);
+            }
+        }
+
+        function displayChatError() {
+            const container = document.getElementById('chatMessages');
+            container.innerHTML = `
+                <div class="text-center py-10">
+                    <i data-lucide="alert-circle" class="w-12 h-12 mx-auto mb-4 text-red-400"></i>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Chat Table Not Found</h3>
+                    <p class="text-gray-600 mb-4">Please create the chat_messages table first.</p>
+                    <div class="bg-gray-50 p-4 rounded-lg text-left max-w-2xl mx-auto">
+                        <p class="text-xs font-mono text-gray-700 mb-2">Run this SQL in Supabase:</p>
+                        <pre class="text-xs bg-gray-800 text-green-400 p-3 rounded overflow-x-auto">create table public.chat_messages (
+  id bigserial primary key,
+  user_id uuid references auth.users(id) on delete cascade,
+  message text not null,
+  created_at timestamp with time zone default now()
+);
+
+create index chat_messages_created_at_idx 
+  on public.chat_messages(created_at);</pre>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        function displayChatMessages() {
+            const container = document.getElementById('chatMessages');
+            container.innerHTML = '';
+
+            if (chatMessages.length === 0) {
+                container.innerHTML = '<div class="text-center py-10 text-gray-400"><i data-lucide="message-circle" class="w-12 h-12 mx-auto mb-2 opacity-50"></i><p>No messages yet. Start the conversation!</p></div>';
+                lucide.createIcons();
+                return;
+            }
+
+            chatMessages.forEach(msg => {
+                const isOwn = msg.user_id === currentUser.id;
+                const profile = msg.profiles || {};
+                const username = profile.username || 'user';
+                const profilePic = profile.profile_pic || `https://ui-avatars.com/api/?name=${encodeURIComponent(username)}&background=10b981&color=fff`;
+                const displayName = profile.display_name || profile.username || 'Anonymous';
+
+                const div = document.createElement('div');
+                div.className = `flex gap-3 ${isOwn ? 'flex-row-reverse' : ''}`;
+
+                div.innerHTML = `
+                    <img src="${profilePic}" alt="${displayName}" class="w-10 h-10 rounded-full object-cover flex-shrink-0" onerror="this.src='https://ui-avatars.com/api/?name=User&background=10b981&color=fff'">
+                    <div class="flex-1 ${isOwn ? 'text-right' : ''}">
+                        <div class="flex items-center gap-2 mb-1 ${isOwn ? 'justify-end' : ''}">
+                            <span class="text-sm font-medium text-gray-800">${displayName}</span>
+                            <span class="text-xs text-gray-400">${new Date(msg.created_at).toLocaleTimeString()}</span>
+                        </div>
+                        <div class="inline-block px-4 py-2 rounded-2xl max-w-md ${isOwn ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-800'}">
+                            <p class="text-sm break-words">${escapeHtml(msg.message)}</p>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(div);
+            });
+
+            container.scrollTop = container.scrollHeight;
+            lucide.createIcons();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        document.getElementById('chatForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            const { error } = await supabaseClient.from('chat_messages').insert([{
+                user_id: currentUser.id,
+                message: message
+            }]);
+
+            if (error) {
+                console.error('Send error:', error);
+                alert('Error sending message: ' + error.message);
+            } else {
+                input.value = '';
+            }
+        });
+
+        // --- CALENDAR ---
+        let currentCalendarDate = new Date();
+        let calendarTasks = [];
+
+        // --- VIDEOS ---
+        let allVideos = [];
+        let currentVideo = null;
+
+        async function loadVideos() {
+            try {
+                const response = await fetch('./vid.json');
+                allVideos = await response.json();
+                filterVideos();
+            } catch (error) {
+                console.error('Error loading videos:', error);
+                document.getElementById('videosList').innerHTML = '<p class="text-red-500 text-center py-10">Error loading videos</p>';
+            }
+        }
+
+        function filterVideos() {
+            const searchQuery = document.getElementById('videoSearch').value.toLowerCase();
+            const subjectFilter = document.getElementById('videoSubjectFilter').value;
+
+            let filtered = allVideos.filter(video => {
+                const matchesSearch = video.title.toLowerCase().includes(searchQuery) ||
+                    video.description.toLowerCase().includes(searchQuery) ||
+                    video.subject.toLowerCase().includes(searchQuery);
+                const matchesSubject = subjectFilter === 'all' || video.subject === subjectFilter;
+                return matchesSearch && matchesSubject;
+            });
+
+            displayVideos(filtered);
+        }
+
+        function displayVideos(videos) {
+            const container = document.getElementById('videosList');
+            const countEl = document.getElementById('videoCount');
+
+            countEl.textContent = `${videos.length} video${videos.length !== 1 ? 's' : ''} available`;
+            container.innerHTML = '';
+
+            if (videos.length === 0) {
+                container.innerHTML = '<div class="text-center py-10 text-gray-400"><i data-lucide="video-off" class="w-12 h-12 mx-auto mb-2 opacity-50"></i><p>No videos found</p></div>';
+                lucide.createIcons();
+                return;
+            }
+
+            videos.forEach(video => {
+                const div = document.createElement('div');
+                div.className = 'p-4 rounded-xl bg-white border border-gray-100 hover:border-emerald-200 hover:shadow-md transition cursor-pointer';
+                div.onclick = () => playVideo(video);
+
+                const subjectColors = {
+                    'Math': 'bg-blue-100 text-blue-700',
+                    'Science': 'bg-green-100 text-green-700',
+                    'Programming': 'bg-purple-100 text-purple-700',
+                    'History': 'bg-orange-100 text-orange-700',
+                    'Language': 'bg-pink-100 text-pink-700'
+                };
+                const subjectClass = subjectColors[video.subject] || 'bg-gray-100 text-gray-700';
+
+                div.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="play" class="w-6 h-6 text-emerald-600"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-bold text-gray-800 mb-1 line-clamp-2">${video.title}</h4>
+                            <div class="flex items-center gap-2 text-xs mb-2">
+                                <span class="px-2 py-1 rounded-full font-medium ${subjectClass}">${video.subject}</span>
+                                <span class="text-gray-500">${video.length}</span>
+                            </div>
+                            <p class="text-xs text-gray-500">by ${video.owner}</p>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+
+            lucide.createIcons();
+        }
+
+        function playVideo(video) {
+            currentVideo = video;
+
+            // Extract YouTube video ID
+            let videoId = '';
+            if (video.ytlink.includes('youtube.com/watch?v=')) {
+                videoId = video.ytlink.split('v=')[1].split('&')[0];
+            } else if (video.ytlink.includes('youtu.be/')) {
+                videoId = video.ytlink.split('youtu.be/')[1].split('?')[0];
+            }
+
+            document.getElementById('videoPlayerPlaceholder').classList.add('hidden');
+            document.getElementById('videoPlayer').classList.remove('hidden');
+            document.getElementById('videoIframe').src = `https://www.youtube.com/embed/${videoId}`;
+            document.getElementById('currentVideoTitle').textContent = video.title;
+            document.getElementById('currentVideoSubject').textContent = video.subject;
+            document.getElementById('currentVideoLength').innerHTML = `<i data-lucide="clock" class="w-4 h-4"></i> ${video.length}`;
+            document.getElementById('currentVideoOwner').innerHTML = `<i data-lucide="user" class="w-4 h-4"></i> ${video.owner}`;
+            document.getElementById('currentVideoDesc').textContent = video.description;
+
+            lucide.createIcons();
+        }
+
+        // --- CHATROOMS ---
+        let currentRoomId = null;
+        let roomMessages = [];
+        let roomSubscription = null;
+
+        function showCreateRoomForm() { document.getElementById('createRoomForm').classList.remove('hidden'); }
+        function hideCreateRoomForm() { document.getElementById('createRoomForm').classList.add('hidden'); document.getElementById('roomForm').reset(); }
+
+        document.getElementById('roomForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const { error } = await supabaseClient.from('chat_rooms').insert([{
+                name: document.getElementById('roomName').value,
+                description: document.getElementById('roomDesc').value,
+                subject: document.getElementById('roomSubject').value,
+                created_by: currentUser.id
+            }]);
+            if (error) alert('Error: ' + error.message);
+            else { hideCreateRoomForm(); loadChatRooms(); }
+        });
+
+        async function loadChatRooms() {
+            const { data: rooms, error } = await supabaseClient.from('chat_rooms').select('*').order('created_at', { ascending: false });
+
+            if (error) {
+                console.error('Error loading rooms:', error);
+                document.getElementById('roomsList').innerHTML = '<div class="col-span-3 text-center py-10 text-red-400"><p>Error loading rooms</p></div>';
+                return;
+            }
+
+            const container = document.getElementById('roomsList');
+            container.innerHTML = '';
+
+            if (!rooms || rooms.length === 0) {
+                container.innerHTML = '<div class="col-span-3 text-center py-10 text-gray-400"><i data-lucide="messages-square" class="w-12 h-12 mx-auto mb-2 opacity-50"></i><p>No rooms yet. Create one!</p></div>';
+                lucide.createIcons();
+                return;
+            }
+
+            // Fetch creator profiles
+            const creatorIds = [...new Set(rooms.map(r => r.created_by).filter(Boolean))];
+            let profileMap = {};
+
+            if (creatorIds.length > 0) {
+                const { data: profiles } = await supabaseClient.from('profiles').select('id, username, display_name').in('id', creatorIds);
+                if (profiles) {
+                    profiles.forEach(p => profileMap[p.id] = p);
+                }
+            }
+
+            rooms.forEach(room => {
+                const creator = profileMap[room.created_by];
+                const div = document.createElement('div');
+                div.className = 'glass p-6 rounded-2xl hover:shadow-lg transition cursor-pointer';
+                div.onclick = () => joinRoom(room.id);
+                div.innerHTML = `
+                    <div class="flex items-start justify-between mb-3">
+                        <h3 class="font-bold text-lg text-gray-800">${room.name}</h3>
+                        ${room.subject ? `<span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">${room.subject}</span>` : ''}
+                    </div>
+                    ${room.description ? `<p class="text-sm text-gray-600 mb-3">${room.description}</p>` : ''}
+                    <div class="flex items-center gap-2 text-xs text-gray-500">
+                        <i data-lucide="user" class="w-3 h-3"></i>
+                        <span>by ${creator?.display_name || creator?.username || 'User'}</span>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            lucide.createIcons();
+        }
+
+        async function joinRoom(roomId) {
+            currentRoomId = roomId;
+            const { data: room, error } = await supabaseClient.from('chat_rooms').select('*').eq('id', roomId).single();
+
+            if (error || !room) {
+                console.error('Error loading room:', error);
+                alert('Could not load room');
+                return;
+            }
+
+            const { error: memberError } = await supabaseClient.from('chat_room_members').insert(
+                [{ room_id: roomId, user_id: currentUser.id }]
+            ).select();
+
+            if (memberError && !memberError.message.includes('duplicate')) {
+                console.error('Error joining room:', memberError);
+            }
+
+            document.getElementById('roomsListView').classList.add('hidden');
+            document.getElementById('roomChatView').classList.remove('hidden');
+            document.getElementById('currentRoomName').textContent = room.name;
+            document.getElementById('currentRoomDesc').textContent = room.description || '';
+
+            loadRoomMessages();
+            subscribeToRoom();
+        }
+
+        function exitRoom() {
+            if (roomSubscription) roomSubscription.unsubscribe();
+            currentRoomId = null;
+            roomMessages = [];
+            document.getElementById('roomChatView').classList.add('hidden');
+            document.getElementById('roomsListView').classList.remove('hidden');
+        }
+
+        async function loadRoomMessages() {
+            const { data: messages, error } = await supabaseClient.from('chat_room_messages').select('*').eq('room_id', currentRoomId).order('sent_at', { ascending: true }).limit(100);
+
+            if (error) {
+                console.error('Error loading messages:', error);
+                roomMessages = [];
+                displayRoomMessages();
+                return;
+            }
+
+            if (!messages || messages.length === 0) {
+                roomMessages = [];
+                displayRoomMessages();
+                return;
+            }
+
+            // Fetch user profiles
+            const userIds = [...new Set(messages.map(m => m.user_id))];
+            const { data: profiles } = await supabaseClient.from('profiles').select('id, username, display_name, profile_pic').in('id', userIds);
+
+            const profileMap = {};
+            if (profiles) {
+                profiles.forEach(p => profileMap[p.id] = p);
+            }
+
+            roomMessages = messages.map(m => ({
+                ...m,
+                profiles: profileMap[m.user_id] || {}
+            }));
+
+            displayRoomMessages();
+        }
+
+        function subscribeToRoom() {
+            if (roomSubscription) roomSubscription.unsubscribe();
+            roomSubscription = supabaseClient.channel(`room:${currentRoomId}`).on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_room_messages', filter: `room_id=eq.${currentRoomId}` }, async (payload) => {
+                const { data: profile } = await supabaseClient.from('profiles').select('username, display_name, profile_pic').eq('id', payload.new.user_id).single();
+                roomMessages.push({ ...payload.new, profiles: profile || {} });
+                displayRoomMessages();
+            }).subscribe();
+        }
+
+        function displayRoomMessages() {
+            const container = document.getElementById('roomMessages');
+            container.innerHTML = '';
+            if (roomMessages.length === 0) {
+                container.innerHTML = '<div class="text-center py-10 text-gray-400"><i data-lucide="message-circle" class="w-12 h-12 mx-auto mb-2 opacity-50"></i><p>No messages yet. Start chatting!</p></div>';
+                lucide.createIcons();
+                return;
+            }
+            roomMessages.forEach(msg => {
+                const isOwn = msg.user_id === currentUser.id;
+                const profile = msg.profiles || {};
+                const username = profile.username || 'user';
+                const profilePic = profile.profile_pic || `https://ui-avatars.com/api/?name=${encodeURIComponent(username)}&background=10b981&color=fff`;
+                const displayName = profile.display_name || profile.username || 'Anonymous';
+                const div = document.createElement('div');
+                div.className = `flex gap-3 ${isOwn ? 'flex-row-reverse' : ''}`;
+                div.innerHTML = `
+                    <img src="${profilePic}" alt="${displayName}" class="w-10 h-10 rounded-full object-cover flex-shrink-0" onerror="this.src='https://ui-avatars.com/api/?name=User&background=10b981&color=fff'">
+                    <div class="flex-1 ${isOwn ? 'text-right' : ''}">
+                        <div class="flex items-center gap-2 mb-1 ${isOwn ? 'justify-end' : ''}">
+                            <span class="text-sm font-medium text-gray-800">${displayName}</span>
+                            <span class="text-xs text-gray-400">${new Date(msg.sent_at).toLocaleTimeString()}</span>
+                        </div>
+                        <div class="inline-block px-4 py-2 rounded-2xl max-w-md ${isOwn ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-800'}">
+                            <p class="text-sm break-words">${escapeHtml(msg.message)}</p>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            container.scrollTop = container.scrollHeight;
+            lucide.createIcons();
+        }
+
+        document.getElementById('roomChatForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('roomChatInput');
+            const message = input.value.trim();
+            if (!message || !currentRoomId) return;
+            const { error } = await supabaseClient.from('chat_room_messages').insert([{ room_id: currentRoomId, user_id: currentUser.id, message: message }]);
+            if (error) alert('Error: ' + error.message);
+            else input.value = '';
+        });
+
+        async function loadCalendar() {
+            const { data: tasks } = await supabaseClient.from('learner_tasks').select('*').eq('user_id', currentUser.id);
+            calendarTasks = tasks || [];
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            document.getElementById('calendarMonth').textContent = `${monthNames[month]} ${year}`;
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            const container = document.getElementById('calendarDays');
+            container.innerHTML = '';
+
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDiv = document.createElement('div');
+                container.appendChild(emptyDiv);
+            }
+
+            const today = new Date();
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const tasksForDay = calendarTasks.filter(task => task.due_date === dateStr);
+
+                const isToday = today.getDate() === day && today.getMonth() === month && today.getFullYear() === year;
+
+                const div = document.createElement('div');
+                div.className = `calendar-day ${isToday ? 'today' : ''} ${tasksForDay.length > 0 ? 'has-tasks' : 'bg-white border border-gray-200'}`;
+                div.innerHTML = `
+                    <span class="text-sm">${day}</span>
+                    ${tasksForDay.length > 0 ? `<span class="task-dot"></span>` : ''}
+                `;
+                div.onclick = () => showTasksForDate(dateStr, day);
+                container.appendChild(div);
+            }
+
+            lucide.createIcons();
+        }
+
+        function changeMonth(delta) {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
+            renderCalendar();
+            document.getElementById('selectedDateTasks').classList.add('hidden');
+        }
+
+        function showTasksForDate(dateStr, day) {
+            const tasksForDay = calendarTasks.filter(task => task.due_date === dateStr);
+
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            document.getElementById('selectedDateDisplay').textContent = `${monthNames[currentCalendarDate.getMonth()]} ${day}, ${currentCalendarDate.getFullYear()}`;
+
+            const container = document.getElementById('dateTasksList');
+            container.innerHTML = '';
+
+            if (tasksForDay.length === 0) {
+                container.innerHTML = '<p class="text-gray-400 text-center py-4">No tasks for this date</p>';
+            } else {
+                tasksForDay.forEach(task => {
+                    const div = document.createElement('div');
+                    div.className = `p-4 rounded-xl border transition ${task.completed ? 'bg-gray-50 border-gray-200' : 'bg-white border-emerald-100'}`;
+                    div.innerHTML = `
+                        <div class="flex items-start gap-3">
+                            <button onclick="toggleTaskStatus(${task.id}, ${task.completed})" class="mt-1 w-5 h-5 rounded-full border-2 flex items-center justify-center transition ${task.completed ? 'bg-emerald-500 border-emerald-500' : 'border-gray-300 hover:border-emerald-500'}">
+                                ${task.completed ? '<i data-lucide="check" class="w-3 h-3 text-white"></i>' : ''}
+                            </button>
+                            <div class="flex-1">
+                                <h3 class="${task.completed ? 'text-gray-400 line-through' : 'text-gray-800 font-medium'}">${task.title}</h3>
+                                ${task.description ? `<p class="text-sm text-gray-500 mt-1">${task.description}</p>` : ''}
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+
+            document.getElementById('selectedDateTasks').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        checkSession();
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').then(reg => {
+                    console.log('Service Worker registered');
+                }).catch(err => {
+                    console.log('Service Worker registration failed', err);
+                });
+            });
+        }
+    </script>
+</body>
+
+</html>
