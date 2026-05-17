@@ -77,7 +77,7 @@
                         before logging in.
                     </p>
                 </div>
-                <button onclick="window.location.href='site.html'"
+                <button onclick="window.location.href='site.html'; vs()"
                     class="pulse-btn bg-white text-emerald-600 px-10 py-4 rounded-full text-lg font-bold hover:bg-emerald-50 transition-all transform hover:scale-105 shadow-2xl">
                     Launch Epsilon Learner
                     <i data-lucide="arrow-right" class="w-5 h-5 inline ml-2"></i>
@@ -250,7 +250,7 @@
                     account now
                     →</a>
             </div>
-            <button onclick="window.location.href='site.html'"
+            <button onclick="window.location.href='site.html'; vs()"
                 class="pulse-btn bg-white text-emerald-600 px-10 py-4 rounded-full text-lg font-bold hover:bg-emerald-50 transition-all transform hover:scale-105 shadow-2xl">
                 Get Started Now
                 <i data-lucide="arrow-right" class="w-5 h-5 inline ml-2"></i>
@@ -268,7 +268,9 @@
 
     <script>
         lucide.createIcons();
-        localStorage.setItem('epsilon_entered_site', true)
+        function vs() {
+            localStorage.setItem('epsilon_entered_site', true)
+        }
         (function() {
     // 1. Immediate Redirect Check
     // We do this first so the user doesn't see the landing page content
