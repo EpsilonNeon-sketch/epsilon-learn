@@ -310,6 +310,58 @@
         });
     });
 })();
+        // Function to handle the @username routing
+function handleProfileRouting() {
+    const path = window.location.pathname;
+    
+    // Check if path starts with /@
+    if (path.startsWith('/@')) {
+        const username = path.substring(2); // Get username after @
+        loadUserProfile(username);
+    }
+}
+
+// Listen for page load and back/forward buttons
+window.addEventListener('load', handleProfileRouting);
+window.addEventListener('popstate', handleProfileRouting);
+
+// Function to navigate without refreshing (use this for links)
+function goToProfile(username) {
+    const newPath = `/@${username}`;
+    window.history.pushState({}, '', newPath);
+    loadUserProfile(username);
+}
+        async function loadUserProfile(username) {
+    console.log(`Loading profile for: ${username}... talk about main character energy.`);
+    
+    // Query your 'profiles' table in Supabase
+    const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('username', username)
+        .single();
+
+    if (error || !profile) {
+        console.error("User not found. L choice.");
+        // Optional: show a 404 section or redirect
+        return;
+    }
+
+    // Update your Epsilon Learner UI with the profile data
+    displayProfile(profile);
+}
+
+function displayProfile(profile) {
+    // Hide dashboard, show profile section (you'll need to add this section to your HTML)
+    document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+    
+    const profileSection = document.getElementById('profileSection');
+    if (profileSection) {
+        profileSection.classList.remove('hidden');
+        document.getElementById('profileName').innerText = profile.full_name || profile.username;
+        // Add more UI updates here...
+    }
+}
     </script>
 </body>
 
