@@ -14,7 +14,52 @@
     <link rel="icon" href="./icon.png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+ /* The Chat Window */
+        #ai-modal {
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
 
+        /* Draggable Header Cursor */
+        #ai-header {
+            cursor: move; /* Indicates it is draggable */
+            user-select: none; /* Prevents text selection while dragging */
+        }
+
+        /* Scrollbar Styling */
+        .chat-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 4px;
+        }
+        .chat-scroll::-webkit-scrollbar-thumb {
+            background: #d1d5db; 
+            border-radius: 4px;
+        }
+        .chat-scroll::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af; 
+        }
+
+        /* Message Bubbles */
+        .msg-bubble {
+            max-width: 80%;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+
+        /* Typing Indicator Animation */
+        .typing-dot {
+            animation: typing 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f3f4f6;
@@ -540,7 +585,11 @@
                     <canvas id="productivityChart"></canvas>
                 </div>
             </div>
-
+<button id="ai-toggle-btn" 
+        class="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full shadow-lg transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2"
+        aria-label="Open AI Assistant">
+        <i data-lucide="message-circle" class="w-6 h-6"></i>
+    </button>
             <!-- WORK TRACKER SECTION -->
             <div id="trackerSection" class="section hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -1324,6 +1373,51 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+    <div id="ai-modal" 
+         class="fixed bottom-24 right-6 z-40 w-80 h-[500px] bg-white rounded-xl border border-gray-200 flex flex-col hidden transform origin-bottom-right"
+         role="dialog" 
+         aria-modal="true" 
+         aria-labelledby="ai-title">
+
+        <!-- Header (Drag Handle) -->
+        <div id="ai-header" class="bg-emerald-500 text-white px-4 py-3 rounded-t-xl flex justify-between items-center select-none">
+            <div class="flex items-center gap-2">
+                <i data-lucide="bot" class="w-5 h-5"></i>
+                <h2 id="ai-title" class="font-semibold text-sm">Epsilon AI</h2>
+            </div>
+            <button id="ai-close-btn" class="text-emerald-100 hover:text-white transition-colors" aria-label="Close Chat">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- Chat Messages Area -->
+        <div id="chat-messages" class="flex-1 p-4 overflow-y-auto bg-gray-50 chat-scroll flex flex-col gap-3 text-sm">
+            <!-- Initial Welcome Message -->
+            <div class="flex gap-2">
+                <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0 text-emerald-600">
+                    <i data-lucide="bot" class="w-4 h-4"></i>
+                </div>
+                <div class="msg-bubble bg-white border border-gray-200 p-3 rounded-2xl rounded-tl-none text-gray-700 shadow-sm">
+                    Hello! I'm powered by Pollinations AI. How can I help you today?
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="p-3 bg-white border-t border-gray-100 rounded-b-xl">
+            <form id="chat-form" class="flex gap-2">
+                <input type="text" id="chat-input" 
+                    class="flex-1 bg-gray-100 text-gray-800 text-sm rounded-full px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-shadow" 
+                    placeholder="Type a message..." 
+                    autocomplete="off" required>
+                <button type="submit" 
+                    class="bg-emerald-500 hover:bg-emerald-600 text-white rounded-full p-2.5 flex items-center justify-center transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    id="send-btn">
+                    <i data-lucide="send" class="w-4 h-4"></i>
+                </button>
+            </form>
         </div>
     </div>
 
@@ -2765,56 +2859,258 @@ create index chat_messages_created_at_idx
             });
         }
         function handleProfileRouting() {
-    const path = window.location.pathname;
-    
-    // Check if path starts with /@
-    if (path.startsWith('/@')) {
-        const username = path.substring(2); // Get username after @
-        loadUserProfile(username);
-    }
-}
+            const path = window.location.pathname;
 
-// Listen for page load and back/forward buttons
-window.addEventListener('load', handleProfileRouting);
-window.addEventListener('popstate', handleProfileRouting);
+            // Check if path starts with /@
+            if (path.startsWith('/@')) {
+                const username = path.substring(2); // Get username after @
+                loadUserProfile(username);
+            }
+        }
 
-// Function to navigate without refreshing (use this for links)
-function goToProfile(username) {
-    const newPath = `/@${username}`;
-    window.history.pushState({}, '', newPath);
-    loadUserProfile(username);
-}
+        // Listen for page load and back/forward buttons
+        window.addEventListener('load', handleProfileRouting);
+        window.addEventListener('popstate', handleProfileRouting);
+
+        // Function to navigate without refreshing (use this for links)
+        function goToProfile(username) {
+            const newPath = `/@${username}`;
+            window.history.pushState({}, '', newPath);
+            loadUserProfile(username);
+        }
         async function loadUserProfile(username) {
-    console.log(`Loading profile for: ${username}... talk about main character energy.`);
-    
-    // Query your 'profiles' table in Supabase
-    const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('username', username)
-        .single();
+            console.log(`Loading profile for: ${username}... talk about main character energy.`);
 
-    if (error || !profile) {
-        console.error("User not found. L choice.");
-        // Optional: show a 404 section or redirect
-        return;
-    }
+            // Query your 'profiles' table in Supabase
+            const { data: profile, error } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('username', username)
+                .single();
 
-    // Update your Epsilon Learner UI with the profile data
-    displayProfile(profile);
-}
+            if (error || !profile) {
+                console.error("User not found. L choice.");
+                // Optional: show a 404 section or redirect
+                return;
+            }
 
-function displayProfile(profile) {
-    // Hide dashboard, show profile section (you'll need to add this section to your HTML)
-    document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
-    
-    const profileSection = document.getElementById('profileSection');
-    if (profileSection) {
-        profileSection.classList.remove('hidden');
-        document.getElementById('profileName').innerText = profile.full_name || profile.username;
-        // Add more UI updates here...
-    }
-}
+            // Update your Epsilon Learner UI with the profile data
+            displayProfile(profile);
+        }
+
+        function displayProfile(profile) {
+            // Hide dashboard, show profile section (you'll need to add this section to your HTML)
+            document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+
+            const profileSection = document.getElementById('profileSection');
+            if (profileSection) {
+                profileSection.classList.remove('hidden');
+                document.getElementById('profileName').innerText = profile.full_name || profile.username;
+                // Add more UI updates here...
+            }
+        }
+    </script>
+      <!-- ========================================== -->
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Elements
+        const toggleBtn = document.getElementById('ai-toggle-btn');
+        const closeBtn = document.getElementById('ai-close-btn');
+        const modal = document.getElementById('ai-modal');
+        const header = document.getElementById('ai-header');
+        const chatForm = document.getElementById('chat-form');
+        const chatInput = document.getElementById('chat-input');
+        const messagesContainer = document.getElementById('chat-messages');
+        const sendBtn = document.getElementById('send-btn');
+
+        // State
+        let isChatOpen = false;
+        let isDragging = false;
+        let dragOffset = { x: 0, y: 0 };
+
+        // --- 1. Open/Close Logic ---
+        function toggleChat() {
+            isChatOpen = !isChatOpen;
+            if (isChatOpen) {
+                modal.classList.remove('hidden');
+                // Small delay to allow display:block to apply before transition
+                setTimeout(() => {
+                    chatInput.focus();
+                }, 50);
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        toggleBtn.addEventListener('click', toggleChat);
+        closeBtn.addEventListener('click', toggleChat);
+
+        // --- 2. Draggable Logic ---
+        
+        header.addEventListener('mousedown', (e) => {
+            // Only start drag if clicking directly on header (not buttons)
+            if(e.target.closest('button')) return;
+
+            isDragging = true;
+            
+            // Calculate offset relative to the modal's top-left corner
+            const rect = modal.getBoundingClientRect();
+            dragOffset.x = e.clientX - rect.left;
+            dragOffset.y = e.clientY - rect.top;
+
+            // Remove bottom/right positioning to allow absolute positioning (top/left) to take over
+            modal.style.bottom = 'auto';
+            modal.style.right = 'auto';
+            modal.style.left = rect.left + 'px';
+            modal.style.top = rect.top + 'px';
+            
+            // Visual feedback
+            modal.style.transition = 'none'; // Disable transition for instant drag response
+            header.style.cursor = 'grabbing';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+
+            e.preventDefault();
+            
+            let newX = e.clientX - dragOffset.x;
+            let newY = e.clientY - dragOffset.y;
+
+            // Boundary Checks (keep modal within viewport)
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            const modalWidth = modal.offsetWidth;
+            const modalHeight = modal.offsetHeight;
+
+            // Constrain X
+            if (newX < 0) newX = 0;
+            if (newX + modalWidth > viewportWidth) newX = viewportWidth - modalWidth;
+
+            // Constrain Y
+            if (newY < 0) newY = 0;
+            if (newY + modalHeight > viewportHeight) newY = viewportHeight - modalHeight;
+
+            modal.style.left = `${newX}px`;
+            modal.style.top = `${newY}px`;
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                modal.style.transition = ''; // Re-enable transition for open/close animations
+                header.style.cursor = 'move';
+            }
+        });
+
+        // --- 3. Chat Functionality ---
+
+        // Helper to create message HTML
+        function appendMessage(text, isUser = false) {
+            const wrapper = document.createElement('div');
+            wrapper.className = `flex gap-2 ${isUser ? 'flex-row-reverse' : ''}`;
+
+            // Avatar
+            const avatar = document.createElement('div');
+            avatar.className = `w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${isUser ? 'bg-gray-200 text-gray-600' : 'bg-emerald-100 text-emerald-600'}`;
+            avatar.innerHTML = isUser 
+                ? '<i data-lucide="user" class="w-4 h-4"></i>' 
+                : '<i data-lucide="bot" class="w-4 h-4"></i>';
+
+            // Bubble
+            const bubble = document.createElement('div');
+            bubble.className = `msg-bubble p-3 rounded-2xl text-sm shadow-sm ${
+                isUser 
+                ? 'bg-emerald-500 text-white rounded-tr-none' 
+                : 'bg-white border border-gray-200 text-gray-700 rounded-tl-none'
+            }`;
+            bubble.textContent = text;
+
+            wrapper.appendChild(avatar);
+            wrapper.appendChild(bubble);
+            messagesContainer.appendChild(wrapper);
+            
+            // Re-render icons for the new element
+            lucide.createIcons();
+
+            // Scroll to bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Helper to show typing indicator
+        function showTyping() {
+            const wrapper = document.createElement('div');
+            wrapper.id = 'typing-indicator';
+            wrapper.className = 'flex gap-2';
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0 text-emerald-600';
+            avatar.innerHTML = '<i data-lucide="bot" class="w-4 h-4"></i>';
+
+            const bubble = document.createElement('div');
+            bubble.className = 'bg-white border border-gray-200 p-3 rounded-2xl rounded-tl-none text-gray-500 flex gap-1 items-center h-10';
+            
+            // Dots
+            for(let i=0; i<3; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'w-1.5 h-1.5 bg-gray-400 rounded-full typing-dot';
+                bubble.appendChild(dot);
+            }
+
+            wrapper.appendChild(avatar);
+            wrapper.appendChild(bubble);
+            messagesContainer.appendChild(wrapper);
+            lucide.createIcons();
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function removeTyping() {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) indicator.remove();
+        }
+
+        // Form Submit
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            // 1. Add User Message
+            appendMessage(text, true);
+            chatInput.value = '';
+            
+            // 2. Disable Input
+            chatInput.disabled = true;
+            sendBtn.disabled = true;
+            showTyping();
+
+            // 3. Call API
+            try {
+                // Using text.pollinations.ai
+                const prompt = encodeURIComponent(text);
+                const response = await fetch(`https://text.pollinations.ai/${prompt}`);
+                
+                if (!response.ok) throw new Error('API request failed');
+                
+                const aiText = await response.text();
+                
+                removeTyping();
+                appendMessage(aiText, false);
+
+            } catch (error) {
+                removeTyping();
+                console.error(error);
+                appendMessage("Sorry, I couldn't connect to the AI. Please try again.", false);
+            } finally {
+                // 4. Re-enable Input
+                chatInput.disabled = false;
+                sendBtn.disabled = false;
+                chatInput.focus();
+            }
+        });
+
     </script>
 </body>
 
