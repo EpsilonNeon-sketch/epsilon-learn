@@ -15,39 +15,6 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-        /* HTML Notes Styles */
-        .html-tab-btn.active {
-            background-color: white;
-            color: #10b981;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        }
-
-        .html-tab-btn:not(.active) {
-            color: #6b7280;
-        }
-
-        .html-tab-btn:not(.active):hover {
-            color: #1f2937;
-        }
-
-        /* Custom Scrollbar for Editor */
-        #htmlEditor::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        #htmlEditor::-webkit-scrollbar-track {
-            background: #111827;
-        }
-
-        #htmlEditor::-webkit-scrollbar-thumb {
-            background: #374151;
-            border-radius: 5px;
-        }
-
-        #htmlEditor::-webkit-scrollbar-thumb:hover {
-            background: #4b5563;
-        }
-
         /* The Chat Window */
         #ai-modal {
             transition: opacity 0.2s ease, transform 0.2s ease;
@@ -478,12 +445,6 @@
                 </button>
                 <button
                     class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
-                    data-page="htmlnotes">
-                    <i data-lucide="code-2" class="w-5 h-5"></i>
-                    <span>HTML Notes</span>
-                </button>
-                <button
-                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
                     data-page="music">
                     <i data-lucide="music" class="w-5 h-5"></i>
                     <span>Study Music</span>
@@ -725,8 +686,6 @@
                     </div>
                 </div>
             </div>
-
-
 
             <!-- QUIZ SECTION -->
             <div id="quizSection" class="section hidden">
@@ -1051,114 +1010,6 @@
                                 <i data-lucide="volume-2" class="w-5 h-5"></i>
                                 <input type="range" id="volumeSlider" min="0" max="100" value="70" class="w-24"
                                     onchange="changeVolume(this.value)">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- HTML NOTES SECTION -->
-            <div id="htmlnotesSection" class="section hidden">
-                <div class="max-w-6xl mx-auto">
-                    <div class="glass p-6 rounded-2xl mb-6">
-                        <div class="flex flex-col md:flex-row justify-between items-center mb-6">
-                            <div>
-                                <h2 class="text-2xl font-bold text-gray-800">HTML Notes & Cheatsheets</h2>
-                                <p class="text-gray-600 text-sm">Create raw HTML notes, generate a session link, and
-                                    preview them instantly.</p>
-                            </div>
-
-                            <!-- Toggle Tabs -->
-                            <div class="flex bg-gray-100 p-1 rounded-lg mt-4 md:mt-0">
-                                <button onclick="switchHtmlTab('create')" id="tab-create"
-                                    class="px-4 py-2 rounded-md text-sm font-medium transition bg-white text-emerald-600 shadow-sm">Creator</button>
-                                <button onclick="switchHtmlTab('view')" id="tab-view"
-                                    class="px-4 py-2 rounded-md text-sm font-medium transition text-gray-500 hover:text-gray-700">Viewer</button>
-                            </div>
-                        </div>
-
-                        <!-- TAB 1: CREATOR -->
-                        <div id="htmlCreator" class="block">
-                            <div class="flex flex-col lg:flex-row gap-6 h-[600px]">
-                                <!-- Code Editor -->
-                                <div class="flex-1 flex flex-col">
-                                    <div class="flex justify-between items-center mb-2">
-                                        <label class="text-sm font-semibold text-gray-700">Source Code (HTML)</label>
-                                        <button onclick="clearHtmlEditor()"
-                                            class="text-xs text-red-500 hover:text-red-700">Clear</button>
-                                    </div>
-                                    <textarea id="htmlEditor"
-                                        class="flex-1 w-full bg-gray-900 text-gray-100 font-mono text-sm p-4 rounded-xl border border-gray-700 focus:border-emerald-500 focus:outline-none resize-none"
-                                        placeholder="<!-- Write your HTML/CSS here -->&#10;<h1>Hello World</h1>&#10;<style>body { font-family: sans-serif; }</style>"
-                                        spellcheck="false"></textarea>
-                                    <div class="mt-4 flex gap-3">
-                                        <button onclick="generateHtmlLink()"
-                                            class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 rounded-lg transition flex items-center justify-center gap-2">
-                                            <i data-lucide="link" class="w-4 h-4"></i> Generate Session Link
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <!-- Live Preview (Optional in Creator) -->
-                                <div class="lg:w-1/2 flex flex-col">
-                                    <label class="text-sm font-semibold text-gray-700 mb-2">Live Preview</label>
-                                    <div class="flex-1 bg-white border border-gray-200 rounded-xl overflow-hidden">
-                                        <iframe id="creatorPreview" class="w-full h-full"></iframe>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Generated Link Modal/Result Area -->
-                            <div id="linkResult"
-                                class="hidden mt-6 p-4 bg-emerald-50 border border-emerald-100 rounded-xl flex flex-col md:flex-row items-center gap-4">
-                                <div class="flex items-center gap-3 text-emerald-700">
-                                    <div class="p-2 bg-emerald-200 rounded-full"><i data-lucide="check-circle"
-                                            class="w-6 h-6"></i></div>
-                                    <div>
-                                        <h4 class="font-bold">Link Generated!</h4>
-                                        <p class="text-sm opacity-80">Copy this link to view this specific note in the
-                                            Viewer tab.</p>
-                                    </div>
-                                </div>
-                                <div class="flex-1 w-full flex gap-2">
-                                    <input type="text" id="generatedLink" readonly
-                                        class="w-full bg-white border border-emerald-200 text-gray-600 text-sm p-3 rounded-lg font-mono">
-                                    <button onclick="copyGeneratedLink()"
-                                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition">Copy</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- TAB 2: VIEWER -->
-                        <div id="htmlViewer" class="hidden">
-                            <div class="mb-6">
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">Paste Note Link or
-                                    URL</label>
-                                <div class="flex gap-2">
-                                    <input type="text" id="externalHtmlUrl"
-                                        placeholder="blob:http://... or any public URL"
-                                        class="input-field flex-1 font-mono text-sm">
-                                    <button onclick="loadExternalHtml()"
-                                        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition font-medium">
-                                        Load
-                                    </button>
-                                </div>
-                                <p class="text-xs text-gray-400 mt-2">
-                                    <i data-lucide="info" class="w-3 h-3 inline"></i>
-                                    Note: Generated "blob" links work in the current browser session. For permanent
-                                    storage, copy the HTML code itself.
-                                </p>
-                            </div>
-
-                            <div
-                                class="w-full h-[600px] bg-white border border-gray-200 rounded-xl shadow-inner overflow-hidden relative">
-                                <iframe id="viewerFrame" class="w-full h-full border-0"></iframe>
-                                <!-- Placeholder State -->
-                                <div id="viewerPlaceholder"
-                                    class="absolute inset-0 flex flex-col items-center justify-center text-gray-400 pointer-events-none">
-                                    <i data-lucide="monitor" class="w-16 h-16 mb-4 opacity-20"></i>
-                                    <p>Load a link to preview content</p>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -3345,131 +3196,6 @@ create index chat_messages_created_at_idx
                 closeAiModal();
             }
         });
-        // --- HTML NOTES LOGIC ---
-
-        // 1. Tab Switching
-        function switchHtmlTab(tabName) {
-            const creator = document.getElementById('htmlCreator');
-            const viewer = document.getElementById('htmlViewer');
-            const btnCreate = document.getElementById('tab-create');
-            const btnView = document.getElementById('tab-view');
-
-            if (tabName === 'create') {
-                creator.classList.remove('hidden');
-                viewer.classList.add('hidden');
-                btnCreate.classList.add('bg-white', 'text-emerald-600', 'shadow-sm');
-                btnCreate.classList.remove('text-gray-500');
-                btnView.classList.remove('bg-white', 'text-emerald-600', 'shadow-sm');
-                btnView.classList.add('text-gray-500');
-
-                // Trigger a live update of the preview if code exists
-                updateLivePreview();
-            } else {
-                creator.classList.add('hidden');
-                viewer.classList.remove('hidden');
-                btnView.classList.add('bg-white', 'text-emerald-600', 'shadow-sm');
-                btnView.classList.remove('text-gray-500');
-                btnCreate.classList.remove('bg-white', 'text-emerald-600', 'shadow-sm');
-                btnCreate.classList.add('text-gray-500');
-            }
-        }
-
-        // 2. Live Preview Logic (Optional, updates while typing)
-        document.getElementById('htmlEditor').addEventListener('input', updateLivePreview);
-
-        function updateLivePreview() {
-            const code = document.getElementById('htmlEditor').value;
-            const previewFrame = document.getElementById('creatorPreview');
-
-            if (!code.trim()) {
-                previewFrame.srcdoc = '';
-                return;
-            }
-
-            // Inject a base style to make it look decent immediately
-            const styledCode = `
-        <style>
-            body { font-family: sans-serif; padding: 20px; color: #333; }
-            h1, h2, h3 { color: #10b981; margin-top: 0; }
-        </style>
-        ${code}
-    `;
-
-            previewFrame.srcdoc = styledCode;
-        }
-
-        function clearHtmlEditor() {
-            if (confirm("Clear editor?")) {
-                document.getElementById('htmlEditor').value = '';
-                updateLivePreview();
-                document.getElementById('linkResult').classList.add('hidden');
-            }
-        }
-
-        // 3. Generate Link (Your requested logic)
-        function generateHtmlLink() {
-            const editor = document.getElementById('htmlEditor');
-            const code = editor.value;
-
-            if (!code.trim()) {
-                showToast('⚠️ Please write some HTML code first!');
-                editor.focus();
-                return;
-            }
-
-            // Create the Blob
-            const blob = new Blob([code], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-
-            // Show result area
-            document.getElementById('generatedLink').value = url;
-            document.getElementById('linkResult').classList.remove('hidden');
-
-            // Auto-scroll to result
-            document.getElementById('linkResult').scrollIntoView({ behavior: 'smooth' });
-
-            showToast('🔗 Link generated! Copy it to the Viewer tab.');
-        }
-
-        function copyGeneratedLink() {
-            const copyText = document.getElementById("generatedLink");
-            copyText.select();
-            copyText.setSelectionRange(0, 99999); // For mobile devices
-
-            try {
-                navigator.clipboard.writeText(copyText.value);
-                showToast('✅ Link copied to clipboard');
-            } catch (err) {
-                showToast('❌ Failed to copy');
-            }
-        }
-
-        // 4. Load External HTML
-        function loadExternalHtml() {
-            const url = document.getElementById('externalHtmlUrl').value.trim();
-            const frame = document.getElementById('viewerFrame');
-            const placeholder = document.getElementById('viewerPlaceholder');
-
-            if (!url) {
-                showToast('⚠️ Please enter a URL first');
-                return;
-            }
-
-            placeholder.classList.add('hidden');
-            frame.src = url;
-
-            showToast('📄 Loading content...');
-        }
-
-        // --- UI INTEGRATION ---
-        // Add this inside your existing document.querySelectorAll('.nav-btn').forEach(...) loop
-        // Find the loop and add this case:
-        /*
-        if (page === 'htmlnotes') {
-            // Reset tabs to default
-            switchHtmlTab('create');
-        }
-        */
     </script>
 </body>
 
