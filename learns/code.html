@@ -1,773 +1,371 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CodeGreen - Learn to Code</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/introjs.min.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/introjs.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script>
-tailwind.config={theme:{extend:{fontFamily:{sans:['Plus Jakarta Sans','sans-serif'],mono:['JetBrains Mono','monospace']}}}}
-</script>
-<style>
-body{font-family:'Plus Jakarta Sans',sans-serif}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 15% 30%,rgba(16,185,129,.07) 0%,transparent 50%),radial-gradient(ellipse at 85% 15%,rgba(5,150,105,.05) 0%,transparent 50%),radial-gradient(ellipse at 50% 85%,rgba(52,211,153,.04) 0%,transparent 50%);pointer-events:none;z-index:-1}
-.code-editor{font-family:'JetBrains Mono',monospace;tab-size:2;resize:none;line-height:1.6}
-.code-editor:focus{outline:none;box-shadow:0 0 0 2px rgba(16,185,129,.4)}
-.scrollbar-thin::-webkit-scrollbar{width:6px;height:6px}
-.scrollbar-thin::-webkit-scrollbar-track{background:transparent}
-.scrollbar-thin::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:3px}
-.scrollbar-thin::-webkit-scrollbar-thumb:hover{background:#9ca3af}
-.introjs-tooltip{background-color:#064e3b!important;color:#ecfdf5!important;border-radius:12px!important;border:1px solid #10b981!important}
-.introjs-tooltipTitle{color:#6ee7b7!important;font-family:'Plus Jakarta Sans',sans-serif!important;font-weight:700!important}
-.introjs-tooltiptext{font-family:'Plus Jakarta Sans',sans-serif!important;line-height:1.6!important}
-.introjs-button{background-color:#10b981!important;color:#fff!important;border:none!important;border-radius:8px!important;font-family:'Plus Jakarta Sans',sans-serif!important;font-weight:600!important;text-shadow:none!important}
-.introjs-button:hover{background-color:#059669!important}
-.introjs-skipbutton{color:#6ee7b7!important;font-family:'Plus Jakarta Sans',sans-serif!important}
-.introjs-bullets .active{background:#10b981!important}
-.introjs-arrow{border-color:#064e3b!important}
-.introjs-overlay{background:rgba(0,0,0,.5)!important}
-.toast-enter{animation:toastIn .4s cubic-bezier(.16,1,.3,1) forwards}
-.toast-exit{animation:toastOut .3s ease-in forwards}
-@keyframes toastIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
-@keyframes toastOut{from{transform:translateX(0);opacity:1}to{transform:translateX(120%);opacity:0}}
-.lesson-item{transition:all .2s ease}
-.lesson-item:hover{transform:translateX(4px)}
-.card-lift{transition:transform .3s ease,box-shadow .3s ease}
-.card-lift:hover{transform:translateY(-6px);box-shadow:0 20px 40px -12px rgba(16,185,129,.2)}
-.run-pulse:active{transform:scale(.95)}
-.progress-fill{transition:width .8s cubic-bezier(.16,1,.3,1)}
-.pulse-dot{animation:pulseDot 2s ease-in-out infinite}
-@keyframes pulseDot{0%,100%{opacity:.4;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeGreen - Learn to Code</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/introjs.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/introjs.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Plus Jakarta Sans','sans-serif'],mono:['JetBrains Mono','monospace']}}}}</script>
+    <style>
+        body{font-family:'Plus Jakarta Sans',sans-serif}
+        body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 15% 30%,rgba(16,185,129,.07) 0%,transparent 50%),radial-gradient(ellipse at 85% 15%,rgba(5,150,105,.05) 0%,transparent 50%),radial-gradient(ellipse at 50% 85%,rgba(52,211,153,.04) 0%,transparent 50%);pointer-events:none;z-index:-1}
+        .code-editor{font-family:'JetBrains Mono',monospace;tab-size:2;resize:none;line-height:1.6}
+        .code-editor:focus{outline:none;box-shadow:0 0 0 2px rgba(16,185,129,.4)}
+        .scrollbar-thin::-webkit-scrollbar{width:6px;height:6px}
+        .scrollbar-thin::-webkit-scrollbar-track{background:transparent}
+        .scrollbar-thin::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:3px}
+        .scrollbar-thin::-webkit-scrollbar-thumb:hover{background:#9ca3af}
+        .introjs-tooltip{background-color:#064e3b!important;color:#ecfdf5!important;border-radius:12px!important;border:1px solid #10b981!important}
+        .introjs-tooltipTitle{color:#6ee7b7!important;font-family:'Plus Jakarta Sans',sans-serif!important;font-weight:700!important}
+        .introjs-tooltiptext{font-family:'Plus Jakarta Sans',sans-serif!important;line-height:1.6!important}
+        .introjs-button{background-color:#10b981!important;color:#fff!important;border:none!important;border-radius:8px!important;font-family:'Plus Jakarta Sans',sans-serif!important;font-weight:600!important;text-shadow:none!important}
+        .introjs-button:hover{background-color:#059669!important}
+        .introjs-skipbutton{color:#6ee7b7!important;font-family:'Plus Jakarta Sans',sans-serif!important}
+        .introjs-bullets .active{background:#10b981!important}
+        .introjs-arrow{border-color:#064e3b!important}
+        .introjs-overlay{background:rgba(0,0,0,.5)!important}
+        .toast-enter{animation:toastIn .4s cubic-bezier(.16,1,.3,1) forwards}
+        .toast-exit{animation:toastOut .3s ease-in forwards}
+        @keyframes toastIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+        @keyframes toastOut{from{transform:translateX(0);opacity:1}to{transform:translateX(120%);opacity:0}}
+        .lesson-item{transition:all .2s ease}
+        .lesson-item:hover{transform:translateX(4px)}
+        .card-lift{transition:transform .3s ease,box-shadow .3s ease}
+        .card-lift:hover{transform:translateY(-6px);box-shadow:0 20px 40px -12px rgba(16,185,129,.2)}
+        .run-pulse:active{transform:scale(.95)}
+        .progress-fill{transition:width .8s cubic-bezier(.16,1,.3,1)}
+        .pulse-dot{animation:pulseDot 2s ease-in-out infinite}
+        @keyframes pulseDot{0%,100%{opacity:.4;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
+        @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+    </style>
 </head>
 <body class="bg-white text-slate-800 min-h-screen">
-
-<div id="toast-container" class="fixed top-20 right-4 z-[200] flex flex-col gap-3 pointer-events-none"></div>
-
-<div id="modal-overlay" class="fixed inset-0 z-[150] hidden items-center justify-center bg-black/40 backdrop-blur-sm" role="dialog" aria-modal="true">
-  <div id="modal-box" class="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl">
-    <h3 id="modal-title" class="text-lg font-bold text-slate-900 mb-2"></h3>
-    <p id="modal-message" class="text-slate-600 mb-6 leading-relaxed"></p>
-    <div class="flex gap-3 justify-end">
-      <button id="modal-cancel" class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold transition-colors">Cancel</button>
-      <button id="modal-confirm" class="px-5 py-2.5 rounded-xl bg-red-500 text-white hover:bg-red-600 font-semibold transition-colors">Confirm</button>
+    <div id="toast-container" class="fixed top-20 right-4 z-[200] flex flex-col gap-3 pointer-events-none"></div>
+    <div id="modal-overlay" class="fixed inset-0 z-[150] hidden items-center justify-center bg-black/40 backdrop-blur-sm" role="dialog" aria-modal="true">
+        <div id="modal-box" class="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl">
+            <h3 id="modal-title" class="text-lg font-bold text-slate-900 mb-2"></h3>
+            <p id="modal-message" class="text-slate-600 mb-6 leading-relaxed"></p>
+            <div class="flex gap-3 justify-end">
+                <button id="modal-cancel" class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold transition-colors">Cancel</button>
+                <button id="modal-confirm" class="px-5 py-2.5 rounded-xl bg-red-500 text-white hover:bg-red-600 font-semibold transition-colors">Confirm</button>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-
-<div id="celebration" class="fixed inset-0 z-[120] hidden pointer-events-none overflow-hidden"></div>
-
-<nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-emerald-100/60">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-    <button id="nav-logo" onclick="showDashboard()" class="flex items-center gap-2.5 group" aria-label="Go to dashboard">
-      <div class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center group-hover:bg-emerald-600 transition-colors">
-        <i data-lucide="code-2" class="w-4 h-4 text-white"></i>
-      </div>
-      <span class="font-extrabold text-emerald-900 text-lg tracking-tight hidden sm:block">CodeGreen</span>
-    </button>
-    <div class="flex items-center gap-3">
-      <span id="nav-progress-text" class="text-xs font-semibold text-slate-500 hidden sm:block"></span>
-      <div class="w-32 h-2 bg-emerald-100 rounded-full overflow-hidden">
-        <div id="nav-progress-bar" class="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full progress-fill" style="width:0%"></div>
-      </div>
-    </div>
-    <div class="flex items-center gap-2">
-      <button onclick="startTour()" class="flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors" aria-label="Take guided tour">
-        <i data-lucide="compass" class="w-4 h-4"></i>
-        <span class="hidden sm:inline">Tour</span>
-      </button>
-      <button onclick="confirmReset()" class="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors" aria-label="Reset all progress" title="Reset Progress">
-        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-      </button>
-    </div>
-  </div>
-</nav>
-
-<main id="app" class="pt-16 min-h-screen"></main>
+    <div id="celebration" class="fixed inset-0 z-[120] hidden pointer-events-none overflow-hidden"></div>
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-emerald-100/60">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <button onclick="showDashboard()" class="flex items-center gap-2.5 group" aria-label="Go to dashboard">
+                <div class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center group-hover:bg-emerald-600 transition-colors"><i data-lucide="code-2" class="w-4 h-4 text-white"></i></div>
+                <span class="font-extrabold text-emerald-900 text-lg tracking-tight hidden sm:block">CodeGreen</span>
+            </button>
+            <div class="flex items-center gap-3">
+                <span id="nav-progress-text" class="text-xs font-semibold text-slate-500 hidden sm:block"></span>
+                <div class="w-32 h-2 bg-emerald-100 rounded-full overflow-hidden"><div id="nav-progress-bar" class="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full progress-fill" style="width:0%"></div></div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="startTour()" class="flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors"><i data-lucide="compass" class="w-4 h-4"></i><span class="hidden sm:inline">Tour</span></button>
+                <button onclick="confirmReset()" class="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Reset Progress"><i data-lucide="rotate-ccw" class="w-4 h-4"></i></button>
+            </div>
+        </div>
+    </nav>
+    <main id="app" class="pt-16 min-h-screen"></main>
 
 <script>
 // ======================== COURSE DATA ========================
-// Using separate arrays to avoid template literal / script tag conflicts
 var COURSES = {
-  html: {
-    id: 'html', name: 'HTML', icon: 'file-code',
-    description: 'Build the structure of web pages with HTML elements, tags, and attributes.',
-    color: '#E34F26', accentBg: 'bg-orange-50', accentText: 'text-orange-600', accentBorder: 'border-orange-200',
-    lessons: [
-      { id:'html-1', title:'Your First HTML Page', type:'html',
-        content:'HTML (HyperText Markup Language) is the skeleton of every web page. A basic HTML document has a <code>&lt;!DOCTYPE html&gt;</code> declaration, followed by <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, and <code>&lt;body&gt;</code> tags.<br><br>The <code>&lt;head&gt;</code> contains metadata like the page title. The <code>&lt;body&gt;</code> holds all visible content — headings, paragraphs, images, and more.',
-        starterCode:'<!DOCTYPE html>\n<html>\n<head>\n  <title>My First Page</title>\n</head>\n<body>\n  <h1>Hello World!</h1>\n  <p>This is my first web page.</p>\n  <p>HTML is the foundation of the web.</p>\n</body>\n</html>',
-        task:'Try changing the heading text and adding a third paragraph with your own message.'
-      },
-      { id:'html-2', title:'Headings & Text Formatting', type:'html',
-        content:'HTML provides six heading levels (<code>&lt;h1&gt;</code> through <code>&lt;h6&gt;</code>). Use <code>&lt;h1&gt;</code> for the main title and lower levels for sub-sections.<br><br>For text emphasis, use <code>&lt;strong&gt;</code> for bold importance and <code>&lt;em&gt;</code> for italic emphasis. The <code>&lt;br&gt;</code> tag creates a line break, and <code>&lt;hr&gt;</code> adds a horizontal rule.',
-        starterCode:'<h1>Main Title</h1>\n<h2>Section Heading</h2>\n<p>This is a normal paragraph with <strong>bold text</strong> and <em>italic text</em> inside it.</p>\n\n<h3>Sub-section</h3>\n<p>You can also combine <strong><em>bold and italic</em></strong> together.</p>\n\n<hr>\n\n<h4>Small Heading</h4>\n<p>Headings help organize content hierarchically.</p>',
-        task:'Add an h5 and h6 heading to see how they look, and try using a br tag inside a paragraph.'
-      },
-      { id:'html-3', title:'Links & Images', type:'html',
-        content:'Links are created with the <code>&lt;a&gt;</code> (anchor) tag using the <code>href</code> attribute. Use <code>target="_blank"</code> to open links in a new tab.<br><br>Images use the <code>&lt;img&gt;</code> tag with <code>src</code> for the URL and <code>alt</code> for alternative text (important for accessibility). The <code>img</code> tag is self-closing.',
-        starterCode:'<h1>My Favorite Resources</h1>\n\n<h2>Links</h2>\n<a href="https://developer.mozilla.org" target="_blank">MDN Web Docs</a><br>\n<a href="https://github.com" target="_blank">GitHub</a>\n\n<h2>Images</h2>\n<img src="https://picsum.photos/seed/greenleaf/400/250" alt="A beautiful landscape" style="border-radius:12px;">\n<p>Always include alt text for accessibility.</p>\n\n<h2>Image as a Link</h2>\n<a href="https://example.com" target="_blank">\n  <img src="https://picsum.photos/seed/coding42/150/100" alt="Click me" style="border-radius:8px;">\n</a>',
-        task:'Add a new link to your favorite website and replace one of the images with a different picsum seed.'
-      },
-      { id:'html-4', title:'Lists & Tables', type:'html',
-        content:'Unordered lists use <code>&lt;ul&gt;</code> with <code>&lt;li&gt;</code> items. Ordered lists use <code>&lt;ol&gt;</code> for numbered items. You can nest lists inside each other.<br><br>Tables use <code>&lt;table&gt;</code>, <code>&lt;tr&gt;</code> for rows, <code>&lt;th&gt;</code> for header cells, and <code>&lt;td&gt;</code> for data cells.',
-        starterCode:'<h2>Shopping List (Unordered)</h2>\n<ul>\n  <li>Apples</li>\n  <li>Bananas</li>\n  <li>Cherries</li>\n</ul>\n\n<h2>Recipe Steps (Ordered)</h2>\n<ol>\n  <li>Gather ingredients</li>\n  <li>Mix everything together</li>\n  <li>Bake at 180 degrees</li>\n  <li>Enjoy!</li>\n</ol>\n\n<h2>Language Comparison</h2>\n<table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse; border-color:#d1d5db;">\n  <thead>\n    <tr style="background:#ecfdf5;">\n      <th>Feature</th><th>HTML</th><th>CSS</th><th>JS</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr><td>Purpose</td><td>Structure</td><td>Style</td><td>Behavior</td></tr>\n    <tr><td>Runs in</td><td>Browser</td><td>Browser</td><td>Browser + Server</td></tr>\n  </tbody>\n</table>',
-        task:'Add a nested list inside one of the list items, and add another row to the table.'
-      },
-      { id:'html-5', title:'Forms & Inputs', type:'html',
-        content:'Forms collect user input using <code>&lt;form&gt;</code>. Common input types include <code>text</code>, <code>email</code>, <code>password</code>, <code>number</code>, and <code>checkbox</code>. Always pair inputs with <code>&lt;label&gt;</code> elements.<br><br>The <code>&lt;textarea&gt;</code> allows multi-line input. Use <code>&lt;select&gt;</code> and <code>&lt;option&gt;</code> for dropdowns.',
-        starterCode:'<h1>Contact Form</h1>\n<form style="max-width:400px;">\n  <label><strong>Name:</strong></label><br>\n  <input type="text" placeholder="Your name" style="width:100%;padding:8px;margin:4px 0 16px;border:1px solid #d1d5db;border-radius:8px;"><br>\n\n  <label><strong>Email:</strong></label><br>\n  <input type="email" placeholder="you@example.com" style="width:100%;padding:8px;margin:4px 0 16px;border:1px solid #d1d5db;border-radius:8px;"><br>\n\n  <label><strong>Topic:</strong></label><br>\n  <select style="width:100%;padding:8px;margin:4px 0 16px;border:1px solid #d1d5db;border-radius:8px;">\n    <option>General Question</option>\n    <option>Bug Report</option>\n    <option>Feature Request</option>\n  </select>\n\n  <label><strong>Message:</strong></label><br>\n  <textarea rows="4" placeholder="Write your message..." style="width:100%;padding:8px;margin:4px 0 16px;border:1px solid #d1d5db;border-radius:8px;resize:vertical;"></textarea><br>\n\n  <label><input type="checkbox"> Subscribe to newsletter</label><br><br>\n\n  <button type="submit" style="background:#10b981;color:white;padding:10px 24px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;">Send Message</button>\n</form>',
-        task:'Add a Phone number input field and a radio button group for Preferred Contact Method (Email / Phone).'
-      }
-    ]
-  },
-  css: {
-    id: 'css', name: 'CSS', icon: 'paintbrush',
-    description: 'Style and layout your web pages with colors, fonts, flexbox, and grid.',
-    color: '#1572B6', accentBg: 'bg-blue-50', accentText: 'text-blue-600', accentBorder: 'border-blue-200',
-    lessons: [
-      { id:'css-1', title:'Your First Styles', type:'html',
-        content:'CSS (Cascading Style Sheets) controls how HTML elements look. Write CSS rules inside a <code>&lt;style&gt;</code> tag. Each rule has a selector and declarations inside curly braces.<br><br>Properties like <code>color</code> change text color, <code>background-color</code> changes the background, and <code>text-align</code> controls alignment.',
-        starterCode:'<style>\n  body {\n    background-color: #ecfdf5;\n    font-family: sans-serif;\n    padding: 20px;\n  }\n  h1 {\n    color: #065f46;\n    text-align: center;\n    border-bottom: 3px solid #10b981;\n    padding-bottom: 12px;\n  }\n  p {\n    color: #374151;\n    font-size: 18px;\n    line-height: 1.8;\n  }\n</style>\n\n<h1>Styled Page</h1>\n<p>This paragraph has custom styles. Notice the colors, font size, and spacing.</p>\n<p>Both paragraphs share the same styles because they match the "p" selector.</p>',
-        task:'Change the background color, make the heading uppercase using text-transform, and add a different style to just the second paragraph using a class.'
-      },
-      { id:'css-2', title:'Colors, Fonts & Text', type:'html',
-        content:'CSS gives powerful control over typography. Use <code>font-family</code> for typeface, <code>font-size</code> for size, <code>font-weight</code> for boldness. Colors can be hex, rgb, or named.<br><br>Use classes (<code>.classname</code>) to target specific elements. <code>text-transform</code> can uppercase, lowercase, or capitalize text.',
-        starterCode:'<style>\n  h1 {\n    color: #065f46;\n    font-family: Georgia, serif;\n    font-size: 36px;\n    text-transform: uppercase;\n    letter-spacing: 3px;\n  }\n  .highlight {\n    background-color: #d1fae5;\n    padding: 12px 20px;\n    border-radius: 8px;\n    color: #047857;\n    font-weight: bold;\n    display: inline-block;\n  }\n  .muted {\n    color: #6b7280;\n    font-style: italic;\n    font-size: 14px;\n  }\n  .gradient-text {\n    background: linear-gradient(135deg, #10b981, #059669, #047857);\n    -webkit-background-clip: text;\n    -webkit-text-fill-color: transparent;\n    font-size: 28px;\n    font-weight: 800;\n  }\n</style>\n\n<h1>Typography Showcase</h1>\n<p class="highlight">This text is highlighted with a green background</p>\n<p class="muted">This is a muted, italic caption</p>\n<p class="gradient-text">This text has a gradient color effect</p>',
-        task:'Create a new class with a different font, background, and text color. Apply it to a new paragraph.'
-      },
-      { id:'css-3', title:'The Box Model', type:'html',
-        content:'Every HTML element is a box: <strong>content</strong> (inner area), <strong>padding</strong> (inside border), <strong>border</strong> (the edge), and <strong>margin</strong> (outside the border).<br><br>Use <code>box-shadow</code> for depth and <code>border-radius</code> to round corners. These four layers are the foundation of CSS layout.',
-        starterCode:'<style>\n  .box {\n    width: 220px;\n    padding: 24px;\n    border: 3px solid #10b981;\n    margin: 20px;\n    background-color: #ecfdf5;\n    text-align: center;\n    border-radius: 12px;\n  }\n  .box-shadow {\n    width: 220px;\n    padding: 24px;\n    border: 2px solid #059669;\n    margin: 20px;\n    background: white;\n    text-align: center;\n    border-radius: 12px;\n    box-shadow: 0 8px 24px rgba(16,185,129,0.25);\n  }\n  .box-dashed {\n    width: 220px;\n    padding: 24px;\n    border: 3px dashed #047857;\n    margin: 20px;\n    background: linear-gradient(135deg, #ecfdf5, #d1fae5);\n    text-align: center;\n    border-radius: 50px;\n  }\n</style>\n\n<div class="box">Solid Border</div>\n<div class="box-shadow">With Shadow</div>\n<div class="box-dashed">Dashed + Pill Shape</div>',
-        task:'Create a fourth box with a dotted border, a different shadow color, and asymmetric border-radius like 20px 50px 20px 50px.'
-      },
-      { id:'css-4', title:'Flexbox Layout', type:'html',
-        content:'Flexbox arranges items in rows or columns. Set <code>display: flex</code> on the parent, then use <code>justify-content</code> for horizontal and <code>align-items</code> for vertical alignment.<br><br>The <code>gap</code> property adds space between items. <code>flex: 1</code> makes items grow equally. Use <code>flex-direction: column</code> to stack vertically.',
-        starterCode:'<style>\n  .row {\n    display: flex;\n    gap: 12px;\n    padding: 16px;\n    margin-bottom: 12px;\n    background: #f0fdf4;\n    border-radius: 12px;\n  }\n  .item {\n    flex: 1;\n    padding: 20px;\n    background: #10b981;\n    color: white;\n    text-align: center;\n    border-radius: 8px;\n    font-weight: bold;\n  }\n  .centered {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    height: 120px;\n    background: #d1fae5;\n    border-radius: 12px;\n  }\n  .around {\n    display: flex;\n    justify-content: space-around;\n    padding: 16px;\n    background: #ecfdf5;\n    border-radius: 12px;\n  }\n</style>\n\n<h3>Equal Width Items</h3>\n<div class="row">\n  <div class="item">Item 1</div>\n  <div class="item">Item 2</div>\n  <div class="item">Item 3</div>\n</div>\n\n<h3>Perfectly Centered</h3>\n<div class="centered">\n  <div class="item" style="background:#059669;flex:none;padding:16px 32px;">Centered!</div>\n</div>\n\n<h3>Space Around</h3>\n<div class="around">\n  <div class="item" style="flex:none;padding:12px 20px;">A</div>\n  <div class="item" style="flex:none;padding:12px 20px;">B</div>\n  <div class="item" style="flex:none;padding:12px 20px;">C</div>\n</div>',
-        task:'Change the first row to use space-between and make one item take double the width of the others.'
-      },
-      { id:'css-5', title:'CSS Grid Layout', type:'html',
-        content:'CSS Grid is a two-dimensional layout system. Use <code>display: grid</code> and <code>grid-template-columns</code> to define columns. The <code>fr</code> unit distributes space fractionally.<br><br>Items can span multiple columns with <code>grid-column: span N</code> or rows with <code>grid-row: span N</code>. Grid excels at complex layouts.',
-        starterCode:'<style>\n  .grid {\n    display: grid;\n    grid-template-columns: 1fr 1fr 1fr;\n    gap: 12px;\n    padding: 16px;\n  }\n  .cell {\n    padding: 24px;\n    background: #10b981;\n    color: white;\n    text-align: center;\n    border-radius: 10px;\n    font-weight: bold;\n    min-height: 60px;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n  }\n  .wide { grid-column: span 2; background: #059669; }\n  .tall { grid-row: span 2; background: #047857; }\n  .full { grid-column: span 3; background: #065f46; }\n</style>\n\n<div class="grid">\n  <div class="cell wide">Wide (2 cols)</div>\n  <div class="cell tall">Tall (2 rows)</div>\n  <div class="cell">Normal</div>\n  <div class="cell">Normal</div>\n  <div class="cell">Normal</div>\n  <div class="cell wide">Wide (2 cols)</div>\n  <div class="cell full">Full Width (3 cols)</div>\n</div>',
-        task:'Change the grid to 4 columns and rearrange items. Try making one item span 3 columns and 2 rows.'
-      }
-    ]
-  },
-  js: {
-    id: 'js', name: 'JavaScript', icon: 'terminal',
-    description: 'Add interactivity and logic to your pages with variables, functions, and DOM manipulation.',
-    color: '#F7DF1E', accentBg: 'bg-yellow-50', accentText: 'text-yellow-600', accentBorder: 'border-yellow-200',
-    lessons: [
-      { id:'js-1', title:'Hello, JavaScript!', type:'js',
-        content:'JavaScript is the programming language of the web. The most basic way to output information is <code>console.log()</code>, which prints to the developer console.<br><br>Store data in variables using <code>let</code> (for values that change) or <code>const</code> (for constants). Strings are in quotes. Template literals use backticks: <code>`Hello ${name}`</code>.',
-        starterCode:'// This is a comment - it won\'t run\nconsole.log("Hello, JavaScript!");\nconsole.log("I\'m learning to code!");\n\n// Variables store data\nlet name = "Learner";\nconsole.log("Welcome, " + name + "!");\n\nconst year = 2024;\nconsole.log("Current year: " + year);\n\n// Template literals use backticks\nlet greeting = "Hello, " + name + "! It\'s " + year + ".";\nconsole.log(greeting);',
-        task:'Create a variable with your favorite color and log a sentence like "My favorite color is blue".'
-      },
-      { id:'js-2', title:'Variables & Data Types', type:'js',
-        content:'JavaScript has several data types: <strong>strings</strong> (text), <strong>numbers</strong>, <strong>booleans</strong> (true/false), <strong>arrays</strong> (ordered lists), and <strong>objects</strong> (key-value pairs).<br><br>Use <code>typeof</code> to check a type. Arrays use <code>[]</code> accessed by index (starting at 0). Objects use <code>{}</code> accessed with dot notation.',
-        starterCode:'// Different data types\nlet username = "Alex";        // string\nlet age = 25;                 // number\nlet isStudent = true;         // boolean\nlet skills = ["HTML", "CSS", "JS"];  // array\nlet profile = {               // object\n  name: "Alex",\n  level: 5,\n  active: true\n};\n\nconsole.log("Name:", username, "Type:", typeof username);\nconsole.log("Age:", age, "Type:", typeof age);\nconsole.log("Student?", isStudent, "Type:", typeof isStudent);\nconsole.log("Skills:", skills);\nconsole.log("First skill:", skills[0]);\nconsole.log("Profile:", profile.name, "Level:", profile.level);\n\n// Modifying values\nage = 26;\nskills.push("React");\nconsole.log("Updated age:", age);\nconsole.log("Updated skills:", skills);',
-        task:'Add more items to the skills array, add new properties to the profile object, and log them.'
-      },
-      { id:'js-3', title:'Functions', type:'js',
-        content:'Functions are reusable blocks of code. Define them with <code>function</code> or as arrow functions <code>() => {}</code>. They accept <strong>parameters</strong> (inputs) and <strong>return</strong> a value (output).<br><br>Arrow functions are shorter: <code>const add = (a, b) => a + b;</code>. Functions help you avoid repeating code.',
-        starterCode:'// Regular function\nfunction greet(name) {\n  return "Hello, " + name + "!";\n}\nconsole.log(greet("World"));\nconsole.log(greet("JavaScript"));\n\n// Arrow function\nvar add = function(a, b) { return a + b; };\nvar multiply = function(a, b) { return a * b; };\nconsole.log("5 + 3 =", add(5, 3));\nconsole.log("4 * 6 =", multiply(4, 6));\n\n// Multi-line function\nvar calculateArea = function(width, height) {\n  var area = width * height;\n  return "A " + width + "x" + height + " rectangle has area " + area;\n};\nconsole.log(calculateArea(10, 5));\nconsole.log(calculateArea(7, 3));\n\n// Function with default parameter\nvar power = function(base, exp) {\n  if (exp === undefined) exp = 2;\n  return Math.pow(base, exp);\n};\nconsole.log("3^2 =", power(3));\nconsole.log("2^5 =", power(2, 5));',
-        task:'Create a function called "factorial" that calculates the factorial of a number. Test it with factorial(5) which should return 120.'
-      },
-      { id:'js-4', title:'DOM Manipulation', type:'html',
-        content:'The DOM (Document Object Model) represents your HTML as a tree. JavaScript can select elements with <code>document.getElementById()</code> or <code>document.querySelector()</code>.<br><br>Change <code>textContent</code>, <code>innerHTML</code>, <code>style</code> properties, and toggle classes with <code>classList.add()</code> / <code>classList.remove()</code>.',
-        starterCode:'<h1 id="title" style="transition: all 0.3s;">Original Title</h1>\n<p id="text">Click the button to change me!</p>\n<button id="btn1" style="background:#10b981;color:white;padding:10px 20px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin-top:12px;">Change Content</button>\n<button id="btn2" style="background:#059669;color:white;padding:10px 20px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin-top:12px;">Toggle Style</button>\n\n<style>\n  .styled {\n    background: #ecfdf5 !important;\n    padding: 16px !important;\n    border-left: 4px solid #10b981 !important;\n    border-radius: 0 8px 8px 0 !important;\n  }\n</style>\n\n<script>\ndocument.getElementById("btn1").addEventListener("click", function() {\n  document.getElementById("title").textContent = "Title Changed!";\n  document.getElementById("title").style.color = "#10b981";\n  document.getElementById("text").innerHTML = "The DOM was <strong>manipulated</strong>!";\n});\n\ndocument.getElementById("btn2").addEventListener("click", function() {\n  document.getElementById("title").classList.toggle("styled");\n});\n<\/script>',
-        task:'Add a third button that creates and appends a new paragraph element to the page using document.createElement and appendChild.'
-      },
-      { id:'js-5', title:'Events & Interactivity', type:'html',
-        content:'Events are browser actions — clicks, key presses, form submissions. Attach handlers with <code>addEventListener()</code>.<br><br>This lesson builds a fully interactive counter. The pattern — read state, update it, reflect in DOM — is the core of all interactive web apps.',
-        starterCode:'<div style="text-align:center; padding:20px;">\n  <div id="counter" style="font-size:64px; font-weight:900; color:#10b981; transition: transform 0.1s;">0</div>\n  <div style="margin-top:16px; display:flex; gap:8px; justify-content:center;">\n    <button id="decBtn" style="font-size:24px; padding:8px 20px; border:2px solid #ef4444; color:#ef4444; background:white; border-radius:10px; cursor:pointer; font-weight:bold;">-</button>\n    <button id="resetBtn" style="font-size:24px; padding:8px 20px; border:2px solid #6b7280; color:#6b7280; background:white; border-radius:10px; cursor:pointer; font-weight:bold;">Reset</button>\n    <button id="incBtn" style="font-size:24px; padding:8px 20px; border:2px solid #10b981; color:#10b981; background:white; border-radius:10px; cursor:pointer; font-weight:bold;">+</button>\n  </div>\n  <p id="message" style="margin-top:16px; color:#6b7280; font-size:18px;">Start counting!</p>\n  <p id="history" style="margin-top:12px; color:#9ca3af; font-size:14px; max-width:300px; margin-left:auto; margin-right:auto;"></p>\n</div>\n\n<script>\nvar count = 0;\nvar historyLog = [];\n\nfunction update(amount) {\n  count += amount;\n  var el = document.getElementById("counter");\n  el.textContent = count;\n  el.style.transform = "scale(1.2)";\n  setTimeout(function() { el.style.transform = "scale(1)"; }, 100);\n\n  var msg = document.getElementById("message");\n  if (count > 0) { msg.textContent = "Positive! Keep going!"; msg.style.color = "#10b981"; }\n  else if (count < 0) { msg.textContent = "Negative! Going down!"; msg.style.color = "#ef4444"; }\n  else { msg.textContent = "Back to zero!"; msg.style.color = "#6b7280"; }\n\n  historyLog.push((amount > 0 ? "+" : "") + amount);\n  document.getElementById("history").textContent = "History: " + historyLog.join(", ");\n}\n\nfunction resetCounter() {\n  count = 0;\n  historyLog = [];\n  document.getElementById("counter").textContent = "0";\n  document.getElementById("message").textContent = "Start counting!";\n  document.getElementById("message").style.color = "#6b7280";\n  document.getElementById("history").textContent = "";\n}\n\ndocument.getElementById("incBtn").addEventListener("click", function() { update(1); });\ndocument.getElementById("decBtn").addEventListener("click", function() { update(-1); });\ndocument.getElementById("resetBtn").addEventListener("click", resetCounter);\n<\/script>',
-        task:'Add a "x2" button that doubles the current count, and change the counter color based on how high the number goes.'
-      }
-    ]
-  }
+    html: {
+        id:'html', name:'HTML', icon:'file-code',
+        description:'Build the structure of web pages with HTML elements, semantic tags, and forms.',
+        color:'#E34F26', accentBg:'bg-orange-50', accentText:'text-orange-600', accentBorder:'border-orange-200',
+        lessons:[
+            {id:'html-1',title:'Your First HTML Page',type:'html',content:'HTML (HyperText Markup Language) is the skeleton of every web page. A basic HTML document has a <code>&lt;!DOCTYPE html&gt;</code> declaration, followed by <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, and <code>&lt;body&gt;</code> tags.<br><br>The <code>&lt;head&gt;</code> contains metadata like the page title. The <code>&lt;body&gt;</code> holds all visible content.',starterCode:'<!DOCTYPE html>\n<html>\n<head>\n  <title>My First Page</title>\n</head>\n<body>\n  <h1>Hello World!</h1>\n  <p>This is my first web page.</p>\n  <p>HTML is the foundation of the web.</p>\n</body>\n</html>',task:'Try changing the heading text and adding a third paragraph with your own message.'},
+            {id:'html-2',title:'Headings & Text Formatting',type:'html',content:'HTML provides six heading levels (<code>&lt;h1&gt;</code> through <code>&lt;h6&gt;</code>). Use <code>&lt;strong&gt;</code> for bold and <code>&lt;em&gt;</code> for italic. The <code>&lt;br&gt;</code> tag creates a line break, <code>&lt;hr&gt;</code> adds a horizontal rule.',starterCode:'<h1>Main Title</h1>\n<h2>Section Heading</h2>\n<p>Normal paragraph with <strong>bold</strong> and <em>italic</em> text.</p>\n<h3>Sub-section</h3>\n<p>Combined <strong><em>bold and italic</em></strong>.</p>\n<hr>\n<h4>Small Heading</h4>\n<p>Headings organize content hierarchically.</p>',task:'Add an h5 and h6 heading, and try using a br tag inside a paragraph.'},
+            {id:'html-3',title:'Links & Images',type:'html',content:'Links use <code>&lt;a href="..."&gt;</code>. Use <code>target="_blank"</code> to open in a new tab. Images use the self-closing <code>&lt;img src="..." alt="..."&gt;</code> tag. Always include alt text for accessibility.',starterCode:'<h2>Links</h2>\n<a href="https://developer.mozilla.org" target="_blank">MDN Web Docs</a><br>\n<a href="https://github.com" target="_blank">GitHub</a>\n\n<h2>Images</h2>\n<img src="https://picsum.photos/seed/greenleaf/400/250" alt="A landscape" style="border-radius:12px;">\n<p>Always include alt text.</p>\n\n<h2>Image as Link</h2>\n<a href="https://example.com" target="_blank">\n  <img src="https://picsum.photos/seed/coding42/150/100" alt="Click me" style="border-radius:8px;">\n</a>',task:'Add a new link to your favorite website and replace one image with a different picsum seed.'},
+            {id:'html-4',title:'Lists & Tables',type:'html',content:'Unordered lists use <code>&lt;ul&gt;</code>, ordered lists use <code>&lt;ol&gt;</code>, both with <code>&lt;li&gt;</code> items. Tables use <code>&lt;table&gt;</code>, <code>&lt;tr&gt;</code> for rows, <code>&lt;th&gt;</code> for headers, <code>&lt;td&gt;</code> for data.',starterCode:'<h2>Shopping List (Unordered)</h2>\n<ul>\n  <li>Apples</li>\n  <li>Bananas</li>\n  <li>Cherries</li>\n</ul>\n\n<h2>Recipe Steps (Ordered)</h2>\n<ol>\n  <li>Gather ingredients</li>\n  <li>Mix together</li>\n  <li>Bake at 180 degrees</li>\n</ol>\n\n<h2>Comparison Table</h2>\n<table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse;border-color:#d1d5db;">\n  <tr style="background:#ecfdf5;"><th>Feature</th><th>HTML</th><th>CSS</th></tr>\n  <tr><td>Purpose</td><td>Structure</td><td>Style</td></tr>\n  <tr><td>Runs in</td><td>Browser</td><td>Browser</td></tr>\n</table>',task:'Add a nested list inside one of the list items, and add another row to the table.'},
+            {id:'html-5',title:'Forms & Inputs',type:'html',content:'Forms collect user input with <code>&lt;form&gt;</code>. Input types: <code>text</code>, <code>email</code>, <code>password</code>, <code>number</code>, <code>checkbox</code>. Always pair inputs with <code>&lt;label&gt;</code>. Use <code>&lt;textarea&gt;</code> for multi-line and <code>&lt;select&gt;</code> for dropdowns.',starterCode:'<h1>Contact Form</h1>\n<form style="max-width:400px;">\n  <label><strong>Name:</strong></label><br>\n  <input type="text" placeholder="Your name" style="width:100%;padding:8px;margin:4px 0 16px;border:1px solid #d1d5db;border-radius:8px;"><br>\n  <label><strong>Email:</strong></label><br>\n  <input type="email" placeholder="you@example.com" style="width:100%;padding:8px;margin:4px 0 16px;border:1px solid #d1d5db;border-radius:8px;"><br>\n  <label><strong>Topic:</strong></label><br>\n  <select style="width:100%;padding:8px;margin:4px 0 16px;border:1px solid #d1d5db;border-radius:8px;">\n    <option>General</option><option>Bug Report</option><option>Feature</option>\n  </select>\n  <label><strong>Message:</strong></label><br>\n  <textarea rows="4" placeholder="Your message..." style="width:100%;padding:8px;margin:4px 0 16px;border:1px solid #d1d5db;border-radius:8px;resize:vertical;"></textarea><br>\n  <label><input type="checkbox"> Subscribe</label><br><br>\n  <button type="submit" style="background:#10b981;color:white;padding:10px 24px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;">Send</button>\n</form>',task:'Add a Phone input and a radio button group for Preferred Contact (Email / Phone).'},
+            {id:'html-6',title:'Semantic HTML',type:'html',content:'Semantic elements describe their meaning: <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;article&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;aside&gt;</code>, <code>&lt;footer&gt;</code>. They improve SEO, accessibility, and readability over generic <code>&lt;div&gt;</code> tags.',starterCode:'<header style="background:#ecfdf5;padding:16px 24px;border-radius:12px;margin-bottom:20px;">\n  <h1>My Blog</h1>\n  <nav><a href="#" style="margin-right:16px;">Home</a><a href="#" style="margin-right:16px;">About</a><a href="#">Contact</a></nav>\n</header>\n<main>\n  <article style="border:1px solid #e5e7eb;border-radius:12px;padding:20px;margin-bottom:16px;">\n    <h2>Understanding Semantic HTML</h2>\n    <p>Published on <time datetime="2024-01-15">January 15, 2024</time></p>\n    <p>Semantic tags make your code meaningful. Screen readers use them to navigate efficiently.</p>\n  </article>\n  <section style="border:1px solid #e5e7eb;border-radius:12px;padding:20px;">\n    <h2>Related Topics</h2>\n    <ul><li>Accessibility</li><li>SEO Best Practices</li><li>Web Standards</li></ul>\n  </section>\n</main>\n<aside style="background:#f0fdf4;padding:16px;border-radius:12px;margin-top:16px;border-left:4px solid #10b981;">\n  <p><strong>Tip:</strong> Use aside for side content like tips or related links.</p>\n</aside>\n<footer style="margin-top:24px;padding-top:16px;border-top:1px solid #e5e7eb;color:#6b7280;font-size:14px;">\n  <p>My Blog &copy; 2024</p>\n</footer>',task:'Add a second article with its own heading, date, and paragraph. Wrap both articles in a section.'},
+            {id:'html-7',title:'Multimedia: Audio, Video & Iframes',type:'html',content:'HTML5 has native <code>&lt;audio&gt;</code> and <code>&lt;video&gt;</code> elements. Use <code>controls</code> for playback UI and <code>&lt;source&gt;</code> for multiple formats. <code>&lt;iframe&gt;</code> embeds external content like maps or videos.',starterCode:'<h1>Multimedia in HTML</h1>\n<h2>Embedded Video</h2>\n<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube Video" style="border-radius:12px;max-width:100%;" allowfullscreen></iframe>\n\n<h2>Embedded Map</h2>\n<iframe src="https://www.openstreetmap.org/export/embed.html?bbox=-0.004%2C51.476%2C0.0003%2C51.4785&layer=mapnik" width="560" height="300" title="Map" style="border-radius:12px;max-width:100%;"></iframe>\n\n<h2>Audio Player</h2>\n<audio controls style="width:100%;">\n  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">\n  Your browser does not support audio.\n</audio>\n\n<h2>Video Player</h2>\n<video controls width="400" style="border-radius:12px;max-width:100%;">\n  <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">\n  Your browser does not support video.\n</video>',task:'Change the YouTube video ID to embed a different video. Add a poster attribute to the video element.'},
+            {id:'html-8',title:'Accessibility & Best Practices',type:'html',content:'Accessible HTML works for everyone. Use <code>alt</code> on images, <code>label</code> with <code>for</code> on inputs, <code>aria-*</code> attributes, proper heading hierarchy, and <code>meta viewport</code> for mobile. Always close tags, use lowercase, and add <code>lang</code> to <code>&lt;html&gt;</code>.',starterCode:'<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>Accessible Page</title>\n</head>\n<body>\n  <header>\n    <nav aria-label="Main navigation">\n      <ul style="list-style:none;display:flex;gap:16px;padding:12px 0;">\n        <li><a href="#" style="color:#059669;font-weight:bold;">Home</a></li>\n        <li><a href="#" style="color:#059669;">About</a></li>\n        <li><a href="#" style="color:#059669;">Contact</a></li>\n      </ul>\n    </nav>\n  </header>\n  <main>\n    <h1>Accessible Form</h1>\n    <form style="max-width:400px;">\n      <div style="margin-bottom:16px;">\n        <label for="fullname" style="font-weight:bold;display:block;margin-bottom:4px;">Full Name</label>\n        <input type="text" id="fullname" required aria-required="true" placeholder="Enter name" style="width:100%;padding:10px;border:2px solid #d1d5db;border-radius:8px;">\n      </div>\n      <div style="margin-bottom:16px;">\n        <label for="email" style="font-weight:bold;display:block;margin-bottom:4px;">Email</label>\n        <input type="email" id="email" required aria-required="true" placeholder="you@example.com" style="width:100%;padding:10px;border:2px solid #d1d5db;border-radius:8px;">\n      </div>\n      <fieldset style="border:2px solid #e5e7eb;border-radius:8px;padding:12px;">\n        <legend style="font-weight:bold;">Language</legend>\n        <label><input type="radio" name="lang" value="en" checked> English</label><br>\n        <label><input type="radio" name="lang" value="es"> Spanish</label>\n      </fieldset>\n      <div aria-live="polite" id="form-status" style="margin-top:8px;color:#059669;font-weight:bold;"></div>\n      <button type="submit" style="background:#10b981;color:white;padding:12px 32px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin-top:12px;">Submit</button>\n    </form>\n    <figure style="margin-top:24px;">\n      <img src="https://picsum.photos/seed/a11y/500/300" alt="Person using screen reader" style="border-radius:12px;width:100%;max-width:500px;">\n      <figcaption style="color:#6b7280;font-size:14px;margin-top:8px;">Figure 1: Screen readers help users navigate content</figcaption>\n    </figure>\n  </main>\n</body>\n</html>',task:'Add an aria-describedby attribute to the email input linking to a help text paragraph.'}
+        ]
+    },
+    css: {
+        id:'css', name:'CSS', icon:'paintbrush',
+        description:'Style and layout web pages with colors, fonts, flexbox, grid, animations, and responsive design.',
+        color:'#1572B6', accentBg:'bg-blue-50', accentText:'text-blue-600', accentBorder:'border-blue-200',
+        lessons:[
+            {id:'css-1',title:'Your First Styles',type:'html',content:'CSS controls how HTML looks. Write rules inside <code>&lt;style&gt;</code>. Each rule has a selector and declarations. <code>color</code> changes text, <code>background-color</code> changes background, <code>text-align</code> controls alignment.',starterCode:'<style>\n  body { background-color: #ecfdf5; font-family: sans-serif; padding: 20px; }\n  h1 { color: #065f46; text-align: center; border-bottom: 3px solid #10b981; padding-bottom: 12px; }\n  p { color: #374151; font-size: 18px; line-height: 1.8; }\n</style>\n\n<h1>Styled Page</h1>\n<p>This paragraph has custom styles.</p>\n<p>Both paragraphs share the same styles.</p>',task:'Change the background color, make the heading uppercase, and add a different style to the second paragraph using a class.'},
+            {id:'css-2',title:'Colors, Fonts & Text',type:'html',content:'Use <code>font-family</code>, <code>font-size</code>, <code>font-weight</code>. Colors can be hex, rgb, or named. Classes (<code>.classname</code>) target specific elements. <code>text-transform</code> can uppercase, lowercase, or capitalize.',starterCode:'<style>\n  h1 { color: #065f46; font-family: Georgia, serif; font-size: 36px; text-transform: uppercase; letter-spacing: 3px; }\n  .highlight { background-color: #d1fae5; padding: 12px 20px; border-radius: 8px; color: #047857; font-weight: bold; display: inline-block; }\n  .muted { color: #6b7280; font-style: italic; font-size: 14px; }\n  .gradient-text { background: linear-gradient(135deg, #10b981, #047857); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 28px; font-weight: 800; }\n</style>\n\n<h1>Typography Showcase</h1>\n<p class="highlight">Highlighted text</p>\n<p class="muted">Muted italic caption</p>\n<p class="gradient-text">Gradient color effect</p>',task:'Create a new class with a different font, background, and text color.'},
+            {id:'css-3',title:'The Box Model',type:'html',content:'Every element is a box: <strong>content</strong>, <strong>padding</strong> (inside border), <strong>border</strong>, <strong>margin</strong> (outside). Use <code>box-shadow</code> for depth and <code>border-radius</code> for rounded corners.',starterCode:'<style>\n  .box { width: 200px; padding: 24px; border: 3px solid #10b981; margin: 20px; background: #ecfdf5; text-align: center; border-radius: 12px; display: inline-block; }\n  .box-shadow { width: 200px; padding: 24px; border: 2px solid #059669; margin: 20px; background: white; text-align: center; border-radius: 12px; box-shadow: 0 8px 24px rgba(16,185,129,0.25); display: inline-block; }\n  .box-dashed { width: 200px; padding: 24px; border: 3px dashed #047857; margin: 20px; background: linear-gradient(135deg, #ecfdf5, #d1fae5); text-align: center; border-radius: 50px; display: inline-block; }\n</style>\n\n<div class="box">Solid Border</div>\n<div class="box-shadow">With Shadow</div>\n<div class="box-dashed">Dashed + Pill</div>',task:'Create a fourth box with a dotted border, different shadow color, and asymmetric border-radius.'},
+            {id:'css-4',title:'Flexbox Layout',type:'html',content:'Set <code>display: flex</code> on the parent. Use <code>justify-content</code> for horizontal alignment, <code>align-items</code> for vertical. <code>gap</code> adds space. <code>flex: 1</code> makes items grow equally.',starterCode:'<style>\n  .row { display: flex; gap: 12px; padding: 16px; margin-bottom: 12px; background: #f0fdf4; border-radius: 12px; }\n  .item { flex: 1; padding: 20px; background: #10b981; color: white; text-align: center; border-radius: 8px; font-weight: bold; }\n  .centered { display: flex; justify-content: center; align-items: center; height: 120px; background: #d1fae5; border-radius: 12px; }\n  .around { display: flex; justify-content: space-around; padding: 16px; background: #ecfdf5; border-radius: 12px; }\n</style>\n<h3>Equal Width</h3>\n<div class="row"><div class="item">1</div><div class="item">2</div><div class="item">3</div></div>\n<h3>Centered</h3>\n<div class="centered"><div class="item" style="background:#059669;flex:none;padding:16px 32px;">Centered!</div></div>\n<h3>Space Around</h3>\n<div class="around"><div class="item" style="flex:none;padding:12px 20px;">A</div><div class="item" style="flex:none;padding:12px 20px;">B</div><div class="item" style="flex:none;padding:12px 20px;">C</div></div>',task:'Change the first row to space-between and make one item double width.'},
+            {id:'css-5',title:'CSS Grid Layout',type:'html',content:'Use <code>display: grid</code> and <code>grid-template-columns</code>. The <code>fr</code> unit distributes space fractionally. Items span columns with <code>grid-column: span N</code> or rows with <code>grid-row: span N</code>.',starterCode:'<style>\n  .grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; padding: 16px; }\n  .cell { padding: 24px; background: #10b981; color: white; text-align: center; border-radius: 10px; font-weight: bold; min-height: 60px; display: flex; align-items: center; justify-content: center; }\n  .wide { grid-column: span 2; background: #059669; }\n  .tall { grid-row: span 2; background: #047857; }\n  .full { grid-column: span 3; background: #065f46; }\n</style>\n<div class="grid">\n  <div class="cell wide">Wide (2 cols)</div>\n  <div class="cell tall">Tall (2 rows)</div>\n  <div class="cell">Normal</div>\n  <div class="cell">Normal</div>\n  <div class="cell">Normal</div>\n  <div class="cell wide">Wide (2 cols)</div>\n  <div class="cell full">Full Width</div>\n</div>',task:'Change to 4 columns and make one item span 3 columns and 2 rows.'},
+            {id:'css-6',title:'Pseudo-classes & Pseudo-elements',type:'html',content:'Pseudo-classes: <code>:hover</code>, <code>:focus</code>, <code>:first-child</code>, <code>:nth-child(n)</code>. Pseudo-elements: <code>::before</code>, <code>::after</code>, <code>::first-letter</code>. They add interactivity and decoration without extra HTML.',starterCode:'<style>\n  .btn { padding: 12px 28px; background: #10b981; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; margin: 6px; }\n  .btn:hover { background: #059669; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16,185,129,0.4); }\n  .btn:active { transform: translateY(0); }\n  .list-item { padding: 12px 16px; border-bottom: 1px solid #e5e7eb; transition: background 0.2s; }\n  .list-item:hover { background: #ecfdf5; }\n  .list-item:nth-child(odd) { background: #f9fafb; }\n  .fancy::before { content: "\\2728 "; }\n  .fancy::after { content: " \\2728"; }\n  .drop-cap::first-letter { font-size: 48px; float: left; line-height: 1; margin-right: 8px; color: #059669; font-weight: 900; }\n</style>\n<h3>Button States</h3>\n<button class="btn">Hover Me</button>\n<button class="btn" style="background:#6366f1;">Secondary</button>\n<h3>Styled List</h3>\n<div style="border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;max-width:400px;">\n  <div class="list-item">First</div><div class="list-item">Second</div><div class="list-item">Third</div><div class="list-item">Fourth</div>\n</div>\n<h3>Pseudo-elements</h3>\n<p class="fancy">Decorated text</p>\n<p class="drop-cap">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>',task:'Add :focus-visible to buttons with an outline. Use ::after on list items to show an arrow on hover.'},
+            {id:'css-7',title:'Transitions & Animations',type:'html',content:'<code>transition</code> animates property changes. <code>@keyframes</code> define multi-step animations with <code>animation-name</code>, <code>animation-duration</code>, and <code>animation-iteration-count</code>.',starterCode:'<style>\n  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }\n  @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }\n  @keyframes pulse-scale { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.1);opacity:0.8} }\n  @keyframes slide-in { from{transform:translateX(-100%);opacity:0} to{transform:translateX(0);opacity:1} }\n  .bounce { animation: bounce 1s ease infinite; width: 50px; height: 50px; background: #10b981; border-radius: 50%; margin: 16px; display: inline-block; }\n  .spinner { animation: spin 2s linear infinite; width: 40px; height: 40px; border: 4px solid #d1fae5; border-top-color: #10b981; border-radius: 50%; margin: 16px; display: inline-block; }\n  .pulse { animation: pulse-scale 2s ease-in-out infinite; padding: 14px 28px; background: #059669; color: white; border-radius: 10px; font-weight: bold; display: inline-block; margin: 16px; }\n  .slide-item { animation: slide-in 0.5s ease-out forwards; opacity: 0; padding: 12px 16px; background: #ecfdf5; border-radius: 8px; margin: 6px 0; }\n  .slide-item:nth-child(1){animation-delay:0.1s} .slide-item:nth-child(2){animation-delay:0.3s} .slide-item:nth-child(3){animation-delay:0.5s}\n  .hover-card { transition: all 0.4s cubic-bezier(0.16,1,0.3,1); padding: 24px; background: white; border: 2px solid #e5e7eb; border-radius: 12px; cursor: pointer; margin: 12px 0; }\n  .hover-card:hover { transform: translateY(-8px) scale(1.02); border-color: #10b981; box-shadow: 0 20px 40px rgba(16,185,129,0.2); }\n</style>\n<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">\n  <div class="bounce"></div><div class="spinner"></div><div class="pulse">Pulse</div>\n</div>\n<h3>Staggered Slide-In</h3>\n<div class="slide-item">Item 1</div><div class="slide-item">Item 2</div><div class="slide-item">Item 3</div>\n<h3>Hover Card</h3>\n<div class="hover-card"><h4 style="margin:0 0 8px 0;">Hover me!</h4><p style="margin:0;color:#6b7280;">Smooth transition with spring-like easing.</p></div>',task:'Create a @keyframes that changes background color. Add animation-play-state: paused on hover.'},
+            {id:'css-8',title:'Responsive Design & Media Queries',type:'html',content:'Use <code>@media</code> to apply CSS based on screen size. <code>max-width</code> for desktop-first, <code>min-width</code> for mobile-first. Combine with flexbox/grid for adaptive layouts.',starterCode:'<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<style>\n  .container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 16px; max-width: 800px; }\n  .card { padding: 24px; background: linear-gradient(135deg, #10b981, #059669); color: white; border-radius: 12px; text-align: center; font-weight: bold; min-height: 80px; display: flex; align-items: center; justify-content: center; }\n  .hero { background: linear-gradient(135deg, #065f46, #047857); color: white; padding: 40px 24px; text-align: center; border-radius: 16px; margin: 16px; }\n  .hero h1 { font-size: 28px; margin: 0 0 8px 0; }\n  @media (max-width: 768px) { .container { grid-template-columns: repeat(2, 1fr); } .hero h1 { font-size: 22px; } }\n  @media (max-width: 480px) { .container { grid-template-columns: 1fr; } .hero h1 { font-size: 18px; } }\n</style>\n<div class="hero"><h1>Resize the preview!</h1><p>Grid adapts from 3 to 2 to 1 column.</p></div>\n<div class="container">\n  <div class="card">Card 1</div><div class="card">Card 2</div><div class="card">Card 3</div>\n  <div class="card">Card 4</div><div class="card">Card 5</div><div class="card">Card 6</div>\n</div>',task:'Add a @media print query that hides the hero and makes cards single-column with no background color.'}
+        ]
+    },
+    js: {
+        id:'js', name:'JavaScript', icon:'terminal',
+        description:'Add interactivity with variables, functions, DOM manipulation, loops, arrays, and objects.',
+        color:'#F7DF1E', accentBg:'bg-yellow-50', accentText:'text-yellow-600', accentBorder:'border-yellow-200',
+        lessons:[
+            {id:'js-1',title:'Hello, JavaScript!',type:'js',content:'<code>console.log()</code> prints to the console. Use <code>let</code> for variables that change, <code>const</code> for constants. Strings use quotes.',starterCode:'console.log("Hello, JavaScript!");\nconsole.log("I\'m learning to code!");\n\nlet name = "Learner";\nconsole.log("Welcome, " + name + "!");\n\nconst year = 2024;\nconsole.log("Current year: " + year);\n\nlet greeting = "Hello, " + name + "! It\'s " + year + ".";\nconsole.log(greeting);',task:'Create a variable with your favorite color and log a sentence like "My favorite color is blue".'},
+            {id:'js-2',title:'Variables & Data Types',type:'js',content:'Types: <strong>strings</strong>, <strong>numbers</strong>, <strong>booleans</strong>, <strong>arrays</strong>, <strong>objects</strong>. Use <code>typeof</code> to check. Arrays use <code>[]</code> with index access. Objects use <code>{}</code> with dot notation.',starterCode:'let username = "Alex";\nlet age = 25;\nlet isStudent = true;\nlet skills = ["HTML", "CSS", "JS"];\nlet profile = { name: "Alex", level: 5, active: true };\n\nconsole.log("Name:", username, "Type:", typeof username);\nconsole.log("Age:", age, "Type:", typeof age);\nconsole.log("Student?", isStudent, "Type:", typeof isStudent);\nconsole.log("Skills:", skills);\nconsole.log("First skill:", skills[0]);\nconsole.log("Profile:", profile.name, "Level:", profile.level);\n\nage = 26;\nskills.push("React");\nconsole.log("Updated age:", age);\nconsole.log("Updated skills:", skills);',task:'Add more items to skills, add new properties to profile, and log them.'},
+            {id:'js-3',title:'Functions',type:'js',content:'Functions are reusable code blocks. Define with <code>function</code> keyword. They accept parameters and return values. Functions avoid repeating code.',starterCode:'function greet(name) { return "Hello, " + name + "!"; }\nconsole.log(greet("World"));\nconsole.log(greet("JavaScript"));\n\nvar add = function(a, b) { return a + b; };\nvar multiply = function(a, b) { return a * b; };\nconsole.log("5 + 3 =", add(5, 3));\nconsole.log("4 * 6 =", multiply(4, 6));\n\nvar calculateArea = function(w, h) { return "A " + w + "x" + h + " rectangle has area " + (w * h); };\nconsole.log(calculateArea(10, 5));\n\nvar power = function(base, exp) {\n  if (exp === undefined) exp = 2;\n  return Math.pow(base, exp);\n};\nconsole.log("3^2 =", power(3));\nconsole.log("2^5 =", power(2, 5));',task:'Create a factorial function. Test with factorial(5) which should return 120.'},
+            {id:'js-4',title:'DOM Manipulation',type:'html',content:'Select elements with <code>document.getElementById()</code> or <code>document.querySelector()</code>. Change <code>textContent</code>, <code>innerHTML</code>, <code>style</code>. Toggle classes with <code>classList</code>.',starterCode:'<h1 id="title" style="transition:all 0.3s;">Original Title</h1>\n<p id="text">Click the button to change me!</p>\n<button id="btn1" style="background:#10b981;color:white;padding:10px 20px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin-top:12px;">Change Content</button>\n<button id="btn2" style="background:#059669;color:white;padding:10px 20px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin-top:12px;">Toggle Style</button>\n<style>.styled{background:#ecfdf5!important;padding:16px!important;border-left:4px solid #10b981!important;border-radius:0 8px 8px 0!important;}</style>\n<script>\ndocument.getElementById("btn1").addEventListener("click",function(){\n  document.getElementById("title").textContent="Title Changed!";\n  document.getElementById("title").style.color="#10b981";\n  document.getElementById("text").innerHTML="The DOM was <strong>manipulated</strong>!";\n});\ndocument.getElementById("btn2").addEventListener("click",function(){\n  document.getElementById("title").classList.toggle("styled");\n});\n<\/script>',task:'Add a third button that creates and appends a new paragraph using createElement and appendChild.'},
+            {id:'js-5',title:'Events & Interactivity',type:'html',content:'Events are browser actions. Attach handlers with <code>addEventListener()</code>. The pattern: read state, update it, reflect in DOM — core of all interactive apps.',starterCode:'<div style="text-align:center;padding:20px;">\n  <div id="counter" style="font-size:64px;font-weight:900;color:#10b981;transition:transform 0.1s;">0</div>\n  <div style="margin-top:16px;display:flex;gap:8px;justify-content:center;">\n    <button id="decBtn" style="font-size:24px;padding:8px 20px;border:2px solid #ef4444;color:#ef4444;background:white;border-radius:10px;cursor:pointer;font-weight:bold;">-</button>\n    <button id="resetBtn" style="font-size:24px;padding:8px 20px;border:2px solid #6b7280;color:#6b7280;background:white;border-radius:10px;cursor:pointer;font-weight:bold;">Reset</button>\n    <button id="incBtn" style="font-size:24px;padding:8px 20px;border:2px solid #10b981;color:#10b981;background:white;border-radius:10px;cursor:pointer;font-weight:bold;">+</button>\n  </div>\n  <p id="message" style="margin-top:16px;color:#6b7280;font-size:18px;">Start counting!</p>\n</div>\n<script>\nvar count=0;\nfunction update(amount){\n  count+=amount;\n  var el=document.getElementById("counter");\n  el.textContent=count;\n  el.style.transform="scale(1.2)";\n  setTimeout(function(){el.style.transform="scale(1)";},100);\n  var msg=document.getElementById("message");\n  if(count>0){msg.textContent="Positive!";msg.style.color="#10b981";}\n  else if(count<0){msg.textContent="Negative!";msg.style.color="#ef4444";}\n  else{msg.textContent="Back to zero!";msg.style.color="#6b7280";}\n}\nfunction resetCounter(){count=0;document.getElementById("counter").textContent="0";document.getElementById("message").textContent="Start counting!";document.getElementById("message").style.color="#6b7280";}\ndocument.getElementById("incBtn").addEventListener("click",function(){update(1);});\ndocument.getElementById("decBtn").addEventListener("click",function(){update(-1);});\ndocument.getElementById("resetBtn").addEventListener("click",resetCounter);\n<\/script>',task:'Add a "x2" button that doubles the count. Change counter color based on how high the number goes.'},
+            {id:'js-6',title:'Conditionals & Loops',type:'js',content:'<code>if / else if / else</code> for branching. Operators: <code>===</code>, <code>!==</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&&</code>, <code>||</code>. Loops: <code>for</code>, <code>while</code>. Use <code>break</code> to exit, <code>continue</code> to skip.',starterCode:'var score = 85;\nif (score >= 90) console.log("Grade: A");\nelse if (score >= 80) console.log("Grade: B");\nelse if (score >= 70) console.log("Grade: C");\nelse console.log("Grade: F");\n\nvar day = "Wednesday";\nswitch (day) {\n  case "Monday": case "Tuesday": case "Wednesday":\n  case "Thursday": case "Friday":\n    console.log(day + " is a weekday"); break;\n  case "Saturday": case "Sunday":\n    console.log(day + " is a weekend"); break;\n}\n\nconsole.log("\\n--- For Loop ---");\nfor (var i = 1; i <= 5; i++) console.log(i + " squared = " + (i * i));\n\nconsole.log("\\n--- While Loop ---");\nvar n = 10;\nwhile (n > 0) { console.log("Countdown: " + n); n -= 3; }\n\nconsole.log("\\n--- FizzBuzz ---");\nfor (var i = 1; i <= 15; i++) {\n  if (i % 15 === 0) console.log(i + ": FizzBuzz");\n  else if (i % 3 === 0) console.log(i + ": Fizz");\n  else if (i % 5 === 0) console.log(i + ": Buzz");\n  else console.log(i + ": " + i);\n}',task:'Write a loop that finds the sum of all even numbers from 1 to 100. Then check if a number is prime.'},
+            {id:'js-7',title:'Arrays & Array Methods',type:'js',content:'Core methods: <code>push()</code>, <code>pop()</code>, <code>unshift()</code>, <code>shift()</code>, <code>splice()</code>. Functional: <code>map()</code>, <code>filter()</code>, <code>reduce()</code>, <code>find()</code>, <code>some()</code>, <code>every()</code>.',starterCode:'var numbers = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3];\nconsole.log("Original:", numbers);\nconsole.log("Length:", numbers.length);\n\nnumbers.push(7);\nconsole.log("After push:", numbers);\nnumbers.pop();\nconsole.log("After pop:", numbers);\n\nvar sorted = numbers.slice().sort(function(a,b){return a-b;});\nconsole.log("Sorted:", sorted);\n\nvar doubled = numbers.map(function(n){return n*2;});\nconsole.log("Doubled:", doubled);\n\nvar evens = numbers.filter(function(n){return n%2===0;});\nconsole.log("Evens:", evens);\n\nvar sum = numbers.reduce(function(acc,n){return acc+n;},0);\nconsole.log("Sum:", sum);\n\nvar found = numbers.find(function(n){return n>5;});\nconsole.log("First > 5:", found);\n\nvar allPositive = numbers.every(function(n){return n>0;});\nconsole.log("All positive?", allPositive);\n\nvar result = numbers.filter(function(n){return n>2;}).map(function(n){return n*10;}).reduce(function(a,b){return a+b;},0);\nconsole.log("Chained:", result);',task:'Create an array of student objects with name and grade. Filter students with grade > 80, then map to just their names.'},
+            {id:'js-8',title:'Objects & JSON',type:'js',content:'Objects group data as key-value pairs. Access with dot or bracket notation. <code>JSON.stringify()</code> converts to string, <code>JSON.parse()</code> converts back. JSON is the backbone of web APIs.',starterCode:'var student = {\n  name: "Alex", age: 22, grades: [90, 85, 92],\n  address: { city: "San Francisco", state: "CA" },\n  getAverage: function() {\n    var sum = 0;\n    for (var i = 0; i < this.grades.length; i++) sum += this.grades[i];\n    return (sum / this.grades.length).toFixed(1);\n  }\n};\n\nconsole.log("Student:", student.name);\nconsole.log("City:", student.address.city);\nconsole.log("Average:", student.getAverage());\nconsole.log("Keys:", Object.keys(student));\n\nvar jsonString = JSON.stringify(student, null, 2);\nconsole.log("JSON:\\n", jsonString);\n\nvar parsed = JSON.parse(jsonString);\nconsole.log("Parsed:", parsed.name, "Grades:", parsed.grades);\n\nvar students = [{name:"Alex",grade:92},{name:"Sam",grade:87},{name:"Jo",grade:95}];\nvar top = students.reduce(function(best,s){return s.grade>best.grade?s:best;},students[0]);\nconsole.log("Top student:", top.name, "with", top.grade);',task:'Create a toJSON scenario: stringify a book object, parse it back, and access its properties.'}
+        ]
+    },
+    cpp: {
+        id:'cpp', name:'C++', icon:'cpu',
+        description:'Learn systems programming with C++: variables, control flow, functions, arrays, and classes.',
+        color:'#00599C', accentBg:'bg-blue-50', accentText:'text-blue-600', accentBorder:'border-blue-200',
+        lessons:[
+            {id:'cpp-1',title:'Hello, C++!',type:'code',content:'Every C++ program starts with <code>#include</code> directives, then <code>main()</code>. <code>&lt;iostream&gt;</code> provides I/O. <code>std::cout</code> prints. <code>&lt;endl&gt;</code> adds newline. Statements end with <code>;</code>.',starterCode:'#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << "Hello, World!" << endl;\n    cout << "Welcome to C++!" << endl;\n    cout << "C++ is fast and powerful." << endl;\n    cout << "Line 1" << endl\n         << "Line 2" << endl\n         << "Line 3" << endl;\n    return 0;\n}',expectedOutput:'Hello, World!\nWelcome to C++!\nC++ is fast and powerful.\nLine 1\nLine 2\nLine 3',task:'Add cout statements to print your name. Try using \\n instead of endl.'},
+            {id:'cpp-2',title:'Variables & Data Types',type:'code',content:'C++ is statically typed. Types: <code>int</code>, <code>double</code>, <code>char</code>, <code>bool</code>, <code>string</code>. Use <code>const</code> for constants. <code>sizeof()</code> shows memory size in bytes.',starterCode:'#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    int age = 25;\n    double price = 19.99;\n    char grade = \'A\';\n    string name = "Alex";\n    bool isStudent = true;\n    const double PI = 3.14159;\n\n    cout << "Name: " << name << endl;\n    cout << "Age: " << age << endl;\n    cout << "Price: $" << price << endl;\n    cout << "Grade: " << grade << endl;\n    cout << "Student: " << isStudent << endl;\n    cout << "PI: " << PI << endl;\n\n    cout << "\\n--- Type Sizes ---" << endl;\n    cout << "int: " << sizeof(int) << " bytes" << endl;\n    cout << "double: " << sizeof(double) << " bytes" << endl;\n    cout << "char: " << sizeof(char) << " byte" << endl;\n    cout << "bool: " << sizeof(bool) << " byte" << endl;\n\n    int truncated = (int)price;\n    cout << "\\nOriginal: " << price << endl;\n    cout << "Truncated: " << truncated << endl;\n    return 0;\n}',expectedOutput:'Name: Alex\nAge: 25\nPrice: $19.99\nGrade: A\nStudent: 1\nPI: 3.14159\n\n--- Type Sizes ---\nint: 4 bytes\ndouble: 8 bytes\nchar: 1 byte\nbool: 1 byte\n\nOriginal: 19.99\nTruncated: 19',task:'Declare long, float, and unsigned int variables. Print their values and sizes.'},
+            {id:'cpp-3',title:'Operators & Expressions',type:'code',content:'Arithmetic: <code>+ - * / %</code>. Comparison: <code>== != > <</code>. Logical: <code>&& || !</code>. Increment: <code>i++</code> (post), <code>++i</code> (pre). Modulo <code>%</code> gives remainder.',starterCode:'#include <iostream>\nusing namespace std;\n\nint main() {\n    int a = 17, b = 5;\n    cout << "a = " << a << ", b = " << b << endl;\n    cout << "a + b = " << (a+b) << endl;\n    cout << "a - b = " << (a-b) << endl;\n    cout << "a * b = " << (a*b) << endl;\n    cout << "a / b = " << (a/b) << " (integer div)" << endl;\n    cout << "a % b = " << (a%b) << " (remainder)" << endl;\n\n    cout << "\\na == b: " << (a==b) << endl;\n    cout << "a != b: " << (a!=b) << endl;\n    cout << "a > b: " << (a>b) << endl;\n\n    int x = 10;\n    cout << "\\nx++ (post): " << x++ << " (now " << x << ")" << endl;\n    cout << "++x (pre): " << ++x << " (now " << x << ")" << endl;\n\n    int y = 20;\n    y += 5;  cout << "y+=5: " << y << endl;\n    y *= 2;  cout << "y*=2: " << y << endl;\n    y %= 7;  cout << "y%=7: " << y << endl;\n    return 0;\n}',expectedOutput:'a = 17, b = 5\na + b = 22\na - b = 12\na * b = 85\na / b = 3 (integer div)\na % b = 2 (remainder)\n\na == b: 0\na != b: 1\na > b: 1\n\nx++ (post): 10 (now 11)\n++x (pre): 12 (now 12)\ny+=5: 25\ny*=2: 50\ny%=7: 1',task:'Extract digits of a 3-digit number using / and %. For 456, output 4, 5, 6.'},
+            {id:'cpp-4',title:'Conditionals',type:'code',content:'<code>if / else if / else</code> for branching. <code>switch</code> for multiple values. Use <code>==</code> not <code>=</code>. Ternary: <code>cond ? a : b</code>.',starterCode:'#include <iostream>\nusing namespace std;\n\nint main() {\n    int score = 85;\n    if (score >= 90) cout << "Grade: A" << endl;\n    else if (score >= 80) cout << "Grade: B" << endl;\n    else if (score >= 70) cout << "Grade: C" << endl;\n    else cout << "Grade: F" << endl;\n\n    int age = 20;\n    bool hasLicense = true;\n    if (age >= 16) {\n        if (hasLicense) cout << "You can drive!" << endl;\n        else cout << "Get your license first." << endl;\n    } else cout << "Too young to drive." << endl;\n\n    char grade = \'B\';\n    switch (grade) {\n        case \'A\': cout << "Outstanding!" << endl; break;\n        case \'B\': cout << "Very good!" << endl; break;\n        case \'C\': cout << "Satisfactory." << endl; break;\n        default:  cout << "Invalid." << endl;\n    }\n\n    int number = 7;\n    cout << number << " is " << ((number%2==0) ? "even" : "odd") << endl;\n    return 0;\n}',expectedOutput:'Grade: B\nYou can drive!\nVery good!\n7 is odd',task:'Write a calculator with switch: read two numbers and an operator, perform the operation.'},
+            {id:'cpp-5',title:'Loops',type:'code',content:'<code>for</code> (known count), <code>while</code> (condition), <code>do-while</code> (runs at least once). <code>break</code> exits, <code>continue</code> skips.',starterCode:'#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << "--- For Loop ---" << endl;\n    for (int i = 1; i <= 5; i++)\n        cout << i << " squared = " << (i*i) << endl;\n\n    cout << "\\n--- While Loop ---" << endl;\n    int n = 12;\n    while (n > 0) { cout << n << " "; n -= 3; }\n    cout << "Liftoff!" << endl;\n\n    cout << "\\n--- Do-While ---" << endl;\n    int input = 1;\n    do { cout << "Iteration " << input << endl; input *= 2; } while (input <= 16);\n\n    cout << "\\n--- Break & Continue ---" << endl;\n    for (int i = 0; i < 10; i++) {\n        if (i == 3) continue;\n        if (i == 8) break;\n        cout << i << " ";\n    }\n    cout << endl;\n\n    cout << "\\n--- 5x5 Table ---" << endl;\n    for (int i = 1; i <= 5; i++) {\n        for (int j = 1; j <= 5; j++) cout << i*j << "\\t";\n        cout << endl;\n    }\n    return 0;\n}',expectedOutput:'--- For Loop ---\n1 squared = 1\n2 squared = 4\n3 squared = 9\n4 squared = 16\n5 squared = 25\n\n--- While Loop ---\n12 9 6 3 Liftoff!\n\n--- Do-While ---\nIteration 1\nIteration 2\nIteration 4\nIteration 8\nIteration 16\n\n--- Break & Continue ---\n0 1 2 4 5 6 7 \n\n--- 5x5 Table ---\n1\t2\t3\t4\t5\t\n2\t4\t6\t8\t10\t\n3\t6\t9\t12\t15\t\n4\t8\t12\t16\t20\t\n5\t10\t15\t20\t25\t',task:'Print a right triangle of stars: row 1 has 1 star, row 5 has 5 stars.'},
+            {id:'cpp-6',title:'Functions',type:'code',content:'Functions need a return type. <code>void</code> for no return. Pass by value (copy) or by reference (<code>&</code>) to modify original. Overloading: same name, different parameters. Default parameters provide fallbacks.',starterCode:'#include <iostream>\n#include <string>\nusing namespace std;\n\nint add(int a, int b) { return a + b; }\nvoid greet(string name) { cout << "Hello, " << name << "!" << endl; }\nvoid doubleValue(int &num) { num = num * 2; }\nint area(int side) { return side * side; }\nint area(int w, int h) { return w * h; }\nvoid repeat(string msg, int times = 3) { for(int i=0;i<times;i++) cout << msg << endl; }\nint factorial(int n) { if(n<=1) return 1; return n*factorial(n-1); }\n\nint main() {\n    cout << "add(5,3) = " << add(5,3) << endl;\n    greet("C++ Learner");\n    int x = 10;\n    cout << "Before: " << x << endl;\n    doubleValue(x);\n    cout << "After: " << x << endl;\n    cout << "Square(5): " << area(5) << endl;\n    cout << "Rect(4,6): " << area(4,6) << endl;\n    cout << "\\nDefault:" << endl; repeat("Hi!");\n    cout << "\\n--- Factorials ---" << endl;\n    for(int i=1;i<=8;i++) cout << i << "! = " << factorial(i) << endl;\n    return 0;\n}',expectedOutput:'add(5,3) = 8\nHello, C++ Learner!\nBefore: 10\nAfter: 20\nSquare(5): 25\nRect(4,6): 24\n\nDefault:\nHi!\nHi!\nHi!\n\n--- Factorials ---\n1! = 1\n2! = 2\n3! = 6\n4! = 24\n5! = 120\n6! = 720\n7! = 5040\n8! = 40320',task:'Write isPrime(int n) and print all primes from 1 to 50.'},
+            {id:'cpp-7',title:'Arrays & Strings',type:'code',content:'Arrays: <code>type name[size]</code>. Index starts at 0. 2D arrays: <code>int matrix[3][3]</code>. <code>&lt;string&gt;</code> class has <code>length()</code>, <code>substr()</code>, <code>find()</code>, <code>append()</code>.',starterCode:'#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    int scores[5] = {90, 85, 92, 78, 88};\n    cout << "--- Array ---" << endl;\n    for (int i = 0; i < 5; i++)\n        cout << "scores[" << i << "] = " << scores[i] << endl;\n\n    int min = scores[0], max = scores[0], sum = 0;\n    for (int i = 0; i < 5; i++) {\n        if (scores[i]<min) min=scores[i];\n        if (scores[i]>max) max=scores[i];\n        sum += scores[i];\n    }\n    cout << "Min: " << min << " Max: " << max << " Avg: " << (double)sum/5 << endl;\n\n    cout << "\\n--- 3x3 Matrix ---" << endl;\n    int m[3][3] = {{1,2,3},{4,5,6},{7,8,9}};\n    for (int i=0;i<3;i++) { for(int j=0;j<3;j++) cout<<m[i][j]<<" "; cout<<endl; }\n\n    cout << "\\n--- Strings ---" << endl;\n    string name = "Hello, C++ World!";\n    cout << "String: " << name << endl;\n    cout << "Length: " << name.length() << endl;\n    cout << "Substring(0,5): " << name.substr(0,5) << endl;\n    cout << "Find C++: " << name.find("C++") << endl;\n    string upper = name;\n    for (int i=0;i<upper.length();i++) upper[i]=toupper(upper[i]);\n    cout << "Upper: " << upper << endl;\n    return 0;\n}',expectedOutput:'--- Array ---\nscores[0] = 90\nscores[1] = 85\nscores[2] = 92\nscores[3] = 78\nscores[4] = 88\nMin: 78 Max: 92 Avg: 86.6\n\n--- 3x3 Matrix ---\n1 2 3 \n4 5 6 \n7 8 9 \n\n--- Strings ---\nString: Hello, C++ World!\nLength: 18\nSubstring(0,5): Hello\nFind C++: 7\nUpper: HELLO, C++ WORLD!',task:'Reverse an array in place. Write a function that checks if a string is a palindrome.'},
+            {id:'cpp-8',title:'Introduction to Classes',type:'code',content:'Classes bundle data (members) and behavior (methods). Use <code>public:</code> for access. Constructors initialize objects. <code>this-></code> refers to the current object.',starterCode:'#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Student {\npublic:\n    string name; int age; double gpa;\n    Student(string n, int a, double g) : name(n), age(a), gpa(g) {}\n    void display() { cout << name << " | Age: " << age << " | GPA: " << gpa << endl; }\n    string getHonors() {\n        if (gpa >= 3.8) return "Summa Cum Laude";\n        if (gpa >= 3.5) return "Magna Cum Laude";\n        if (gpa >= 3.0) return "Cum Laude";\n        return "No honors";\n    }\n    void updateGPA(double g) { gpa = g; cout << name << " GPA updated to " << gpa << endl; }\n};\n\nclass Rectangle {\n    double w, h;\npublic:\n    Rectangle(double w, double h) : w(w), h(h) {}\n    double area() { return w * h; }\n    double perimeter() { return 2 * (w + h); }\n    bool isSquare() { return w == h; }\n    void display() { cout << w << "x" << h << " | Area: " << area() << " | Perim: " << perimeter() << (isSquare() ? " [Square]" : "") << endl; }\n};\n\nint main() {\n    cout << "=== Students ===" << endl;\n    Student s1("Alice", 20, 3.9);\n    Student s2("Bob", 22, 3.2);\n    s1.display(); cout << "  " << s1.getHonors() << endl;\n    s2.display(); cout << "  " << s2.getHonors() << endl;\n    cout << "\\n=== Rectangles ===" << endl;\n    Rectangle r1(5,3), r2(4,4);\n    r1.display(); r2.display();\n    return 0;\n}',expectedOutput:'=== Students ===\nAlice | Age: 20 | GPA: 3.9\n  Summa Cum Laude\nBob | Age: 22 | GPA: 3.2\n  Cum Laude\n\n=== Rectangles ===\n5x3 | Area: 15 | Perim: 16\n4x4 | Area: 16 | Perim: 16 [Square]',task:'Add a BankAccount class with balance, deposit(), withdraw() (prevent negative), and getBalance().'}
+        ]
+    },
+    kotlin: {
+        id:'kotlin', name:'Kotlin', icon:'diamond',
+        description:'Modern Android language with null safety, lambdas, and concise syntax.',
+        color:'#7F52FF', accentBg:'bg-purple-50', accentText:'text-purple-600', accentBorder:'border-purple-200',
+        lessons:[
+            {id:'kotlin-1',title:'Hello, Kotlin!',type:'code',content:'Kotlin is concise and safe. <code>main()</code> is the entry point. <code>println()</code> prints. f-strings use <code>$variable</code> and <code>${expression}</code>. Triple-quoted strings for multi-line.',starterCode:'fun main() {\n    println("Hello, World!")\n    println("Welcome to Kotlin!")\n\n    val name = "Kotlin Learner"\n    println("Hello, $name!")\n\n    val a = 10\n    val b = 20\n    println("$a + $b = ${a + b}")\n\n    val poem = """\n        Kotlin is great,\n        Modern and first-rate.\n        Null-safe by design,\n        Making code shine.\n    """.trimIndent()\n    println(poem)\n}',expectedOutput:'Hello, World!\nWelcome to Kotlin!\nHello, Kotlin Learner!\n10 + 20 = 30\n\nKotlin is great,\nModern and first-rate.\nNull-safe by design,\nMaking code shine.',task:'Create a mini profile using string templates: name, age, and a calculation in one println.'},
+            {id:'kotlin-2',title:'Variables & Data Types',type:'code',content:'<code>val</code> = read-only, <code>var</code> = mutable. Types: <code>Int</code>, <code>Double</code>, <code>Boolean</code>, <code>String</code>, <code>Char</code>. Type inference is automatic. No implicit casting — use <code>.toInt()</code>, <code>.toDouble()</code>.',starterCode:'fun main() {\n    val name: String = "Alex"\n    var age: Int = 25\n    val gpa: Double = 3.85\n    val isStudent: Boolean = true\n    val grade: Char = \'A\'\n\n    val city = "San Francisco"  // inferred\n    val pi = 3.14159            // inferred Double\n    val count = 42              // inferred Int\n\n    println("Name: $name, Age: $age")\n    println("GPA: $gpa, Student: $isStudent")\n    println("City: $city, Pi: $pi, Count: $count")\n\n    // Type conversion (no implicit!)\n    val intVal = 10\n    val doubleVal: Double = intVal.toDouble()\n    val stringVal = "42"\n    val parsed: Int = stringVal.toInt()\n    println("\\nInt to Double: $doubleVal")\n    println("String to Int: $parsed")\n\n    age = 26\n    println("Updated age: $age")\n}',expectedOutput:'Name: Alex, Age: 25\nGPA: 3.85, Student: true\nCity: San Francisco, Pi: 3.14159, Count: 42\n\nInt to Double: 10.0\nString to Int: 42\nUpdated age: 26',task:'Create Long, Float, Short variables and convert between them.'},
+            {id:'kotlin-3',title:'Control Flow',type:'code',content:'<code>when</code> replaces switch — matches values, ranges, types. <code>if/else</code> is an expression (returns value). Use <code>in</code> for ranges: <code>in 1..10</code>.',starterCode:'fun main() {\n    val score = 85\n    val grade = if (score >= 90) "A"\n                 else if (score >= 80) "B"\n                 else if (score >= 70) "C"\n                 else "F"\n    println("Score: $score -> Grade: $grade")\n\n    val day = "Wednesday"\n    val dayType = when (day) {\n        "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" -> "Weekday"\n        "Saturday", "Sunday" -> "Weekend"\n        else -> "Unknown"\n    }\n    println("$day is a $dayType")\n\n    val temp = 35\n    val weather = when (temp) {\n        in Int.MIN_VALUE..0 -> "Freezing!"\n        in 1..15 -> "Cold"\n        in 16..25 -> "Pleasant"\n        in 26..35 -> "Warm"\n        else -> "Extreme!"\n    }\n    println("Temperature $temp: $weather")\n\n    val x = 15\n    when {\n        x % 15 == 0 -> println("$x: FizzBuzz")\n        x % 3 == 0 -> println("$x: Fizz")\n        x % 5 == 0 -> println("$x: Buzz")\n        else -> println("$x: $x")\n    }\n}',expectedOutput:'Score: 85 -> Grade: B\nWednesday is a Weekday\nTemperature 35: Warm\n15: FizzBuzz',task:'Write a when that classifies a character as vowel, consonant, digit, or special.'},
+            {id:'kotlin-4',title:'Functions & Lambdas',type:'code',content:'<code>fun</code> defines functions. Single-expression: <code>fun add(a:Int,b:Int) = a+b</code>. Default params, named args. Lambdas: <code>{ x, y -> x + y }</code>. <code>it</code> is the single parameter.',starterCode:'fun main() {\n    fun greet(name: String) = "Hello, $name!"\n    println(greet("Kotlin"))\n\n    fun add(a: Int, b: Int) = a + b\n    println("5 + 3 = ${add(5, 3)}")\n\n    fun power(base: Int, exp: Int = 2) =\n        Math.pow(base.toDouble(), exp.toDouble()).toInt()\n    println("3^2 = ${power(3)}")\n    println("2^5 = ${power(2, 5)}")\n\n    fun createProfile(name: String, age: Int, city: String) {\n        println("Profile: $name, $age, $city")\n    }\n    createProfile(age = 25, city = "Tokyo", name = "Yuki")\n\n    val double: (Int) -> Int = { it * 2 }\n    println("double(7) = ${double(7)}")\n\n    val numbers = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)\n    val evens = numbers.filter { it % 2 == 0 }\n    val doubled = numbers.map { it * 2 }\n    val total = numbers.reduce { acc, n -> acc + n }\n    println("Evens: $evens")\n    println("Total: $total")\n\n    fun operate(a: Int, b: Int, op: (Int, Int) -> Int) = op(a, b)\n    println("Custom: ${operate(15, 4) { a, b -> a - b }}")\n}',expectedOutput:'Hello, Kotlin!\n5 + 3 = 8\n3^2 = 9\n2^5 = 32\nProfile: Yuki, 25, Tokyo\ndouble(7) = 14\nEvens: [2, 4, 6, 8, 10]\nTotal: 55\nCustom: 11',task:'Write a higher-order transformList function that applies a lambda to each element.'},
+            {id:'kotlin-5',title:'Null Safety',type:'code',content:'Variables can\'t be null unless declared with <code>?</code>. Safe call <code>?.</code>, Elvis <code>?:</code> for defaults, <code>!!</code> to assert non-null, <code>let</code> to run if not null.',starterCode:'fun main() {\n    val name: String = "Alice"\n    println("Name: $name, Length: ${name.length}")\n\n    var nickname: String? = "Ali"\n    println("Nickname length: ${nickname?.length}")\n\n    nickname = null\n    println("After null - length: ${nickname?.length}")\n\n    val displayName = nickname ?: "No nickname"\n    println("Display: $displayName")\n\n    data class User(val name: String, val email: String?)\n    val user: User? = User("Bob", null)\n    println("Email length: ${user?.email?.length}")\n\n    val message: String? = "Hello from let!"\n    message?.let { println("let: ${it.uppercase()}") }\n\n    val nullMsg: String? = null\n    nullMsg?.let { println("This won\\\'t print") }\n    println("let was skipped for null")\n\n    val obj: Any = "Hello"\n    println("Cast String: ${obj as? String}")\n    println("Cast Int: ${obj as? Int}")\n}',expectedOutput:'Name: Alice, Length: 5\nNickname length: 3\nAfter null - length: null\nDisplay: No nickname\nEmail length: null\nlet: HELLO FROM LET!\nlet was skipped for null\nCast String: Hello\nCast Int: null',task:'Create findUser(id: Int): User? that returns null for unknown IDs. Use safe calls and let.'},
+            {id:'kotlin-6',title:'Collections',type:'code',content:'<code>listOf</code>, <code>mutableListOf</code>, <code>setOf</code>, <code>mapOf</code>. Operations: <code>filter</code>, <code>map</code>, <code>flatMap</code>, <code>reduce</code>, <code>sortedBy</code>, <code>groupBy</code>, <code>zip</code>.',starterCode:'fun main() {\n    val fruits = listOf("apple", "banana", "cherry", "date")\n    println("Fruits: $fruits")\n    println("First: ${fruits.first()}, Last: ${fruits.last()}")\n\n    val numbers = mutableListOf(3, 1, 4, 1, 5, 9, 2, 6)\n    numbers.add(7); numbers.removeAt(0); numbers.sort()\n    println("Sorted: $numbers")\n\n    val ages = mapOf("Alice" to 25, "Bob" to 30, "Carol" to 22)\n    println("Ages: $ages")\n    println("Bob: ${ages["Bob"]}")\n\n    val words = listOf("apple", "banana", "avocado", "cherry", "blueberry")\n    println("A-words: ${words.filter { it.startsWith("a") }}")\n    println("Grouped: ${words.groupBy { it.first() }}")\n\n    val result = words.filter { it.length > 5 }.map { it.uppercase() }.sorted()\n    println("Long sorted: $result")\n\n    val names = listOf("A", "B", "C")\n    val scores = listOf(90, 85, 92)\n    println("Zipped: ${names.zip(scores)}")\n}',expectedOutput:'Fruits: [apple, banana, cherry, date]\nFirst: apple, Last: date\nSorted: [1, 1, 2, 4, 5, 6, 7, 9]\nAges: {Alice=25, Bob=30, Carol=22}\nBob: 30\nA-words: [apple, avocado]\nGrouped: {a=[apple, avocado], b=[banana, blueberry], c=[cherry]}\nLong sorted: [AVOCADO, BANANA, BLUEBERRY, CHERRY]\nZipped: [(A, 90), (B, 85), (C, 92)]',task:'Create a list of Person data objects. Filter over 18, sort by age, map to names.'},
+            {id:'kotlin-7',title:'Classes & Objects',type:'code',content:'<code>data class</code> auto-generates equals, hashCode, toString, copy. <code>object</code> for singletons. <code>companion object</code> for static-like members. <code>init</code> blocks run during construction.',starterCode:'data class Book(val title: String, val author: String, val year: Int, val rating: Double)\n\nclass Counter(val name: String) {\n    var count: Int = 0; private set\n    init { println("$name counter created") }\n    fun increment() { count++ }\n    fun decrement() { count-- }\n}\n\nobject Config {\n    val appName = "CodeGreen"\n    val version = "1.0"\n    fun printInfo() = println("$appName v$version")\n}\n\nclass MathUtils {\n    companion object {\n        fun square(n: Int) = n * n\n        fun cube(n: Int) = n * n * n\n    }\n}\n\nfun main() {\n    val b1 = Book("1984", "Orwell", 1949, 4.7)\n    val b2 = b1.copy(rating = 4.8)\n    println("Book 1: $b1")\n    println("Book 2: $b2")\n    println("Same? ${b1 == b2}")\n\n    val c = Counter("Clicks")\n    c.increment(); c.increment(); c.increment()\n    println("Count: ${c.count}")\n\n    Config.printInfo()\n    println("square(5) = ${MathUtils.square(5)}")\n    println("cube(3) = ${MathUtils.cube(3)}")\n}',expectedOutput:'Book 1: Book(title=1984, author=Orwell, year=1949, rating=4.7)\nBook 2: Book(title=1984, author=Orwell, year=1949, rating=4.8)\nSame? false\nClicks counter created\nCount: 3\nCodeGreen v1.0\nsquare(5) = 25\ncube(3) = 27',task:'Create a Task data class with title, priority enum, and completed boolean. Filter and sort tasks.'},
+            {id:'kotlin-8',title:'Extensions & Scope Functions',type:'code',content:'Extension functions add methods to existing classes. Scope functions: <code>let</code> (null-safe, returns result), <code>also</code> (side effects, returns object), <code>apply</code> (configure, returns object), <code>run</code> (combine with/let).',starterCode:'fun String.addExclamation() = this + "!"\nfun Int.isEven() = this % 2 == 0\nfun Int.isPrime(): Boolean {\n    if (this < 2) return false\n    for (i in 2..Math.sqrt(this.toDouble()).toInt())\n        if (this % i == 0) return false\n    return true\n}\n\nfun main() {\n    println("Hello".addExclamation())\n    println("4 is even: ${4.isEven()}")\n    println("Primes up to 20: ${(1..20).filter { it.isPrime() }}")\n\n    val name: String? = "Kotlin"\n    val len = name?.let { println("Processing: $it"); it.length }\n    println("Length: $len")\n\n    val numbers = mutableListOf(3, 1, 4)\n    numbers.also { println("Before: $it") }.sort()\n    println("After: ${numbers}")\n\n    data class Person(var name: String, var age: Int, var city: String)\n    val person = Person("", 0, "").apply {\n        name = "Alice"; age = 25; city = "Tokyo"\n    }\n    println("Person: $person")\n\n    val result = person.run {\n        "$name lives in $city"\n    }\n    println("Run: $result")\n\n    val formatted = "  hello  ".trim().uppercase()\n    println("Formatted: $formatted")\n}',expectedOutput:'Hello!\n4 is even: true\nPrimes up to 20: [2, 3, 5, 7, 11, 13, 17, 19]\nProcessing: Kotlin\nLength: 6\nBefore: [3, 1, 4]\nAfter: [1, 3, 4]\nPerson: Person(name=Alice, age=25, city=Tokyo)\nRun: Alice lives in Tokyo\nFormatted: HELLO',task:'Write extension functions on MutableList: shuffle() and secondLargest(). Chain scope functions.'}
+        ]
+    },
+    python: {
+        id:'python', name:'Python', icon:'terminal-square',
+        description:'Beginner-friendly language for web, data science, AI, and automation.',
+        color:'#3776AB', accentBg:'bg-teal-50', accentText:'text-teal-600', accentBorder:'border-teal-200',
+        lessons:[
+            {id:'python-1',title:'Hello, Python!',type:'code',content:'Python uses indentation for blocks. <code>print()</code> outputs. f-strings: <code>f"Hello {name}"</code>. Comments: <code>#</code>. No semicolons, no curly braces.',starterCode:'# This is a comment\nprint("Hello, World!")\nprint("Welcome to Python!")\n\nname = "Python Learner"\nage = 25\npi = 3.14159\n\nprint(f"Hello, {name}!")\nprint(f"Age: {age}, Pi: {pi}")\n\na = 10\nb = 20\nprint(f"{a} + {b} = {a + b}")\nprint(f"2^10 = {2 ** 10}")\n\npoem = """\nPython is clear,\nSyntax so dear,\nIndentation rules,\nMaking code cool.\n"""\nprint(poem)\n\nprint(f"Type of name: {type(name).__name__}")\nprint(f"Type of age: {type(age).__name__}")',expectedOutput:'Hello, World!\nWelcome to Python!\nHello, Python Learner!\nAge: 25, Pi: 3.14159\n10 + 20 = 30\n2^10 = 1024\n\nPython is clear,\nSyntax so dear,\nIndentation rules,\nMaking code cool.\n\nType of name: str\nType of age: int',task:'Create variables for name, height, and a boolean. Print them in one f-string.'},
+            {id:'python-2',title:'Variables & Data Types',type:'code',content:'Types: <code>int</code> (arbitrary precision), <code>float</code>, <code>str</code>, <code>bool</code>, <code>None</code>. Dynamically typed. Convert with <code>int()</code>, <code>float()</code>, <code>str()</code>. <code>type()</code> checks type.',starterCode:'name = "Alice"\nage = 25\nheight = 5.7\nis_student = True\nnothing = None\n\nprint(f"Name: {name} ({type(name).__name__})")\nprint(f"Age: {age} ({type(age).__name__})")\nprint(f"Height: {height} ({type(height).__name__})")\nprint(f"Student: {is_student} ({type(is_student).__name__})")\n\nx = "42"\nprint(f"\\nString \'{x}\' -> int: {int(x)}")\nprint(f"String \'{x}\' -> float: {float(x)}")\n\ny = 3.99\nprint(f"Float {y} -> int: {int(y)}")\nprint(f"Float {y} -> round: {round(y)}")\n\nprint(f"\\nbool(0): {bool(0)}")\nprint(f"bool(1): {bool(1)}")\nprint(f"bool(\'\'): {bool(\'\') }")\nprint(f"bool(\'hello\'): {bool(\'hello\') }")\nprint(f"bool(None): {bool(None)}")\n\nx = 10\nprint(f"\\nx = {x} ({type(x).__name__})")\nx = "now string"\nprint(f"x = \'{x}\' ({type(x).__name__})")\n\na, b, c = 1, 2, 3\nprint(f"\\nUnpacked: a={a}, b={b}, c={c}")',expectedOutput:'Name: Alice (str)\nAge: 25 (int)\nHeight: 5.7 (float)\nStudent: True (bool)\n\nString \'42\' -> int: 42\nString \'42\' -> float: 42.0\nFloat 3.99 -> int: 3\nFloat 3.99 -> round: 4\n\nbool(0): False\nbool(1): True\nbool(\'\'): False\nbool(\'hello\'): True\nbool(None): False\n\nx = 10 (int)\nx = \'now string\' (str)\n\nUnpacked: a=1, b=2, c=3',task:'Convert Celsius to Fahrenheit: F = C * 9/5 + 32. Format to 1 decimal with f"{v:.1f}".'},
+            {id:'python-3',title:'Strings & String Methods',type:'code',content:'Strings are immutable. Methods: <code>.upper()</code>, <code>.lower()</code>, <code>.strip()</code>, <code>.split()</code>, <code>.join()</code>, <code>.replace()</code>, <code>.find()</code>, <code>.count()</code>. Slicing: <code>s[0:3]</code>, <code>s[::-1]</code>.',starterCode:'text = "  Hello, Python World!  "\nprint(f"Original: \'{text}\'")\nprint(f"Stripped: \'{text.strip()}\'")\nprint(f"Upper: \'{text.strip().upper()}\'")\n\nmodified = text.strip().replace("World", "Universe")\nprint(f"Replaced: \'{modified}\'")\n\nwords = "apple,banana,cherry".split(",")\nprint(f"Split: {words}")\nprint(f"Joined: \'{\" | \".join(words)}\'")\n\nsentence = "the cat sat on the mat"\nprint(f"Find \'cat\': {sentence.find(\'cat\') }")\nprint(f"Count \'the\': {sentence.count(\'the\') }")\n\ns = "Python"\nprint(f"\\ns[0]: \'{s[0]}\' s[-1]: \'{s[-1]}\'")\nprint(f"s[0:3]: \'{s[0:3]}\' s[::-1]: \'{s[::-1]}\'")\n\nprint(f"\\n\'Hello123\'.isalnum(): {\'Hello123\'.isalnum()}")\nprint(f"\'hello\'.startswith(\'he\'): {\'hello\'.startswith(\'he\')}")\n\npi = 3.14159265\nprint(f"\\nPi: {pi:.2f}")\nbig = 1234567\nprint(f"Number: {big:,}")',expectedOutput:'Original: \'  Hello, Python World!  \'\nStripped: \'Hello, Python World!\'\nUpper: \'HELLO, PYTHON WORLD!\'\nReplaced: \'Hello, Python Universe!\'\nSplit: [\'apple\', \'banana\', \'cherry\']\nJoined: \'apple | banana | cherry\'\nFind \'cat\': 4\nCount \'the\': 2\n\ns[0]: \'P\' s[-1]: \'n\'\ns[0:3]: \'Pyt\' s[::-1]: \'nohtyP\'\n\n\'Hello123\'.isalnum(): True\n\'hello\'.startswith(\'he\'): True\n\nPi: 3.14\nNumber: 1,234,567',task:'Write a function that takes a full name and returns initials. "John F Kennedy" -> "J.F.K.".'},
+            {id:'python-4',title:'Lists & Tuples',type:'code',content:'<code>list</code> is mutable: <code>[1,2,3]</code>. <code>tuple</code> is immutable: <code>(1,2,3)</code>. Methods: <code>.append()</code>, <code>.insert()</code>, <code>.pop()</code>, <code>.sort()</code>, <code>.reverse()</code>. List comprehensions: <code>[x*2 for x in range(5)]</code>.',starterCode:'fruits = ["apple", "banana", "cherry"]\nprint(f"Fruits: {fruits}")\n\nfruits.append("date")\nfruits.insert(1, "blueberry")\nfruits.remove("banana")\nprint(f"Modified: {fruits}")\n\nnumbers = [3, 1, 4, 1, 5, 9, 2, 6]\nprint(f"\\nNumbers: {numbers}")\nprint(f"Sum: {sum(numbers)}, Min: {min(numbers)}, Max: {max(numbers)}")\nprint(f"Count of 1: {numbers.count(1)}")\n\nnumbers.sort()\nprint(f"Sorted: {numbers}")\n\nsquares = [x**2 for x in range(1, 6)]\nprint(f"\\nSquares: {squares}")\nevens = [x for x in range(1, 21) if x % 2 == 0]\nprint(f"Evens: {evens}")\n\npoint = (3, 4)\nprint(f"\\nPoint: {point}")\nx, y = point\nprint(f"Unpacked: x={x}, y={y}")\n\na, b = 10, 20\na, b = b, a\nprint(f"Swapped: a={a}, b={b}")',expectedOutput:'Fruits: [\'apple\', \'banana\', \'cherry\']\nModified: [\'apple\', \'blueberry\', \'cherry\', \'date\']\n\nNumbers: [3, 1, 4, 1, 5, 9, 2, 6]\nSum: 31, Min: 1, Max: 9\nCount of 1: 2\nSorted: [1, 1, 2, 3, 4, 5, 6, 9]\n\nSquares: [1, 4, 9, 16, 25]\nEvens: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]\n\nPoint: (3, 4)\nUnpacked: x=3, y=4\nSwapped: a=20, b=10',task:'Remove duplicates from a list while preserving order, without using set().' },
+            {id:'python-5',title:'Dictionaries & Sets',type:'code',content:'<code>dict</code>: <code>{"key": "value"}</code>. Access with <code>d["key"]</code> or <code>d.get("key", default)</code>. <code>set</code>: <code>{1,2,3}</code> — unique elements. Union <code>|</code>, intersection <code>&</code>, difference <code>-</code>.',starterCode:'student = {"name": "Alice", "age": 22, "grades": [90, 85, 92]}\nprint(f"Student: {student}")\nprint(f"Name: {student[\'name\']}")\nprint(f"Phone: {student.get(\'phone\', \'Not found\')}")\n\nstudent["email"] = "alice@example.com"\nprint(f"Updated: {student}")\n\nprint(f"\\nKeys: {list(student.keys())}")\nfor key, value in student.items():\n    print(f"  {key}: {value}")\n\nsquares = {x: x**2 for x in range(1, 6)}\nprint(f"\\nSquares: {squares}")\n\nwords = "the cat sat on the mat the cat"\nwc = {}\nfor w in words.split(): wc[w] = wc.get(w, 0) + 1\nprint(f"Word count: {wc}")\n\na = {1, 2, 3, 4, 5}\nb = {4, 5, 6, 7, 8}\nprint(f"\\nUnion: {a | b}")\nprint(f"Intersection: {a & b}")\nprint(f"Difference: {a - b}")\n\nnums = [1, 2, 2, 3, 3, 3, 4]\nprint(f"Unique sorted: {sorted(set(nums))}")',expectedOutput:'Student: {\'name\': \'Alice\', \'age\': 22, \'grades\': [90, 85, 92]}\nName: Alice\nPhone: Not found\nUpdated: {\'name\': \'Alice\', \'age\': 22, \'grades\': [90, 85, 92], \'email\': \'alice@example.com\'}\n\nKeys: [\'name\', \'age\', \'grades\', \'email\']\n  name: Alice\n  age: 22\n  grades: [90, 85, 92]\n  email: alice@example.com\n\nSquares: {1: 1, 2: 4, 3: 9, 4: 16, 5: 25}\nWord count: {\'the\': 3, \'cat\': 2, \'sat\': 1, \'on\': 1, \'mat\': 1}\n\nUnion: {1, 2, 3, 4, 5, 6, 7, 8}\nIntersection: {4, 5}\nDifference: {1, 2, 3}\nUnique sorted: [1, 2, 3, 4]',task:'Write a function that returns character frequencies from a string, sorted by frequency.'},
+            {id:'python-6',title:'Control Flow',type:'code',content:'<code>if / elif / else</code>. <code>for x in range()</code> or <code>for x in iterable</code>. <code>while</code>. <code>break</code>, <code>continue</code>. <code>for-else</code> runs else if no break. Ternary: <code>"a" if cond else "b"</code>.',starterCode:'score = 85\nif score >= 90: grade = "A"\nelif score >= 80: grade = "B"\nelif score >= 70: grade = "C"\nelse: grade = "F"\nprint(f"Score {score}: Grade {grade}")\n\nstatus = "Adult" if 20 >= 18 else "Minor"\nprint(f"Status: {status}")\n\nprint("\\n--- For Loop ---")\nfor i in range(1, 6):\n    print(f"{i} squared = {i**2}")\n\nfruits = ["apple", "banana", "cherry"]\nprint("\\n--- Enumerate ---")\nfor i, f in enumerate(fruits):\n    print(f"{i}: {f}")\n\nprint("\\n--- While ---")\nn = 12\nwhile n > 0:\n    print(f"{n}", end=" ")\n    n -= 3\nprint("Liftoff!")\n\nprint("\\n--- Primes ---")\nfor n in range(2, 20):\n    for i in range(2, n):\n        if n % i == 0: break\n    else:\n        print(f"{n} is prime")\n\nprint("\\n--- Triangle ---")\nfor i in range(1, 6):\n    print("* " * i)',expectedOutput:'Score 85: Grade B\nStatus: Adult\n\n--- For Loop ---\n1 squared = 1\n2 squared = 4\n3 squared = 9\n4 squared = 16\n5 squared = 25\n\n--- Enumerate ---\n0: apple\n1: banana\n2: cherry\n\n--- While ---\n12 9 6 3 Liftoff!\n\n--- Primes ---\n2 is prime\n3 is prime\n5 is prime\n7 is prime\n11 is prime\n13 is prime\n17 is prime\n19 is prime\n\n--- Triangle ---\n* \n* * \n* * * \n* * * * \n* * * * * ',task:'Write a number guessing game with while loop, "Too high"/"Too low" feedback, and attempt counter.'},
+            {id:'python-7',title:'Functions',type:'code',content:'<code>def</code> defines functions. Default params: <code>def f(x=10)</code>. <code>*args</code>, <code>**kwargs</code>. Lambda: <code>lambda x: x*2</code>. Functions are first-class objects. Recursion supported.',starterCode:'def greet(name):\n    return f"Hello, {name}!"\nprint(greet("Python"))\n\ndef power(base, exp=2):\n    return base ** exp\nprint(f"3^2 = {power(3)}")\nprint(f"2^5 = {power(2, 5)}")\n\ndef min_max(nums):\n    return min(nums), max(nums)\nlow, high = min_max([3, 1, 4, 1, 5, 9])\nprint(f"Min: {low}, Max: {high}")\n\ndef summarize(*args, **kwargs):\n    print(f"Args: {args}")\n    print(f"Kwargs: {kwargs}")\nsummarize(1, 2, 3, name="Alice", age=25)\n\nnumbers = [3, 1, 4, 1, 5, 9, 2, 6]\nprint(f"\\nSorted desc: {sorted(numbers, reverse=True)}")\nwords = ["banana", "pie", "Washington", "book"]\nprint(f"By length: {sorted(words, key=len)}")\n\ndef factorial(n):\n    if n <= 1: return 1\n    return n * factorial(n - 1)\nprint("\\n--- Factorials ---")\nfor i in range(1, 9): print(f"{i}! = {factorial(i)}")\n\ndef fibonacci(n):\n    a, b = 0, 1\n    result = []\n    for _ in range(n): result.append(a); a, b = b, a + b\n    return result\nprint(f"\\nFib(10): {fibonacci(10)}")',expectedOutput:'Hello, Python!\n3^2 = 9\n2^5 = 32\nMin: 1, Max: 9\nArgs: (1, 2, 3)\nKwargs: {\'name\': \'Alice\', \'age\': 25}\n\nSorted desc: [9, 6, 5, 4, 3, 1, 1]\nBy length: [\'pie\', \'book\', \'banana\', \'Washington\']\n\n--- Factorials ---\n1! = 1\n2! = 2\n3! = 6\n4! = 24\n5! = 120\n6! = 720\n7! = 5040\n8! = 40320\n\nFib(10): [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]',task:'Write a decorator that measures and prints function execution time.'},
+            {id:'python-8',title:'Comprehensions & Advanced Patterns',type:'code',content:'List: <code>[expr for x in iter if cond]</code>. Dict: <code>{k:v for ...}</code>. Set: <code>{x for ...}</code>. Generator: <code>(x for ...)</code> — memory efficient. <code>zip()</code> pairs elements. <code>any()</code>, <code>all()</code>.',starterCode:'squares = [x**2 for x in range(1, 11)]\nprint(f"Squares: {squares}")\n\nevens = [x for x in range(1, 21) if x % 2 == 0]\nprint(f"Evens: {evens}")\n\nlabels = ["even" if x%2==0 else "odd" for x in range(1,6)]\nprint(f"Labels: {labels}")\n\nmatrix = [[1,2,3],[4,5,6],[7,8,9]]\nflat = [n for row in matrix for n in row]\nprint(f"Flattened: {flat}")\n\nword_lengths = {w: len(w) for w in ["hi", "hello", "world"]}\nprint(f"Lengths: {word_lengths}")\n\nvowels = {c for c in "hello world" if c in "aeiou"}\nprint(f"Vowels: {vowels}")\n\nprint(f"\\nSum gen: {sum(x**2 for x in range(1,1001))}")\n\nnames = ["Alice", "Bob", "Carol"]\nscores = [92, 85, 97]\nprint(f"Zipped: {list(zip(names, scores))}")\nprint(f"Dict: {dict(zip(names, scores))}")\n\nnums = [2, 4, 6, 8, 10]\nprint(f"\\nAll even? {all(x%2==0 for x in nums)}")\nprint(f"Any > 7? {any(x>7 for x in nums)}")\n\nstudents = [\n    {"name":"Alice","grades":[90,85,92]},\n    {"name":"Bob","grades":[70,65,72]},\n    {"name":"Carol","grades":[95,98,93]},\n]\ntop = [s["name"] for s in students if sum(s["grades"])/len(s["grades"]) >= 90]\nprint(f"\\nTop students: {top}")',expectedOutput:'Squares: [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]\nEvens: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]\nLabels: [\'odd\', \'even\', \'odd\', \'even\', \'odd\']\nFlattened: [1, 2, 3, 4, 5, 6, 7, 8, 9]\nLengths: {\'hi\': 2, \'hello\': 5, \'world\': 5}\nVowels: {\'e\', \'o\'}\n\nSum gen: 333833500\nZipped: [(\'Alice\', 92), (\'Bob\', 85), (\'Carol\', 97)]\nDict: {\'Alice\': 92, \'Bob\': 85, \'Carol\': 97}\n\nAll even? True\nAny > 7? True\n\nTop students: [\'Alice\', \'Carol\']',task:'Using comprehensions only, create a multiplication table as a 2D list for 1-5.'}
+        ]
+    }
 };
 
 var TOTAL_LESSONS = 0;
 for (var k in COURSES) { TOTAL_LESSONS += COURSES[k].lessons.length; }
 
 // ======================== STATE ========================
-var STATE_KEY = 'codegreen_state_v2';
-
-function getDefaultState() {
-  return { completedLessons: [], codeSnippets: {}, lastVisited: null, introShown: false };
-}
-
-function loadState() {
-  try {
-    var raw = localStorage.getItem(STATE_KEY);
-    if (raw) { var p = JSON.parse(raw); var d = getDefaultState(); for (var k in d) { if (p[k] !== undefined) d[k] = p[k]; } return d; }
-  } catch(e) {}
-  return getDefaultState();
-}
-
-function saveState() {
-  try { localStorage.setItem(STATE_KEY, JSON.stringify(state)); } catch(e) {}
-}
-
+var STATE_KEY = 'codegreen_state_v3';
+function getDefaultState() { return { completedLessons: [], codeSnippets: {}, lastVisited: null, introShown: false }; }
+function loadState() { try { var r = localStorage.getItem(STATE_KEY); if (r) { var p = JSON.parse(r); var d = getDefaultState(); for (var k in d) { if (p[k] !== undefined) d[k] = p[k]; } return d; } } catch(e) {} return getDefaultState(); }
+function saveState() { try { localStorage.setItem(STATE_KEY, JSON.stringify(state)); } catch(e) {} }
 var state = loadState();
-
 function isCompleted(lid) { return state.completedLessons.indexOf(lid) !== -1; }
-
-function markCompleted(lid) {
-  if (!isCompleted(lid)) { state.completedLessons.push(lid); saveState(); }
-}
-
-function getCourseProgress(cid) {
-  var c = COURSES[cid]; var done = 0;
-  for (var i = 0; i < c.lessons.length; i++) { if (isCompleted(c.lessons[i].id)) done++; }
-  return { completed: done, total: c.lessons.length, percent: Math.round((done / c.lessons.length) * 100) };
-}
-
-function getOverallProgress() {
-  return { completed: state.completedLessons.length, total: TOTAL_LESSONS, percent: Math.round((state.completedLessons.length / TOTAL_LESSONS) * 100) };
-}
+function markCompleted(lid) { if (!isCompleted(lid)) { state.completedLessons.push(lid); saveState(); } }
+function getCourseProgress(cid) { var c = COURSES[cid]; var d = 0; for (var i = 0; i < c.lessons.length; i++) { if (isCompleted(c.lessons[i].id)) d++; } return { completed: d, total: c.lessons.length, percent: c.lessons.length > 0 ? Math.round((d / c.lessons.length) * 100) : 0 }; }
+function getOverallProgress() { return { completed: state.completedLessons.length, total: TOTAL_LESSONS, percent: TOTAL_LESSONS > 0 ? Math.round((state.completedLessons.length / TOTAL_LESSONS) * 100) : 0 }; }
 
 // ======================== TOAST ========================
 function showToast(message, type) {
-  type = type || 'success';
-  var container = document.getElementById('toast-container');
-  var toast = document.createElement('div');
-  var colors = { success:'bg-emerald-600', error:'bg-red-500', info:'bg-slate-700' };
-  var icons = { success:'check-circle', error:'alert-circle', info:'info' };
-  toast.className = 'pointer-events-auto flex items-center gap-3 px-5 py-3.5 rounded-xl text-white text-sm font-semibold shadow-lg ' + (colors[type]||colors.info) + ' toast-enter';
-  toast.innerHTML = '<i data-lucide="' + (icons[type]||icons.info) + '" class="w-5 h-5 flex-shrink-0"></i><span>' + message + '</span>';
-  container.appendChild(toast);
-  lucide.createIcons({ nodes: [toast] });
-  setTimeout(function() {
-    toast.classList.remove('toast-enter');
-    toast.classList.add('toast-exit');
-    toast.addEventListener('animationend', function() { if (toast.parentNode) toast.parentNode.removeChild(toast); });
-  }, 3000);
+    type = type || 'success';
+    var c = document.getElementById('toast-container');
+    var t = document.createElement('div');
+    var cols = { success: 'bg-emerald-600', error: 'bg-red-500', info: 'bg-slate-700' };
+    var icons = { success: 'check-circle', error: 'alert-circle', info: 'info' };
+    t.className = 'pointer-events-auto flex items-center gap-3 px-5 py-3.5 rounded-xl text-white text-sm font-semibold shadow-lg ' + (cols[type]||cols.info) + ' toast-enter';
+    t.innerHTML = '<i data-lucide="' + (icons[type]||icons.info) + '" class="w-5 h-5 flex-shrink-0"></i><span>' + message + '</span>';
+    c.appendChild(t); lucide.createIcons({ nodes: [t] });
+    setTimeout(function() { t.classList.remove('toast-enter'); t.classList.add('toast-exit'); t.addEventListener('animationend', function() { if (t.parentNode) t.parentNode.removeChild(t); }); }, 3000);
 }
 
 // ======================== MODAL ========================
 var modalCallback = null;
-
 function showModal(title, message, confirmText, onConfirm, btnClass) {
-  document.getElementById('modal-title').textContent = title;
-  document.getElementById('modal-message').textContent = message;
-  var btn = document.getElementById('modal-confirm');
-  btn.textContent = confirmText;
-  btn.className = 'px-5 py-2.5 rounded-xl text-white font-semibold transition-colors ' + (btnClass || 'bg-red-500 hover:bg-red-600');
-  modalCallback = onConfirm;
-  var overlay = document.getElementById('modal-overlay');
-  overlay.classList.remove('hidden');
-  overlay.classList.add('flex');
-  try { anime({ targets:'#modal-box', scale:[0.9,1], opacity:[0,1], duration:300, easing:'easeOutCubic' }); } catch(e){}
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-message').textContent = message;
+    var btn = document.getElementById('modal-confirm');
+    btn.textContent = confirmText;
+    btn.className = 'px-5 py-2.5 rounded-xl text-white font-semibold transition-colors ' + (btnClass || 'bg-red-500 hover:bg-red-600');
+    modalCallback = onConfirm;
+    var o = document.getElementById('modal-overlay'); o.classList.remove('hidden'); o.classList.add('flex');
+    try { anime({ targets:'#modal-box', scale:[0.9,1], opacity:[0,1], duration:300, easing:'easeOutCubic' }); } catch(e) {}
 }
-
-function closeModal() {
-  var overlay = document.getElementById('modal-overlay');
-  overlay.classList.add('hidden');
-  overlay.classList.remove('flex');
-  modalCallback = null;
-}
-
-document.getElementById('modal-confirm').addEventListener('click', function() {
-  if (modalCallback) modalCallback();
-  closeModal();
-});
+function closeModal() { var o = document.getElementById('modal-overlay'); o.classList.add('hidden'); o.classList.remove('flex'); modalCallback = null; }
+document.getElementById('modal-confirm').addEventListener('click', function() { if (modalCallback) modalCallback(); closeModal(); });
 document.getElementById('modal-cancel').addEventListener('click', closeModal);
-document.getElementById('modal-overlay').addEventListener('click', function(e) {
-  if (e.target === document.getElementById('modal-overlay')) closeModal();
-});
-
-function confirmReset() {
-  showModal('Reset All Progress?', 'This will erase all your completed lessons and saved code. This action cannot be undone.', 'Reset Everything', function() {
-    state = getDefaultState();
-    state.introShown = true;
-    saveState();
-    showDashboard();
-    showToast('All progress has been reset', 'info');
-  });
-}
+document.getElementById('modal-overlay').addEventListener('click', function(e) { if (e.target === document.getElementById('modal-overlay')) closeModal(); });
+function confirmReset() { showModal('Reset All Progress?', 'This will erase all completed lessons and saved code. This cannot be undone.', 'Reset Everything', function() { state = getDefaultState(); state.introShown = true; saveState(); showDashboard(); showToast('All progress has been reset', 'info'); }); }
 
 // ======================== CELEBRATION ========================
 function celebrate() {
-  var container = document.getElementById('celebration');
-  container.classList.remove('hidden');
-  container.innerHTML = '';
-  var colors = ['#10b981','#059669','#34d399','#6ee7b7','#a7f3d0','#fbbf24','#f59e0b','#ecfdf5'];
-  for (var i = 0; i < 50; i++) {
-    var p = document.createElement('div');
-    var sz = Math.random() * 10 + 5;
-    p.style.cssText = 'position:absolute;width:' + sz + 'px;height:' + sz + 'px;background:' + colors[Math.floor(Math.random()*colors.length)] + ';border-radius:' + (Math.random()>0.5?'50%':'2px') + ';top:50%;left:50%;';
-    container.appendChild(p);
-    (function(el) {
-      anime({
-        targets: el,
-        translateX: anime.random(-400,400),
-        translateY: anime.random(-500,-50),
-        rotate: anime.random(0,720),
-        scale: [1,0],
-        opacity: [1,0],
-        duration: anime.random(800,1800),
-        easing: 'easeOutExpo',
-        delay: anime.random(0,200),
-        complete: function() { if (el.parentNode) el.parentNode.removeChild(el); }
-      });
-    })(p);
-  }
-  setTimeout(function() { container.classList.add('hidden'); container.innerHTML = ''; }, 2200);
+    var c = document.getElementById('celebration'); c.classList.remove('hidden'); c.innerHTML = '';
+    var cols = ['#10b981','#059669','#34d399','#6ee7b7','#fbbf24','#f59e0b'];
+    for (var i = 0; i < 50; i++) {
+        var p = document.createElement('div'); var sz = Math.random()*10+5;
+        p.style.cssText = 'position:absolute;width:'+sz+'px;height:'+sz+'px;background:'+cols[Math.floor(Math.random()*cols.length)]+';border-radius:'+(Math.random()>0.5?'50%':'2px')+';top:50%;left:50%;';
+        c.appendChild(p);
+        (function(el) { anime({ targets:el, translateX:anime.random(-400,400), translateY:anime.random(-500,-50), rotate:anime.random(0,720), scale:[1,0], opacity:[1,0], duration:anime.random(800,1800), easing:'easeOutExpo', delay:anime.random(0,200), complete:function(){if(el.parentNode)el.parentNode.removeChild(el);} }); })(p);
+    }
+    setTimeout(function() { c.classList.add('hidden'); c.innerHTML = ''; }, 2200);
 }
 
 // ======================== VIEWS ========================
 var app = document.getElementById('app');
+var currentCourseId = null, currentLessonIdx = null;
+
+function updateNavProgress() { var o = getOverallProgress(); document.getElementById('nav-progress-bar').style.width = o.percent+'%'; document.getElementById('nav-progress-text').textContent = o.completed+'/'+o.total+' lessons'; }
+
+function escHTML(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 function showDashboard() {
-  var overall = getOverallProgress();
-  var cardsHTML = '';
-  var courseIds = ['html','css','js'];
-  var isFirst = true;
-
-  for (var ci = 0; ci < courseIds.length; ci++) {
-    var id = courseIds[ci];
-    var course = COURSES[id];
-    var prog = getCourseProgress(id);
-    var isDone = prog.percent === 100;
-    var introAttr = isFirst ? ' data-intro="Here are your three courses. Click any card to start learning!"' : '';
-    isFirst = false;
-
-    cardsHTML += '<div class="card-lift bg-white rounded-2xl border ' +
-      (isDone ? 'border-emerald-300 ring-2 ring-emerald-100' : 'border-slate-200') +
-      ' overflow-hidden cursor-pointer group" onclick="showCourse(\'' + id + '\')"' + introAttr + '>' +
-      '<div class="h-2 bg-gradient-to-r from-emerald-400 to-emerald-600"></div>' +
-      '<div class="p-6">' +
-        '<div class="flex items-start justify-between mb-4">' +
-          '<div class="w-12 h-12 rounded-xl ' + course.accentBg + ' flex items-center justify-center">' +
-            '<i data-lucide="' + course.icon + '" class="w-6 h-6 ' + course.accentText + '"></i>' +
-          '</div>' +
-          (isDone ? '<span class="flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full"><i data-lucide="trophy" class="w-3.5 h-3.5"></i>Completed</span>' : '') +
-        '</div>' +
-        '<h3 class="text-xl font-extrabold text-slate-900 mb-1.5">' + course.name + '</h3>' +
-        '<p class="text-slate-500 text-sm leading-relaxed mb-5">' + course.description + '</p>' +
-        '<div class="mb-3">' +
-          '<div class="flex justify-between text-xs font-semibold mb-1.5">' +
-            '<span class="text-slate-500">' + prog.completed + ' of ' + prog.total + ' lessons</span>' +
-            '<span class="' + (isDone ? 'text-emerald-600' : 'text-slate-500') + '">' + prog.percent + '%</span>' +
-          '</div>' +
-          '<div class="h-2.5 bg-slate-100 rounded-full overflow-hidden">' +
-            '<div class="h-full rounded-full progress-fill bg-gradient-to-r from-emerald-400 to-emerald-600" style="width:' + prog.percent + '%"></div>' +
-          '</div>' +
-        '</div>' +
-        '<div class="flex items-center gap-1.5 text-sm font-bold ' + (prog.completed > 0 ? 'text-emerald-600' : 'text-slate-400') + ' group-hover:text-emerald-600 transition-colors">' +
-          (prog.completed > 0 ? 'Continue Learning' : 'Start Learning') +
-          ' <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>' +
-        '</div>' +
-      '</div>' +
-    '</div>';
-  }
-
-  app.innerHTML =
-    '<div class="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16">' +
-      '<section class="text-center mb-14" id="hero-section">' +
-        '<div class="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 text-sm font-semibold px-4 py-1.5 rounded-full mb-5">' +
-          '<i data-lucide="sparkles" class="w-4 h-4"></i>Free Interactive Coding Lessons' +
-        '</div>' +
-        '<h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-tight mb-4">' +
-          'Learn to Code<br>' +
-          '<span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-emerald-700">From Scratch</span>' +
-        '</h1>' +
-        '<p class="text-lg text-slate-500 max-w-xl mx-auto leading-relaxed mb-8">' +
-          'Master HTML, CSS, and JavaScript with hands-on lessons. Write real code, see instant results, and track your progress.' +
-        '</p>' +
-        '<div class="inline-flex items-center gap-4 bg-slate-50 rounded-2xl px-6 py-4" id="stats-section">' +
-          '<div class="text-center"><div class="text-2xl font-black text-emerald-600">' + overall.completed + '</div><div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Completed</div></div>' +
-          '<div class="w-px h-10 bg-slate-200"></div>' +
-          '<div class="text-center"><div class="text-2xl font-black text-slate-700">' + (overall.total - overall.completed) + '</div><div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Remaining</div></div>' +
-          '<div class="w-px h-10 bg-slate-200"></div>' +
-          '<div class="text-center"><div class="text-2xl font-black text-slate-700">' + overall.percent + '%</div><div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Overall</div></div>' +
-        '</div>' +
-      '</section>' +
-      '<section class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="courses-section">' + cardsHTML + '</section>' +
-      '<footer class="mt-20 text-center text-sm text-slate-400">' +
-        '<p>Built for learners. All progress saved locally in your browser.</p>' +
-        '<p class="mt-1">CodeGreen &mdash; Start your coding journey today.</p>' +
-      '</footer>' +
-    '</div>';
-
-  updateNavProgress();
-  lucide.createIcons();
-
-  try {
-    anime({ targets:'.card-lift', translateY:[30,0], opacity:[0,1], delay:anime.stagger(120,{start:200}), duration:600, easing:'easeOutCubic' });
-    anime({ targets:'#hero-section > *', translateY:[20,0], opacity:[0,1], delay:anime.stagger(80), duration:500, easing:'easeOutCubic' });
-  } catch(e){}
-
-  if (!state.introShown) {
-    state.introShown = true;
-    saveState();
-    setTimeout(startTour, 800);
-  }
+    currentCourseId = null; currentLessonIdx = null;
+    var overall = getOverallProgress();
+    var cardsHTML = '';
+    var courseIds = ['html','css','js','cpp','kotlin','python'];
+    var isFirst = true;
+    for (var ci = 0; ci < courseIds.length; ci++) {
+        var id = courseIds[ci], course = COURSES[id], prog = getCourseProgress(id), isDone = prog.percent === 100;
+        var introAttr = isFirst ? ' data-intro="Here are your courses. Click any card to start learning!"' : ''; isFirst = false;
+        cardsHTML += '<div class="card-lift bg-white rounded-2xl border '+(isDone?'border-emerald-300 ring-2 ring-emerald-100':'border-slate-200')+' overflow-hidden cursor-pointer group" onclick="showCourse(\''+id+'\')"'+introAttr+'><div class="h-2 bg-gradient-to-r from-emerald-400 to-emerald-600"></div><div class="p-6"><div class="flex items-start justify-between mb-4"><div class="w-12 h-12 rounded-xl '+course.accentBg+' flex items-center justify-center"><i data-lucide="'+course.icon+'" class="w-6 h-6 '+course.accentText+'"></i></div>'+(isDone?'<span class="flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full"><i data-lucide="trophy" class="w-3.5 h-3.5"></i>Done</span>':'')+'</div><h3 class="text-xl font-extrabold text-slate-900 mb-1.5">'+course.name+'</h3><p class="text-slate-500 text-sm leading-relaxed mb-5">'+course.description+'</p><div class="mb-3"><div class="flex justify-between text-xs font-semibold mb-1.5"><span class="text-slate-500">'+prog.completed+' of '+prog.total+' lessons</span><span class="'+(isDone?'text-emerald-600':'text-slate-500')+'">'+prog.percent+'%</span></div><div class="h-2.5 bg-slate-100 rounded-full overflow-hidden"><div class="h-full rounded-full progress-fill bg-gradient-to-r from-emerald-400 to-emerald-600" style="width:'+prog.percent+'%"></div></div></div><div class="flex items-center gap-1.5 text-sm font-bold '+(prog.completed>0?'text-emerald-600':'text-slate-400')+' group-hover:text-emerald-600 transition-colors">'+(prog.completed>0?'Continue Learning':'Start Learning')+' <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i></div></div></div>';
+    }
+    app.innerHTML = '<div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-16"><section class="text-center mb-14" id="hero-section"><div class="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 text-sm font-semibold px-4 py-1.5 rounded-full mb-5"><i data-lucide="sparkles" class="w-4 h-4"></i>Free Interactive Coding Lessons</div><h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-tight mb-4">Learn to Code<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-emerald-700">From Scratch</span></h1><p class="text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed mb-8">Master HTML, CSS, JavaScript, C++, Kotlin, and Python with hands-on lessons. Write real code, see instant results, and track your progress.</p><div class="inline-flex items-center gap-4 sm:gap-6 bg-slate-50 rounded-2xl px-5 sm:px-8 py-4" id="stats-section"><div class="text-center"><div class="text-2xl font-black text-emerald-600">'+overall.completed+'</div><div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Done</div></div><div class="w-px h-10 bg-slate-200"></div><div class="text-center"><div class="text-2xl font-black text-slate-700">'+(overall.total-overall.completed)+'</div><div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Left</div></div><div class="w-px h-10 bg-slate-200"></div><div class="text-center"><div class="text-2xl font-black text-slate-700">'+overall.percent+'%</div><div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Overall</div></div></div></section><section class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="courses-section">'+cardsHTML+'</section><footer class="mt-20 text-center text-sm text-slate-400"><p>Built for learners. All progress saved locally in your browser.</p><p class="mt-1">CodeGreen &mdash; Start your coding journey today.</p></footer></div>';
+    updateNavProgress(); lucide.createIcons();
+    try { anime({ targets:'.card-lift', translateY:[30,0], opacity:[0,1], delay:anime.stagger(80,{start:200}), duration:600, easing:'easeOutCubic' }); anime({ targets:'#hero-section > *', translateY:[20,0], opacity:[0,1], delay:anime.stagger(80), duration:500, easing:'easeOutCubic' }); } catch(e) {}
+    if (!state.introShown) { state.introShown = true; saveState(); setTimeout(startTour, 800); }
 }
 
 function showCourse(courseId) {
-  var course = COURSES[courseId];
-  var prog = getCourseProgress(courseId);
-  var isDone = prog.percent === 100;
-  var lessonsHTML = '';
+    currentCourseId = courseId; currentLessonIdx = null;
+    var course = COURSES[courseId], prog = getCourseProgress(courseId), isDone = prog.percent === 100, lessonsHTML = '';
+    for (var i = 0; i < course.lessons.length; i++) {
+        var lesson = course.lessons[i], done = isCompleted(lesson.id);
+        var isNext = !done && (i === 0 || isCompleted(course.lessons[i-1].id));
+        var cc = done ? 'bg-emerald-500 text-white' : isNext ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-400';
+        var rc = done ? 'bg-emerald-50/60 hover:bg-emerald-50' : isNext ? 'bg-white border-2 border-emerald-200 hover:border-emerald-300 shadow-sm' : 'bg-white border border-slate-100 hover:bg-slate-50';
+        var tc = done ? 'line-through text-slate-400' : '';
+        var ci = done ? '<i data-lucide="check" class="w-5 h-5"></i>' : String(i+1);
+        var dot = isNext && !done ? '<span class="pulse-dot w-2.5 h-2.5 bg-emerald-500 rounded-full flex-shrink-0"></span>' : '';
+        var tl = lesson.type === 'js' ? 'Console Output' : lesson.type === 'code' ? 'Read & Practice' : 'Live Preview';
+        lessonsHTML += '<div class="lesson-item flex items-center gap-4 p-4 rounded-xl cursor-pointer '+rc+' transition-all" onclick="showLesson(\''+courseId+'\','+i+')"><div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 '+cc+' font-bold text-sm">'+ci+'</div><div class="flex-1 min-w-0"><div class="font-semibold text-slate-800 '+tc+'">'+lesson.title+'</div><div class="text-xs text-slate-400 mt-0.5">'+tl+'</div></div>'+dot+'<i data-lucide="chevron-right" class="w-4 h-4 text-slate-300 flex-shrink-0"></i></div>';
+    }
+    var trophy = isDone ? '<div class="mb-6 bg-emerald-50 border border-emerald-200 rounded-xl p-5 flex items-center gap-4"><div class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0"><i data-lucide="trophy" class="w-6 h-6 text-white"></i></div><div><div class="font-bold text-emerald-800">Course Completed!</div><div class="text-sm text-emerald-600">You finished all '+course.name+' lessons. Great work!</div></div></div>' : '';
+    app.innerHTML = '<div class="max-w-3xl mx-auto px-4 sm:px-6 py-10"><button onclick="showDashboard()" class="flex items-center gap-2 text-sm font-semibold text-slate-400 hover:text-emerald-600 transition-colors mb-8 group"><i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>Back to Courses</button><div class="flex items-center gap-4 mb-6"><div class="w-14 h-14 rounded-xl '+course.accentBg+' flex items-center justify-center"><i data-lucide="'+course.icon+'" class="w-7 h-7 '+course.accentText+'"></i></div><div><h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900">'+course.name+'</h1><p class="text-slate-500 text-sm">'+prog.completed+' of '+prog.total+' completed</p></div></div>'+trophy+'<div class="mb-6"><div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full rounded-full progress-fill bg-gradient-to-r from-emerald-400 to-emerald-600" style="width:'+prog.percent+'%"></div></div></div><div class="flex flex-col gap-2">'+lessonsHTML+'</div></div>';
+    updateNavProgress(); lucide.createIcons();
+    try { anime({ targets:'.lesson-item', translateX:[-20,0], opacity:[0,1], delay:anime.stagger(50,{start:100}), duration:400, easing:'easeOutCubic' }); } catch(e) {}
+}
 
-  for (var i = 0; i < course.lessons.length; i++) {
-    var lesson = course.lessons[i];
+function showLesson(courseId, lessonIdx) {
+    currentCourseId = courseId; currentLessonIdx = lessonIdx;
+    var course = COURSES[courseId], lesson = course.lessons[lessonIdx];
     var done = isCompleted(lesson.id);
-    var isNext = !done && (i === 0 || isCompleted(course.lessons[i-1].id));
-    var circleClass = done ? 'bg-emerald-500 text-white' : isNext ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-400';
-    var rowClass = done ? 'bg-emerald-50/60 hover:bg-emerald-50' : isNext ? 'bg-white border-2 border-emerald-200 hover:border-emerald-300 shadow-sm' : 'bg-white border border-slate-100 hover:bg-slate-50';
-    var titleClass = done ? 'line-through text-slate-400' : '';
-    var circleContent = done ? '<i data-lucide="check" class="w-5 h-5"></i>' : String(i + 1);
-    var dot = isNext && !done ? '<span class="pulse-dot w-2.5 h-2.5 bg-emerald-500 rounded-full flex-shrink-0"></span>' : '';
-
-    lessonsHTML +=
-      '<div class="lesson-item flex items-center gap-4 p-4 rounded-xl cursor-pointer ' + rowClass + ' transition-all" onclick="showLesson(\'' + courseId + '\',' + i + ')">' +
-        '<div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ' + circleClass + ' font-bold text-sm">' + circleContent + '</div>' +
-        '<div class="flex-1 min-w-0">' +
-          '<div class="font-semibold text-slate-800 ' + titleClass + '">' + lesson.title + '</div>' +
-          '<div class="text-xs text-slate-400 mt-0.5">' + (lesson.type === 'js' ? 'Console Output' : 'Live Preview') + '</div>' +
-        '</div>' +
-        dot +
-        '<i data-lucide="chevron-right" class="w-4 h-4 text-slate-300 flex-shrink-0"></i>' +
-      '</div>';
-  }
-
-  var trophyHTML = '';
-  if (isDone) {
-    trophyHTML =
-      '<div class="mb-6 bg-emerald-50 border border-emerald-200 rounded-xl p-5 flex items-center gap-4">' +
-        '<div class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0">' +
-          '<i data-lucide="trophy" class="w-6 h-6 text-white"></i>' +
-        '</div>' +
-        '<div>' +
-          '<div class="font-bold text-emerald-800">Course Completed!</div>' +
-          '<div class="text-sm text-emerald-600">You\'ve finished all ' + course.name + ' lessons. Great work!</div>' +
-        '</div>' +
-      '</div>';
-  }
-
-  app.innerHTML =
-    '<div class="max-w-3xl mx-auto px-4 sm:px-6 py-10">' +
-      '<button onclick="showDashboard()" class="flex items-center gap-2 text-sm font-semibold text-slate-400 hover:text-emerald-600 transition-colors mb-8 group">' +
-        '<i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>Back to Courses' +
-      '</button>' +
-      '<div class="flex items-center gap-4 mb-8">' +
-        '<div class="w-14 h-14 rounded-2xl ' + course.accentBg + ' flex items-center justify-center">' +
-          '<i data-lucide="' + course.icon + '" class="w-7 h-7 ' + course.accentText + '"></i>' +
-        '</div>' +
-        '<div>' +
-          '<h1 class="text-3xl font-black text-slate-900">' + course.name + '</h1>' +
-          '<p class="text-sm text-slate-400 mt-0.5">' + prog.completed + '/' + prog.total + ' lessons completed</p>' +
-        '</div>' +
-      '</div>' +
-      trophyHTML +
-      '<div class="mb-6"><div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full progress-fill" style="width:' + prog.percent + '%"></div></div></div>' +
-      '<div class="space-y-3">' + lessonsHTML + '</div>' +
-    '</div>';
-
-  updateNavProgress();
-  lucide.createIcons();
-
-  try { anime({ targets:'.lesson-item', translateX:[-20,0], opacity:[0,1], delay:anime.stagger(60,{start:100}), duration:400, easing:'easeOutCubic' }); } catch(e){}
-}
-
-var currentEditor = null;
-
-function showLesson(courseId, lessonIndex) {
-  var course = COURSES[courseId];
-  var lesson = course.lessons[lessonIndex];
-  var done = isCompleted(lesson.id);
-  var hasNext = lessonIndex < course.lessons.length - 1;
-  var hasPrev = lessonIndex > 0;
-  var savedCode = state.codeSnippets[lesson.id] || lesson.starterCode;
-
-  state.lastVisited = lesson.id;
-  saveState();
-
-  // Format content: replace <code> tags with styled versions
-  var formattedContent = lesson.content.replace(/<code>(.*?)<\/code>/g, '<code class="bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded text-[13px] font-mono font-semibold">$1</code>');
-
-  var prevBtn = hasPrev ? '<button onclick="showLesson(\'' + courseId + '\',' + (lessonIndex-1) + ')" class="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors"><i data-lucide="arrow-left" class="w-4 h-4"></i>Previous</button>' : '';
-  var nextBtn = hasNext ? '<button onclick="showLesson(\'' + courseId + '\',' + (lessonIndex+1) + ')" class="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors">Next<i data-lucide="arrow-right" class="w-4 h-4"></i></button>' : '';
-
-  var doneBadge = done ? '<span class="flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i>Done</span>' : '';
-
-  var completeBtnClass = done ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'bg-emerald-500 text-white hover:bg-emerald-600 shadow-lg shadow-emerald-200';
-  var completeBtnIcon = done ? 'check-circle' : 'circle-check';
-  var completeBtnText = done ? 'Completed' : 'Mark as Complete';
-  var nextLessonBtn = (hasNext && done) ? '<button onclick="showLesson(\'' + courseId + '\',' + (lessonIndex+1) + ')" class="flex items-center gap-1.5 px-5 py-3 rounded-xl font-bold text-sm bg-slate-900 text-white hover:bg-slate-800 transition-colors">Next Lesson<i data-lucide="arrow-right" class="w-4 h-4"></i></button>' : '';
-
-  app.innerHTML =
-    '<div class="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10">' +
-      '<div class="flex items-center gap-2 text-sm text-slate-400 mb-6 flex-wrap">' +
-        '<button onclick="showDashboard()" class="hover:text-emerald-600 transition-colors font-semibold">Courses</button>' +
-        '<i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>' +
-        '<button onclick="showCourse(\'' + courseId + '\')" class="hover:text-emerald-600 transition-colors font-semibold">' + course.name + '</button>' +
-        '<i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>' +
-        '<span class="text-slate-600 font-semibold">Lesson ' + (lessonIndex+1) + '</span>' +
-      '</div>' +
-      '<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">' +
-        '<div>' +
-          '<div class="flex items-center gap-2 mb-1">' +
-            '<span class="text-xs font-bold uppercase tracking-wider ' + course.accentText + ' ' + course.accentBg + ' px-2.5 py-0.5 rounded-full">Lesson ' + (lessonIndex+1) + '</span>' +
-            doneBadge +
-          '</div>' +
-          '<h1 class="text-2xl sm:text-3xl font-black text-slate-900">' + lesson.title + '</h1>' +
-        '</div>' +
-        '<div class="flex items-center gap-2">' + prevBtn + nextBtn + '</div>' +
-      '</div>' +
-      '<div class="grid lg:grid-cols-2 gap-6">' +
-        '<div class="space-y-6">' +
-          '<div class="bg-white border border-slate-200 rounded-2xl p-6">' +
-            '<div class="text-slate-600 leading-relaxed text-[15px]">' + formattedContent + '</div>' +
-          '</div>' +
-          '<div class="bg-amber-50 border border-amber-200 rounded-2xl p-5">' +
-            '<div class="flex items-start gap-3">' +
-              '<i data-lucide="lightbulb" class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5"></i>' +
-              '<div><div class="font-bold text-amber-800 text-sm mb-1">Try This</div><div class="text-sm text-amber-700 leading-relaxed">' + lesson.task + '</div></div>' +
-            '</div>' +
-          '</div>' +
-          '<div class="flex gap-3">' +
-            '<button id="complete-btn" onclick="completeLesson(\'' + lesson.id + '\',\'' + courseId + '\',' + lessonIndex + ')" class="flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm transition-all ' + completeBtnClass + '">' +
-              '<i data-lucide="' + completeBtnIcon + '" class="w-5 h-5"></i>' + completeBtnText +
-            '</button>' +
-            nextLessonBtn +
-          '</div>' +
-        '</div>' +
-        '<div class="space-y-4">' +
-          '<div class="bg-slate-900 rounded-2xl overflow-hidden shadow-xl">' +
-            '<div class="flex items-center justify-between px-4 py-3 bg-slate-800/50 border-b border-slate-700/50">' +
-              '<div class="flex items-center gap-2">' +
-                '<div class="flex gap-1.5"><div class="w-3 h-3 rounded-full bg-red-400/80"></div><div class="w-3 h-3 rounded-full bg-yellow-400/80"></div><div class="w-3 h-3 rounded-full bg-green-400/80"></div></div>' +
-                '<span class="text-xs text-slate-400 font-mono ml-2">' + lesson.type.toUpperCase() + '</span>' +
-              '</div>' +
-              '<button onclick="runCurrentCode(\'' + courseId + '\')" class="run-pulse flex items-center gap-1.5 px-4 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-white text-xs font-bold rounded-lg transition-all" aria-label="Run code">' +
-                '<i data-lucide="play" class="w-3.5 h-3.5"></i>Run' +
-              '</button>' +
-            '</div>' +
-            '<textarea id="code-editor" class="code-editor w-full bg-slate-900 text-emerald-300 p-4 text-sm scrollbar-thin" style="height:280px;" spellcheck="false" aria-label="Code editor">' + escapeHTML(savedCode) + '</textarea>' +
-          '</div>' +
-          '<div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">' +
-            '<div class="flex items-center gap-2 px-4 py-2.5 bg-slate-50 border-b border-slate-100">' +
-              '<i data-lucide="monitor" class="w-4 h-4 text-slate-400"></i>' +
-              '<span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Output</span>' +
-              '<button onclick="clearOutput()" class="ml-auto text-xs text-slate-400 hover:text-slate-600 font-semibold transition-colors">Clear</button>' +
-            '</div>' +
-            '<div id="output-panel" class="bg-white scrollbar-thin" style="height:220px;overflow:auto;">' +
-              '<div class="flex items-center justify-center h-full text-slate-300 text-sm"><div class="text-center"><i data-lucide="play-circle" class="w-8 h-8 mx-auto mb-2 text-slate-200"></i><p>Click "Run" to see output</p></div></div>' +
-            '</div>' +
-          '</div>' +
-        '</div>' +
-      '</div>' +
-    '</div>';
-
-  updateNavProgress();
-  lucide.createIcons();
-
-  // Setup editor
-  var editor = document.getElementById('code-editor');
-  currentEditor = { courseId: courseId, lessonId: lesson.id, type: lesson.type };
-
-  var saveTimeout;
-  editor.addEventListener('input', function() {
-    clearTimeout(saveTimeout);
-    saveTimeout = setTimeout(function() {
-      state.codeSnippets[lesson.id] = editor.value;
-      saveState();
-    }, 500);
-  });
-
-  editor.addEventListener('keydown', function(e) {
-    if (e.key === 'Tab') {
-      e.preventDefault();
-      var start = editor.selectionStart;
-      var end = editor.selectionEnd;
-      var val = editor.value;
-      editor.value = val.substring(0, start) + '  ' + val.substring(end);
-      editor.selectionStart = editor.selectionEnd = start + 2;
-      editor.dispatchEvent(new Event('input'));
+    var prevCode = state.codeSnippets[lesson.id] || lesson.starterCode;
+    var previewLabel = lesson.type === 'html' ? 'Live Preview' : lesson.type === 'code' ? 'Expected Output' : 'Console Output';
+    var runLabel = lesson.type === 'code' ? 'Show Output' : 'Run Code';
+    var langNote = '';
+    if (lesson.type === 'code') {
+        langNote = '<div class="flex items-center gap-2 text-xs text-amber-600 bg-amber-50 px-3 py-2 rounded-lg mb-3"><i data-lucide="info" class="w-3.5 h-3.5 flex-shrink-0"></i><span>'+course.name+' code runs in a compiler, not in the browser. Edit for practice, then click "'+runLabel+'" to see the expected result.</span></div>';
     }
-    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-      e.preventDefault();
-      runCurrentCode(courseId);
+    var doneBtn = done ? '<button disabled class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-100 text-emerald-700 font-semibold text-sm cursor-default"><i data-lucide="check-circle" class="w-4 h-4"></i>Completed</button>' : '<button onclick="completeLesson()" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 text-white font-semibold text-sm hover:bg-emerald-600 transition-colors run-pulse"><i data-lucide="check" class="w-4 h-4"></i>Mark Complete</button>';
+
+    app.innerHTML = '<div class="max-w-6xl mx-auto px-4 sm:px-6 py-6"><div class="flex items-center justify-between mb-6"><button onclick="showCourse(\''+courseId+'\')" class="flex items-center gap-2 text-sm font-semibold text-slate-400 hover:text-emerald-600 transition-colors group"><i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>'+course.name+'</button><div class="flex items-center gap-2 text-sm text-slate-400"><span>'+course.lessons[lessonIdx].title+'</span><span class="text-slate-300">|</span><span>'+(lessonIdx+1)+'/'+course.lessons.length+'</span></div></div><div class="grid lg:grid-cols-2 gap-6"><div class="flex flex-col"><div class="flex items-center justify-between mb-3"><h2 class="text-lg font-bold text-slate-900">'+lesson.title+'</h2>'+doneBtn+'</div><div class="bg-slate-50 rounded-xl p-5 mb-4 text-sm text-slate-600 leading-relaxed border border-slate-100">'+lesson.content+'</div>'+langNote+'<div class="flex items-center justify-between mb-2"><span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Code Editor</span><button onclick="resetCode()" class="text-xs font-semibold text-slate-400 hover:text-red-500 transition-colors flex items-center gap-1"><i data-lucide="rotate-ccw" class="w-3 h-3"></i>Reset</button></div><textarea id="code-editor" class="code-editor w-full h-64 bg-slate-900 text-emerald-300 p-4 rounded-xl text-sm scrollbar-thin border border-slate-700 focus:border-emerald-500" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea><div class="mt-3 flex gap-2"><button onclick="runCode()" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 text-white font-semibold text-sm hover:bg-emerald-600 transition-colors run-pulse"><i data-lucide="play" class="w-4 h-4"></i>'+runLabel+'</button></div><div class="mt-4 bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800"><strong>Task:</strong> '+lesson.task+'</div></div><div class="flex flex-col"><div class="flex items-center mb-2"><span class="text-xs font-bold text-slate-400 uppercase tracking-wider">'+previewLabel+'</span></div><div id="preview-pane" class="flex-1 min-h-[400px] bg-white border border-slate-200 rounded-xl overflow-hidden"><div id="preview-content" class="w-full h-full"></div></div></div></div></div>';
+
+    var editor = document.getElementById('code-editor');
+    editor.value = prevCode;
+    editor.addEventListener('input', function() { state.codeSnippets[lesson.id] = editor.value; saveState(); });
+    editor.addEventListener('keydown', function(e) {
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            var start = this.selectionStart, end = this.selectionEnd;
+            this.value = this.value.substring(0, start) + '  ' + this.value.substring(end);
+            this.selectionStart = this.selectionEnd = start + 2;
+            state.codeSnippets[lesson.id] = this.value; saveState();
+        }
+    });
+
+    updateNavProgress(); lucide.createIcons();
+    if (lesson.type === 'html') { runCode(); }
+}
+
+function runCode() {
+    if (currentCourseId === null || currentLessonIdx === null) return;
+    var lesson = COURSES[currentCourseId].lessons[currentLessonIdx];
+    var code = document.getElementById('code-editor').value;
+    var pane = document.getElementById('preview-content');
+
+    if (lesson.type === 'html') {
+        pane.innerHTML = code;
+    } else if (lesson.type === 'code') {
+        var expected = lesson.expectedOutput || 'No expected output provided.';
+        pane.innerHTML = '<div class="p-4 bg-slate-900 h-full overflow-auto"><div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Expected Output</div><pre class="text-emerald-300 text-sm font-mono whitespace-pre-wrap leading-relaxed">' + escHTML(expected) + '</pre></div>';
+    } else {
+        var logs = [];
+        var fakeConsole = { log: function() { var args = Array.prototype.slice.call(arguments); logs.push(args.map(function(a) { return typeof a === 'object' ? JSON.stringify(a) : String(a); }).join(' ')); } };
+        try {
+            var fn = new Function('console', code);
+            fn(fakeConsole);
+        } catch(e) { logs.push('Error: ' + e.message); }
+        pane.innerHTML = '<div class="p-4 bg-slate-900 h-full overflow-auto scrollbar-thin"><div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Console Output</div>' + (logs.length > 0 ? logs.map(function(l) { return '<div class="text-emerald-300 text-sm font-mono whitespace-pre-wrap leading-relaxed py-0.5 border-b border-slate-800 last:border-0">' + escHTML(l) + '</div>'; }).join('') : '<div class="text-slate-500 text-sm italic">No output yet.</div>') + '</div>';
     }
-  });
-
-  try { anime({ targets:'.grid > div, .grid > div > div', translateY:[15,0], opacity:[0,1], delay:anime.stagger(80,{start:50}), duration:450, easing:'easeOutCubic' }); } catch(e){}
 }
 
-function escapeHTML(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function resetCode() {
+    if (currentCourseId === null || currentLessonIdx === null) return;
+    var lesson = COURSES[currentCourseId].lessons[currentLessonIdx];
+    document.getElementById('code-editor').value = lesson.starterCode;
+    delete state.codeSnippets[lesson.id];
+    saveState();
+    showToast('Code reset to starter', 'info');
+    if (lesson.type === 'html') { runCode(); }
 }
 
-// ======================== CODE EXECUTION ========================
-function runCurrentCode(courseId) {
-  if (!currentEditor) return;
-  var editor = document.getElementById('code-editor');
-  var output = document.getElementById('output-panel');
-  if (!editor || !output) return;
-  var code = editor.value;
-
-  state.codeSnippets[currentEditor.lessonId] = code;
-  saveState();
-
-  var runBtn = document.querySelector('.run-pulse');
-  if (runBtn) { try { anime({ targets:runBtn, scale:[1,0.9,1], duration:200, easing:'easeInOutQuad' }); } catch(e){} }
-
-  if (currentEditor.type === 'js') {
-    runJavaScript(code, output);
-  } else {
-    runHTMLCSS(code, output);
-  }
+function completeLesson() {
+    if (currentCourseId === null || currentLessonIdx === null) return;
+    var lesson = COURSES[currentCourseId].lessons[currentLessonIdx];
+    markCompleted(lesson.id);
+    celebrate();
+    showToast('Lesson completed! Great job!', 'success');
+    updateNavProgress();
+    setTimeout(function() { showLesson(currentCourseId, currentLessonIdx); }, 600);
 }
 
-function runJavaScript(code, outputEl) {
-  var logs = [];
-  var sandbox = document.createElement('iframe');
-  sandbox.style.cssText = 'position:fixed;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;';
-  document.body.appendChild(sandbox);
-
-  sandbox.contentWindow.console.log = function() {
-    var args = [];
-    for (var i = 0; i < arguments.length; i++) {
-      var a = arguments[i];
-      if (a === null) args.push('null');
-      else if (a === undefined) args.push('undefined');
-      else if (typeof a === 'object') { try { args.push(JSON.stringify(a, null, 2)); } catch(e) { args.push(String(a)); } }
-      else args.push(String(a));
-    }
-    logs.push(args.join(' '));
-  };
-  sandbox.contentWindow.console.error = function() {
-    var a = []; for (var i=0;i<arguments.length;i++) a.push(String(arguments[i])); logs.push('Error: ' + a.join(' '));
-  };
-  sandbox.contentWindow.console.warn = function() {
-    var a = []; for (var i=0;i<arguments.length;i++) a.push(String(arguments[i])); logs.push('Warning: ' + a.join(' '));
-  };
-
-  try {
-    sandbox.contentWindow.eval(code);
-  } catch(e) {
-    logs.push('Error: ' + e.message);
-  }
-
-  setTimeout(function() {
-    if (sandbox.parentNode) sandbox.parentNode.removeChild(sandbox);
-  }, 100);
-
-  if (logs.length === 0) {
-    outputEl.innerHTML = '<div class="flex items-center justify-center h-full text-slate-300 text-sm p-4"><p>No output. Use console.log() to print values.</p></div>';
-  } else {
-    outputEl.innerHTML = '<pre class="p-4 text-sm font-mono leading-relaxed whitespace-pre-wrap text-slate-700 scrollbar-thin">' + escapeHTML(logs.join('\n')) + '</pre>';
-  }
-
-  try { anime({ targets:outputEl, opacity:[0.5,1], duration:200 }); } catch(e){}
-}
-
-function runHTMLCSS(code, outputEl) {
-  var fullHTML;
-  var lowerCode = code.toLowerCase();
-  if (lowerCode.indexOf('<html') !== -1 || lowerCode.indexOf('<!doctype') !== -1) {
-    fullHTML = code;
-  } else if (lowerCode.indexOf('<style') !== -1) {
-    fullHTML = '<!DOCTYPE html><html><head><meta charset="UTF-8">' + code + '</head><body></body></html>';
-  } else {
-    fullHTML = '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:sans-serif;margin:16px;color:#1e293b;}</style></head><body>' + code + '</body></html>';
-  }
-
-  outputEl.innerHTML = '<iframe id="output-iframe" style="width:100%;height:100%;border:none;min-height:220px;" sandbox="allow-scripts"></iframe>';
-  var iframe = document.getElementById('output-iframe');
-  if (iframe) { iframe.srcdoc = fullHTML; }
-
-  try { anime({ targets:outputEl, opacity:[0.5,1], duration:200 }); } catch(e){}
-}
-
-function clearOutput() {
-  var output = document.getElementById('output-panel');
-  if (output) {
-    output.innerHTML = '<div class="flex items-center justify-center h-full text-slate-300 text-sm"><div class="text-center"><i data-lucide="play-circle" class="w-8 h-8 mx-auto mb-2 text-slate-200"></i><p>Click "Run" to see output</p></div></div>';
-    lucide.createIcons({ nodes: [output] });
-  }
-}
-
-// ======================== LESSON COMPLETION ========================
-function completeLesson(lessonId, courseId, lessonIndex) {
-  if (isCompleted(lessonId)) return;
-  markCompleted(lessonId);
-  celebrate();
-  showToast('Lesson completed! Great job!', 'success');
-  setTimeout(function() { showLesson(courseId, lessonIndex); }, 300);
-
-  var prog = getCourseProgress(courseId);
-  if (prog.percent === 100) {
-    setTimeout(function() {
-      celebrate();
-      showToast(COURSES[courseId].name + ' course completed! You\'re a champion!', 'success');
-    }, 1500);
-  }
-}
-
-// ======================== NAV PROGRESS ========================
-function updateNavProgress() {
-  var overall = getOverallProgress();
-  var bar = document.getElementById('nav-progress-bar');
-  var text = document.getElementById('nav-progress-text');
-  if (bar) bar.style.width = overall.percent + '%';
-  if (text) text.textContent = overall.completed + '/' + overall.total + ' lessons';
-}
-
-// ======================== INTRO.JS TOUR ========================
+// ======================== TOUR ========================
 function startTour() {
-  // Make sure we're on dashboard first
-  showDashboard();
-  setTimeout(function() {
     if (typeof introJs === 'undefined') return;
-    try {
-      introJs().setOptions({
-        showBullets: false,
-        showStepNumbers: true,
-        nextLabel: 'Next',
-        prevLabel: 'Back',
-        skipLabel: 'Skip',
-        doneLabel: 'Got it!',
+    var intro = introJs();
+    intro.setOptions({
         steps: [
-          { element: '#nav-logo', intro: 'Welcome to <strong>CodeGreen</strong>! Click the logo anytime to return to this dashboard.' },
-          { element: '#hero-section', intro: 'Here you\'ll find your learning path. We track your overall progress across all three languages.' },
-          { element: '#stats-section', intro: 'These stats update in real-time as you complete lessons. Everything is saved in your browser.' },
-          { element: '#courses-section', intro: 'Pick a course to start! Each course has interactive lessons with a built-in code editor. Your code and progress are saved automatically — come back anytime!' }
-        ]
-      }).start();
-    } catch(e) {
-      console.log('Tour error:', e);
-    }
-  }, 400);
+            { element: '#nav-logo', intro: 'Click here anytime to return to the dashboard.' },
+            { element: '#courses-section', intro: 'Browse all 6 courses here. Each has 8 hands-on lessons covering fundamentals to intermediate topics.' },
+            { element: '#stats-section', intro: 'Your overall progress at a glance. Complete lessons to fill this up!' }
+        ],
+        showBullets: false,
+        showStepNumbers: false,
+        tooltipClass: 'custom-intro-tooltip'
+    });
+    intro.start();
 }
-
-// ======================== KEYBOARD ========================
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeModal();
-});
 
 // ======================== INIT ========================
-function init() {
-  // Fix any corrupted state from old version
-  if (!Array.isArray(state.completedLessons)) state.completedLessons = [];
-  if (typeof state.codeSnippets !== 'object' || state.codeSnippets === null) state.codeSnippets = {};
-  saveState();
-
-  showDashboard();
-  lucide.createIcons();
-}
-
-init();
+showDashboard();
 </script>
 </body>
 </html>
