@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeGreen - Learn to Code</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/introjs.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/introjs.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{fontFamily:{sans:['Plus Jakarta Sans','sans-serif'],mono:['JetBrains Mono','monospace']}}}}
+</script>
+<style>
+body{font-family:'Plus Jakarta Sans',sans-serif}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 15% 30%,rgba(16,185,129,.07) 0%,transparent 50%),radial-gradient(ellipse at 85% 15%,rgba(5,150,105,.05) 0%,transparent 50%),radial-gradient(ellipse at 50% 85%,rgba(52,211,153,.04) 0%,transparent 50%);pointer-events:none;z-index:-1}
+.code-editor{font-family:'JetBrains Mono',monospace;tab-size:2;resize:none;line-height:1.6}
+.code-editor:focus{outline:none;box-shadow:0 0 0 2px rgba(16,185,129,.4)}
+.scrollbar-thin::-webkit-scrollbar{width:6px;height:6px}
+.scrollbar-thin::-webkit-scrollbar-track{background:transparent}
+.scrollbar-thin::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:3px}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover{background:#9ca3af}
+.introjs-tooltip{background-color:#064e3b!important;color:#ecfdf5!important;border-radius:12px!important;border:1px solid #10b981!important}
+.introjs-tooltipTitle{color:#6ee7b7!important;font-family:'Plus Jakarta Sans',sans-serif!important;font-weight:700!important}
+.introjs-tooltiptext{font-family:'Plus Jakarta Sans',sans-serif!important;line-height:1.6!important}
+.introjs-button{background-color:#10b981!important;color:#fff!important;border:none!important;border-radius:8px!important;font-family:'Plus Jakarta Sans',sans-serif!important;font-weight:600!important;text-shadow:none!important}
+.introjs-button:hover{background-color:#059669!important}
+.introjs-skipbutton{color:#6ee7b7!important;font-family:'Plus Jakarta Sans',sans-serif!important}
+.introjs-bullets .active{background:#10b981!important}
+.introjs-arrow{border-color:#064e3b!important}
+.introjs-overlay{background:rgba(0,0,0,.5)!important}
+.toast-enter{animation:toastIn .4s cubic-bezier(.16,1,.3,1) forwards}
+.toast-exit{animation:toastOut .3s ease-in forwards}
+@keyframes toastIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes toastOut{from{transform:translateX(0);opacity:1}to{transform:translateX(120%);opacity:0}}
+.lesson-item{transition:all .2s ease}
+.lesson-item:hover{transform:translateX(4px)}
+.card-lift{transition:transform .3s ease,box-shadow .3s ease}
+.card-lift:hover{transform:translateY(-6px);box-shadow:0 20px 40px -12px rgba(16,185,129,.2)}
+.run-pulse:active{transform:scale(.95)}
+.progress-fill{transition:width .8s cubic-bezier(.16,1,.3,1)}
+.pulse-dot{animation:pulseDot 2s ease-in-out infinite}
+@keyframes pulseDot{0%,100%{opacity:.4;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body class="bg-white text-slate-800 min-h-screen">
+
+<div id="toast-container" class="fixed top-20 right-4 z-[200] flex flex-col gap-3 pointer-events-none"></div>
+
+<div id="modal-overlay" class="fixed inset-0 z-[150] hidden items-center justify-center bg-black/40 backdrop-blur-sm" role="dialog" aria-modal="true">
+  <div id="modal-box" class="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl">
+    <h3 id="modal-title" class="text-lg font-bold text-slate-900 mb-2"></h3>
+    <p id="modal-message" class="text-slate-600 mb-6 leading-relaxed"></p>
+    <div class="flex gap-3 justify-end">
+      <button id="modal-cancel" class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold transition-colors">Cancel</button>
+      <button id="modal-confirm" class="px-5 py-2.5 rounded-xl bg-red-500 text-white hover:bg-red-600 font-semibold transition-colors">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div id="celebration" class="fixed inset-0 z-[120] hidden pointer-events-none overflow-hidden"></div>
+
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-emerald-100/60">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+    <button id="nav-logo" onclick="showDashboard()" class="flex items-center gap-2.5 group" aria-label="Go to dashboard">
+      <div class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center group-hover:bg-emerald-600 transition-colors">
+        <i data-lucide="code-2" class="w-4 h-4 text-white"></i>
+      </div>
+      <span class="font-extrabold text-emerald-900 text-lg tracking-tight hidden sm:block">CodeGreen</span>
+    </button>
+    <div class="flex items-center gap-3">
+      <span id="nav-progress-text" class="text-xs font-semibold text-slate-500 hidden sm:block"></span>
+      <div class="w-32 h-2 bg-emerald-100 rounded-full overflow-hidden">
+        <div id="nav-progress-bar" class="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="startTour()" class="flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors" aria-label="Take guided tour">
+        <i data-lucide="compass" class="w-4 h-4"></i>
+        <span class="hidden sm:inline">Tour</span>
+      </button>
+      <button onclick="confirmReset()" class="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors" aria-label="Reset all progress" title="Reset Progress">
+        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<main id="app" class="pt-16 min-h-screen"></main>
+
+<script>
+// ======================== COURSE DATA ========================
+// Using separate arrays to avoid template literal / script tag conflicts
+var COURSES = {
+  html: {
+    id: 'html', name: 'HTML', icon: 'file-code',
+    description: 'Build the structure of web pages with HTML elements, tags, and attributes.',
+    color: '#E34F26', accentBg: 'bg-orange-50', accentText: 'text-orange-600', accentBorder: 'border-orange-200',
+    lessons: [
+      { id:'html-1', title:'Your First HTML Page', type:'html',
+        content:'HTML (HyperText Markup Language) is the skeleton of every web page. A basic HTML document has a <code>&lt;!DOCTYPE html&gt;</code> declaration, followed by <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, and <code>&lt;body&gt;</code> tags.<br><br>The <code>&lt;head&gt;</code> contains metadata like the page title. The <code>&lt;body&gt;</code> holds all visible content — headings, paragraphs, images, and more.',
+        starterCode:'<!DOCTYPE html>\n<html>\n<head>\n  <title>My First Page</title>\n</head>\n<body>\n  <h1>Hello World!</h1>\n  <p>This is my first web page.</p>\n  <p>HTML is the foundation of the web.</p>\n</body>\n</html>',
+        task:'Try changing the heading text and adding a third paragraph with your own message.'
+      },
+      { id:'html-2', title:'Headings & Text Formatting', type:'html',
+        content:'HTML provides six heading levels (<code>&lt;h1&gt;</code> through <code>&lt;h6&gt;</code>). Use <code>&lt;h1&gt;</code> for the main title and lower levels for sub-sections.<br><br>For text emphasis, use <code>&lt;strong&gt;</code> for bold importance and <code>&lt;em&gt;</code> for italic emphasis. The <code>&lt;br&gt;</code> tag creates a line break, and <code>&lt;hr&gt;</code> adds a horizontal rule.',
+        starterCode:'<h1>Main Title</h1>\n<h2>Section Heading</h2>\n<p>This is a normal paragraph with <strong>bold text</strong> and <em>italic text</em> inside it.</p>\n\n<h3>Sub-section</h3>\n<p>You can also combine <strong><em>bold and italic</em></strong> together.</p>\n\n<hr>\n\n<h4>Small Heading</h4>\n<p>Headings help organize content hierarchically.</p>',
+        task:'Add an h5 and h6 heading to see how they look, and try using a br tag inside a paragraph.'
+      },
+      { id:'html-3', title:'Links & Images', type:'html',
+        content:'Links are created with the <code>&lt;a&gt;</code> (anchor) tag using the <code>href</code> attribute. Use <code>target="_blank"</code> to open links in a new tab.<br><br>Images use the <code>&lt;img&gt;</code> tag with <code>src</code> for the URL and <code>alt</code> for alternative text (important for accessibility). The <code>img</code> tag is self-closing.',
+        starterCode:'<h1>My Favorite Resources</h1>\n\n<h2>Links</h2>\n<a href="https://developer.mozilla.org" target="_blank">MDN Web Docs</a><br>\n<a href="https://github.com" target="_blank">GitHub</a>\n\n<h2>Images</h2>\n<img src="https://picsum.photos/seed/greenleaf/400/250" alt="A beautiful landscape" style="border-radius:12px;">\n<p>Always include alt text for accessibility.</p>\n\n<h2>Image as a Link</h2>\n<a href="https://example.com" target="_blank">\n  <img src="https://picsum.photos/seed/coding42/150/100" alt="Click me" style="border-radius:8px;">\n</a>',
+        task:'Add a new link to your favorite website and replace one of the images with a different picsum seed.'
+      },
+      { id:'html-4', title:'Lists & Tables', type:'html',
+        content:'Unordered lists use <code>&lt;ul&gt;</code> with <code>&lt;li&gt;</code> items. Ordered lists use <code>&lt;ol&gt;</code> for numbered items. You can nest lists inside each other.<br><br>Tables use <code>&lt;table&gt;</code>, <code>&lt;tr&gt;</code> for rows, <code>&lt;th&gt;</code> for header cells, and <code>&lt;td&gt;</code> for data cells.',
+        starterCode:'<h2>Shopping List (Unordered)</h2>\n<ul>\n  <li>Apples</li>\n  <li>Bananas</li>\n  <li>Cherries</li>\n</ul>\n\n<h2>Recipe Steps (Ordered)</h2>\n<ol>\n  <li>Gather ingredients</li>\n  <li>Mix everything together</li>\n  <li>Bake at 180 degrees</li>\n  <li>Enjoy!</li>\n</ol>\n\n<h2>Language Comparison</h2>\n<table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse; border-color:#d1d5db;">\n  <thead>\n    <tr style="background:#ecfdf5;">\n      <th>Feature</th><th>HTML</th><th>CSS</th><th>JS</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr><td>Purpose</td><td>Structure</td><td>Style</td><td>Behavior</td></tr>\n    <tr><td>Runs in</td><td>Browser</td><td>Browser</td><td>Browser + Server</td></tr>\n  </tbody>\n</table>',
+        task:'Add a nested list inside one of the list items, and add another row to the table.'
+      },
+      { id:'html-5', title:'Forms & Inputs', type:'html',
+        content:'Forms collect user input using <code>&lt;form&gt;</code>. Common input types include <code>text</code>, <code>email</code>, <code>password</code>, <code>number</code>, and <code>checkbox</code>. Always pair inputs with <code>&lt;label&gt;</code> elements.<br><br>The <code>&lt;textarea&gt;</code> allows multi-line input. Use <code>&lt;select&gt;</code> and <code>&lt;option&gt;</code> for dropdowns.',
+        starterCode:'<h1>Contact Form</h1>\n<form style="max-width:400px;">\n  <label><strong>Name:</strong></label><br>\n  <input type="text" placeholder="Your name" style="width:100%;padding:8px;margin:4px 0 16px;border:1px solid #d1d5db;border-radius:8px;"><br>\n\n  <label><strong>Email:</strong></label><br>\n  <input type="email" placeholder="you@example.com" style="width:100%;padding:8px;margin:4px 0 16px;border:1px solid #d1d5db;border-radius:8px;"><br>\n\n  <label><strong>Topic:</strong></label><br>\n  <select style="width:100%;padding:8px;margin:4px 0 16px;border:1px solid #d1d5db;border-radius:8px;">\n    <option>General Question</option>\n    <option>Bug Report</option>\n    <option>Feature Request</option>\n  </select>\n\n  <label><strong>Message:</strong></label><br>\n  <textarea rows="4" placeholder="Write your message..." style="width:100%;padding:8px;margin:4px 0 16px;border:1px solid #d1d5db;border-radius:8px;resize:vertical;"></textarea><br>\n\n  <label><input type="checkbox"> Subscribe to newsletter</label><br><br>\n\n  <button type="submit" style="background:#10b981;color:white;padding:10px 24px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;">Send Message</button>\n</form>',
+        task:'Add a Phone number input field and a radio button group for Preferred Contact Method (Email / Phone).'
+      }
+    ]
+  },
+  css: {
+    id: 'css', name: 'CSS', icon: 'paintbrush',
+    description: 'Style and layout your web pages with colors, fonts, flexbox, and grid.',
+    color: '#1572B6', accentBg: 'bg-blue-50', accentText: 'text-blue-600', accentBorder: 'border-blue-200',
+    lessons: [
+      { id:'css-1', title:'Your First Styles', type:'html',
+        content:'CSS (Cascading Style Sheets) controls how HTML elements look. Write CSS rules inside a <code>&lt;style&gt;</code> tag. Each rule has a selector and declarations inside curly braces.<br><br>Properties like <code>color</code> change text color, <code>background-color</code> changes the background, and <code>text-align</code> controls alignment.',
+        starterCode:'<style>\n  body {\n    background-color: #ecfdf5;\n    font-family: sans-serif;\n    padding: 20px;\n  }\n  h1 {\n    color: #065f46;\n    text-align: center;\n    border-bottom: 3px solid #10b981;\n    padding-bottom: 12px;\n  }\n  p {\n    color: #374151;\n    font-size: 18px;\n    line-height: 1.8;\n  }\n</style>\n\n<h1>Styled Page</h1>\n<p>This paragraph has custom styles. Notice the colors, font size, and spacing.</p>\n<p>Both paragraphs share the same styles because they match the "p" selector.</p>',
+        task:'Change the background color, make the heading uppercase using text-transform, and add a different style to just the second paragraph using a class.'
+      },
+      { id:'css-2', title:'Colors, Fonts & Text', type:'html',
+        content:'CSS gives powerful control over typography. Use <code>font-family</code> for typeface, <code>font-size</code> for size, <code>font-weight</code> for boldness. Colors can be hex, rgb, or named.<br><br>Use classes (<code>.classname</code>) to target specific elements. <code>text-transform</code> can uppercase, lowercase, or capitalize text.',
+        starterCode:'<style>\n  h1 {\n    color: #065f46;\n    font-family: Georgia, serif;\n    font-size: 36px;\n    text-transform: uppercase;\n    letter-spacing: 3px;\n  }\n  .highlight {\n    background-color: #d1fae5;\n    padding: 12px 20px;\n    border-radius: 8px;\n    color: #047857;\n    font-weight: bold;\n    display: inline-block;\n  }\n  .muted {\n    color: #6b7280;\n    font-style: italic;\n    font-size: 14px;\n  }\n  .gradient-text {\n    background: linear-gradient(135deg, #10b981, #059669, #047857);\n    -webkit-background-clip: text;\n    -webkit-text-fill-color: transparent;\n    font-size: 28px;\n    font-weight: 800;\n  }\n</style>\n\n<h1>Typography Showcase</h1>\n<p class="highlight">This text is highlighted with a green background</p>\n<p class="muted">This is a muted, italic caption</p>\n<p class="gradient-text">This text has a gradient color effect</p>',
+        task:'Create a new class with a different font, background, and text color. Apply it to a new paragraph.'
+      },
+      { id:'css-3', title:'The Box Model', type:'html',
+        content:'Every HTML element is a box: <strong>content</strong> (inner area), <strong>padding</strong> (inside border), <strong>border</strong> (the edge), and <strong>margin</strong> (outside the border).<br><br>Use <code>box-shadow</code> for depth and <code>border-radius</code> to round corners. These four layers are the foundation of CSS layout.',
+        starterCode:'<style>\n  .box {\n    width: 220px;\n    padding: 24px;\n    border: 3px solid #10b981;\n    margin: 20px;\n    background-color: #ecfdf5;\n    text-align: center;\n    border-radius: 12px;\n  }\n  .box-shadow {\n    width: 220px;\n    padding: 24px;\n    border: 2px solid #059669;\n    margin: 20px;\n    background: white;\n    text-align: center;\n    border-radius: 12px;\n    box-shadow: 0 8px 24px rgba(16,185,129,0.25);\n  }\n  .box-dashed {\n    width: 220px;\n    padding: 24px;\n    border: 3px dashed #047857;\n    margin: 20px;\n    background: linear-gradient(135deg, #ecfdf5, #d1fae5);\n    text-align: center;\n    border-radius: 50px;\n  }\n</style>\n\n<div class="box">Solid Border</div>\n<div class="box-shadow">With Shadow</div>\n<div class="box-dashed">Dashed + Pill Shape</div>',
+        task:'Create a fourth box with a dotted border, a different shadow color, and asymmetric border-radius like 20px 50px 20px 50px.'
+      },
+      { id:'css-4', title:'Flexbox Layout', type:'html',
+        content:'Flexbox arranges items in rows or columns. Set <code>display: flex</code> on the parent, then use <code>justify-content</code> for horizontal and <code>align-items</code> for vertical alignment.<br><br>The <code>gap</code> property adds space between items. <code>flex: 1</code> makes items grow equally. Use <code>flex-direction: column</code> to stack vertically.',
+        starterCode:'<style>\n  .row {\n    display: flex;\n    gap: 12px;\n    padding: 16px;\n    margin-bottom: 12px;\n    background: #f0fdf4;\n    border-radius: 12px;\n  }\n  .item {\n    flex: 1;\n    padding: 20px;\n    background: #10b981;\n    color: white;\n    text-align: center;\n    border-radius: 8px;\n    font-weight: bold;\n  }\n  .centered {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    height: 120px;\n    background: #d1fae5;\n    border-radius: 12px;\n  }\n  .around {\n    display: flex;\n    justify-content: space-around;\n    padding: 16px;\n    background: #ecfdf5;\n    border-radius: 12px;\n  }\n</style>\n\n<h3>Equal Width Items</h3>\n<div class="row">\n  <div class="item">Item 1</div>\n  <div class="item">Item 2</div>\n  <div class="item">Item 3</div>\n</div>\n\n<h3>Perfectly Centered</h3>\n<div class="centered">\n  <div class="item" style="background:#059669;flex:none;padding:16px 32px;">Centered!</div>\n</div>\n\n<h3>Space Around</h3>\n<div class="around">\n  <div class="item" style="flex:none;padding:12px 20px;">A</div>\n  <div class="item" style="flex:none;padding:12px 20px;">B</div>\n  <div class="item" style="flex:none;padding:12px 20px;">C</div>\n</div>',
+        task:'Change the first row to use space-between and make one item take double the width of the others.'
+      },
+      { id:'css-5', title:'CSS Grid Layout', type:'html',
+        content:'CSS Grid is a two-dimensional layout system. Use <code>display: grid</code> and <code>grid-template-columns</code> to define columns. The <code>fr</code> unit distributes space fractionally.<br><br>Items can span multiple columns with <code>grid-column: span N</code> or rows with <code>grid-row: span N</code>. Grid excels at complex layouts.',
+        starterCode:'<style>\n  .grid {\n    display: grid;\n    grid-template-columns: 1fr 1fr 1fr;\n    gap: 12px;\n    padding: 16px;\n  }\n  .cell {\n    padding: 24px;\n    background: #10b981;\n    color: white;\n    text-align: center;\n    border-radius: 10px;\n    font-weight: bold;\n    min-height: 60px;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n  }\n  .wide { grid-column: span 2; background: #059669; }\n  .tall { grid-row: span 2; background: #047857; }\n  .full { grid-column: span 3; background: #065f46; }\n</style>\n\n<div class="grid">\n  <div class="cell wide">Wide (2 cols)</div>\n  <div class="cell tall">Tall (2 rows)</div>\n  <div class="cell">Normal</div>\n  <div class="cell">Normal</div>\n  <div class="cell">Normal</div>\n  <div class="cell wide">Wide (2 cols)</div>\n  <div class="cell full">Full Width (3 cols)</div>\n</div>',
+        task:'Change the grid to 4 columns and rearrange items. Try making one item span 3 columns and 2 rows.'
+      }
+    ]
+  },
+  js: {
+    id: 'js', name: 'JavaScript', icon: 'terminal',
+    description: 'Add interactivity and logic to your pages with variables, functions, and DOM manipulation.',
+    color: '#F7DF1E', accentBg: 'bg-yellow-50', accentText: 'text-yellow-600', accentBorder: 'border-yellow-200',
+    lessons: [
+      { id:'js-1', title:'Hello, JavaScript!', type:'js',
+        content:'JavaScript is the programming language of the web. The most basic way to output information is <code>console.log()</code>, which prints to the developer console.<br><br>Store data in variables using <code>let</code> (for values that change) or <code>const</code> (for constants). Strings are in quotes. Template literals use backticks: <code>`Hello ${name}`</code>.',
+        starterCode:'// This is a comment - it won\'t run\nconsole.log("Hello, JavaScript!");\nconsole.log("I\'m learning to code!");\n\n// Variables store data\nlet name = "Learner";\nconsole.log("Welcome, " + name + "!");\n\nconst year = 2024;\nconsole.log("Current year: " + year);\n\n// Template literals use backticks\nlet greeting = "Hello, " + name + "! It\'s " + year + ".";\nconsole.log(greeting);',
+        task:'Create a variable with your favorite color and log a sentence like "My favorite color is blue".'
+      },
+      { id:'js-2', title:'Variables & Data Types', type:'js',
+        content:'JavaScript has several data types: <strong>strings</strong> (text), <strong>numbers</strong>, <strong>booleans</strong> (true/false), <strong>arrays</strong> (ordered lists), and <strong>objects</strong> (key-value pairs).<br><br>Use <code>typeof</code> to check a type. Arrays use <code>[]</code> accessed by index (starting at 0). Objects use <code>{}</code> accessed with dot notation.',
+        starterCode:'// Different data types\nlet username = "Alex";        // string\nlet age = 25;                 // number\nlet isStudent = true;         // boolean\nlet skills = ["HTML", "CSS", "JS"];  // array\nlet profile = {               // object\n  name: "Alex",\n  level: 5,\n  active: true\n};\n\nconsole.log("Name:", username, "Type:", typeof username);\nconsole.log("Age:", age, "Type:", typeof age);\nconsole.log("Student?", isStudent, "Type:", typeof isStudent);\nconsole.log("Skills:", skills);\nconsole.log("First skill:", skills[0]);\nconsole.log("Profile:", profile.name, "Level:", profile.level);\n\n// Modifying values\nage = 26;\nskills.push("React");\nconsole.log("Updated age:", age);\nconsole.log("Updated skills:", skills);',
+        task:'Add more items to the skills array, add new properties to the profile object, and log them.'
+      },
+      { id:'js-3', title:'Functions', type:'js',
+        content:'Functions are reusable blocks of code. Define them with <code>function</code> or as arrow functions <code>() => {}</code>. They accept <strong>parameters</strong> (inputs) and <strong>return</strong> a value (output).<br><br>Arrow functions are shorter: <code>const add = (a, b) => a + b;</code>. Functions help you avoid repeating code.',
+        starterCode:'// Regular function\nfunction greet(name) {\n  return "Hello, " + name + "!";\n}\nconsole.log(greet("World"));\nconsole.log(greet("JavaScript"));\n\n// Arrow function\nvar add = function(a, b) { return a + b; };\nvar multiply = function(a, b) { return a * b; };\nconsole.log("5 + 3 =", add(5, 3));\nconsole.log("4 * 6 =", multiply(4, 6));\n\n// Multi-line function\nvar calculateArea = function(width, height) {\n  var area = width * height;\n  return "A " + width + "x" + height + " rectangle has area " + area;\n};\nconsole.log(calculateArea(10, 5));\nconsole.log(calculateArea(7, 3));\n\n// Function with default parameter\nvar power = function(base, exp) {\n  if (exp === undefined) exp = 2;\n  return Math.pow(base, exp);\n};\nconsole.log("3^2 =", power(3));\nconsole.log("2^5 =", power(2, 5));',
+        task:'Create a function called "factorial" that calculates the factorial of a number. Test it with factorial(5) which should return 120.'
+      },
+      { id:'js-4', title:'DOM Manipulation', type:'html',
+        content:'The DOM (Document Object Model) represents your HTML as a tree. JavaScript can select elements with <code>document.getElementById()</code> or <code>document.querySelector()</code>.<br><br>Change <code>textContent</code>, <code>innerHTML</code>, <code>style</code> properties, and toggle classes with <code>classList.add()</code> / <code>classList.remove()</code>.',
+        starterCode:'<h1 id="title" style="transition: all 0.3s;">Original Title</h1>\n<p id="text">Click the button to change me!</p>\n<button id="btn1" style="background:#10b981;color:white;padding:10px 20px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin-top:12px;">Change Content</button>\n<button id="btn2" style="background:#059669;color:white;padding:10px 20px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin-top:12px;">Toggle Style</button>\n\n<style>\n  .styled {\n    background: #ecfdf5 !important;\n    padding: 16px !important;\n    border-left: 4px solid #10b981 !important;\n    border-radius: 0 8px 8px 0 !important;\n  }\n</style>\n\n<script>\ndocument.getElementById("btn1").addEventListener("click", function() {\n  document.getElementById("title").textContent = "Title Changed!";\n  document.getElementById("title").style.color = "#10b981";\n  document.getElementById("text").innerHTML = "The DOM was <strong>manipulated</strong>!";\n});\n\ndocument.getElementById("btn2").addEventListener("click", function() {\n  document.getElementById("title").classList.toggle("styled");\n});\n<\/script>',
+        task:'Add a third button that creates and appends a new paragraph element to the page using document.createElement and appendChild.'
+      },
+      { id:'js-5', title:'Events & Interactivity', type:'html',
+        content:'Events are browser actions — clicks, key presses, form submissions. Attach handlers with <code>addEventListener()</code>.<br><br>This lesson builds a fully interactive counter. The pattern — read state, update it, reflect in DOM — is the core of all interactive web apps.',
+        starterCode:'<div style="text-align:center; padding:20px;">\n  <div id="counter" style="font-size:64px; font-weight:900; color:#10b981; transition: transform 0.1s;">0</div>\n  <div style="margin-top:16px; display:flex; gap:8px; justify-content:center;">\n    <button id="decBtn" style="font-size:24px; padding:8px 20px; border:2px solid #ef4444; color:#ef4444; background:white; border-radius:10px; cursor:pointer; font-weight:bold;">-</button>\n    <button id="resetBtn" style="font-size:24px; padding:8px 20px; border:2px solid #6b7280; color:#6b7280; background:white; border-radius:10px; cursor:pointer; font-weight:bold;">Reset</button>\n    <button id="incBtn" style="font-size:24px; padding:8px 20px; border:2px solid #10b981; color:#10b981; background:white; border-radius:10px; cursor:pointer; font-weight:bold;">+</button>\n  </div>\n  <p id="message" style="margin-top:16px; color:#6b7280; font-size:18px;">Start counting!</p>\n  <p id="history" style="margin-top:12px; color:#9ca3af; font-size:14px; max-width:300px; margin-left:auto; margin-right:auto;"></p>\n</div>\n\n<script>\nvar count = 0;\nvar historyLog = [];\n\nfunction update(amount) {\n  count += amount;\n  var el = document.getElementById("counter");\n  el.textContent = count;\n  el.style.transform = "scale(1.2)";\n  setTimeout(function() { el.style.transform = "scale(1)"; }, 100);\n\n  var msg = document.getElementById("message");\n  if (count > 0) { msg.textContent = "Positive! Keep going!"; msg.style.color = "#10b981"; }\n  else if (count < 0) { msg.textContent = "Negative! Going down!"; msg.style.color = "#ef4444"; }\n  else { msg.textContent = "Back to zero!"; msg.style.color = "#6b7280"; }\n\n  historyLog.push((amount > 0 ? "+" : "") + amount);\n  document.getElementById("history").textContent = "History: " + historyLog.join(", ");\n}\n\nfunction resetCounter() {\n  count = 0;\n  historyLog = [];\n  document.getElementById("counter").textContent = "0";\n  document.getElementById("message").textContent = "Start counting!";\n  document.getElementById("message").style.color = "#6b7280";\n  document.getElementById("history").textContent = "";\n}\n\ndocument.getElementById("incBtn").addEventListener("click", function() { update(1); });\ndocument.getElementById("decBtn").addEventListener("click", function() { update(-1); });\ndocument.getElementById("resetBtn").addEventListener("click", resetCounter);\n<\/script>',
+        task:'Add a "x2" button that doubles the current count, and change the counter color based on how high the number goes.'
+      }
+    ]
+  }
+};
+
+var TOTAL_LESSONS = 0;
+for (var k in COURSES) { TOTAL_LESSONS += COURSES[k].lessons.length; }
+
+// ======================== STATE ========================
+var STATE_KEY = 'codegreen_state_v2';
+
+function getDefaultState() {
+  return { completedLessons: [], codeSnippets: {}, lastVisited: null, introShown: false };
+}
+
+function loadState() {
+  try {
+    var raw = localStorage.getItem(STATE_KEY);
+    if (raw) { var p = JSON.parse(raw); var d = getDefaultState(); for (var k in d) { if (p[k] !== undefined) d[k] = p[k]; } return d; }
+  } catch(e) {}
+  return getDefaultState();
+}
+
+function saveState() {
+  try { localStorage.setItem(STATE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+var state = loadState();
+
+function isCompleted(lid) { return state.completedLessons.indexOf(lid) !== -1; }
+
+function markCompleted(lid) {
+  if (!isCompleted(lid)) { state.completedLessons.push(lid); saveState(); }
+}
+
+function getCourseProgress(cid) {
+  var c = COURSES[cid]; var done = 0;
+  for (var i = 0; i < c.lessons.length; i++) { if (isCompleted(c.lessons[i].id)) done++; }
+  return { completed: done, total: c.lessons.length, percent: Math.round((done / c.lessons.length) * 100) };
+}
+
+function getOverallProgress() {
+  return { completed: state.completedLessons.length, total: TOTAL_LESSONS, percent: Math.round((state.completedLessons.length / TOTAL_LESSONS) * 100) };
+}
+
+// ======================== TOAST ========================
+function showToast(message, type) {
+  type = type || 'success';
+  var container = document.getElementById('toast-container');
+  var toast = document.createElement('div');
+  var colors = { success:'bg-emerald-600', error:'bg-red-500', info:'bg-slate-700' };
+  var icons = { success:'check-circle', error:'alert-circle', info:'info' };
+  toast.className = 'pointer-events-auto flex items-center gap-3 px-5 py-3.5 rounded-xl text-white text-sm font-semibold shadow-lg ' + (colors[type]||colors.info) + ' toast-enter';
+  toast.innerHTML = '<i data-lucide="' + (icons[type]||icons.info) + '" class="w-5 h-5 flex-shrink-0"></i><span>' + message + '</span>';
+  container.appendChild(toast);
+  lucide.createIcons({ nodes: [toast] });
+  setTimeout(function() {
+    toast.classList.remove('toast-enter');
+    toast.classList.add('toast-exit');
+    toast.addEventListener('animationend', function() { if (toast.parentNode) toast.parentNode.removeChild(toast); });
+  }, 3000);
+}
+
+// ======================== MODAL ========================
+var modalCallback = null;
+
+function showModal(title, message, confirmText, onConfirm, btnClass) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-message').textContent = message;
+  var btn = document.getElementById('modal-confirm');
+  btn.textContent = confirmText;
+  btn.className = 'px-5 py-2.5 rounded-xl text-white font-semibold transition-colors ' + (btnClass || 'bg-red-500 hover:bg-red-600');
+  modalCallback = onConfirm;
+  var overlay = document.getElementById('modal-overlay');
+  overlay.classList.remove('hidden');
+  overlay.classList.add('flex');
+  try { anime({ targets:'#modal-box', scale:[0.9,1], opacity:[0,1], duration:300, easing:'easeOutCubic' }); } catch(e){}
+}
+
+function closeModal() {
+  var overlay = document.getElementById('modal-overlay');
+  overlay.classList.add('hidden');
+  overlay.classList.remove('flex');
+  modalCallback = null;
+}
+
+document.getElementById('modal-confirm').addEventListener('click', function() {
+  if (modalCallback) modalCallback();
+  closeModal();
+});
+document.getElementById('modal-cancel').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', function(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+
+function confirmReset() {
+  showModal('Reset All Progress?', 'This will erase all your completed lessons and saved code. This action cannot be undone.', 'Reset Everything', function() {
+    state = getDefaultState();
+    state.introShown = true;
+    saveState();
+    showDashboard();
+    showToast('All progress has been reset', 'info');
+  });
+}
+
+// ======================== CELEBRATION ========================
+function celebrate() {
+  var container = document.getElementById('celebration');
+  container.classList.remove('hidden');
+  container.innerHTML = '';
+  var colors = ['#10b981','#059669','#34d399','#6ee7b7','#a7f3d0','#fbbf24','#f59e0b','#ecfdf5'];
+  for (var i = 0; i < 50; i++) {
+    var p = document.createElement('div');
+    var sz = Math.random() * 10 + 5;
+    p.style.cssText = 'position:absolute;width:' + sz + 'px;height:' + sz + 'px;background:' + colors[Math.floor(Math.random()*colors.length)] + ';border-radius:' + (Math.random()>0.5?'50%':'2px') + ';top:50%;left:50%;';
+    container.appendChild(p);
+    (function(el) {
+      anime({
+        targets: el,
+        translateX: anime.random(-400,400),
+        translateY: anime.random(-500,-50),
+        rotate: anime.random(0,720),
+        scale: [1,0],
+        opacity: [1,0],
+        duration: anime.random(800,1800),
+        easing: 'easeOutExpo',
+        delay: anime.random(0,200),
+        complete: function() { if (el.parentNode) el.parentNode.removeChild(el); }
+      });
+    })(p);
+  }
+  setTimeout(function() { container.classList.add('hidden'); container.innerHTML = ''; }, 2200);
+}
+
+// ======================== VIEWS ========================
+var app = document.getElementById('app');
+
+function showDashboard() {
+  var overall = getOverallProgress();
+  var cardsHTML = '';
+  var courseIds = ['html','css','js'];
+  var isFirst = true;
+
+  for (var ci = 0; ci < courseIds.length; ci++) {
+    var id = courseIds[ci];
+    var course = COURSES[id];
+    var prog = getCourseProgress(id);
+    var isDone = prog.percent === 100;
+    var introAttr = isFirst ? ' data-intro="Here are your three courses. Click any card to start learning!"' : '';
+    isFirst = false;
+
+    cardsHTML += '<div class="card-lift bg-white rounded-2xl border ' +
+      (isDone ? 'border-emerald-300 ring-2 ring-emerald-100' : 'border-slate-200') +
+      ' overflow-hidden cursor-pointer group" onclick="showCourse(\'' + id + '\')"' + introAttr + '>' +
+      '<div class="h-2 bg-gradient-to-r from-emerald-400 to-emerald-600"></div>' +
+      '<div class="p-6">' +
+        '<div class="flex items-start justify-between mb-4">' +
+          '<div class="w-12 h-12 rounded-xl ' + course.accentBg + ' flex items-center justify-center">' +
+            '<i data-lucide="' + course.icon + '" class="w-6 h-6 ' + course.accentText + '"></i>' +
+          '</div>' +
+          (isDone ? '<span class="flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full"><i data-lucide="trophy" class="w-3.5 h-3.5"></i>Completed</span>' : '') +
+        '</div>' +
+        '<h3 class="text-xl font-extrabold text-slate-900 mb-1.5">' + course.name + '</h3>' +
+        '<p class="text-slate-500 text-sm leading-relaxed mb-5">' + course.description + '</p>' +
+        '<div class="mb-3">' +
+          '<div class="flex justify-between text-xs font-semibold mb-1.5">' +
+            '<span class="text-slate-500">' + prog.completed + ' of ' + prog.total + ' lessons</span>' +
+            '<span class="' + (isDone ? 'text-emerald-600' : 'text-slate-500') + '">' + prog.percent + '%</span>' +
+          '</div>' +
+          '<div class="h-2.5 bg-slate-100 rounded-full overflow-hidden">' +
+            '<div class="h-full rounded-full progress-fill bg-gradient-to-r from-emerald-400 to-emerald-600" style="width:' + prog.percent + '%"></div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="flex items-center gap-1.5 text-sm font-bold ' + (prog.completed > 0 ? 'text-emerald-600' : 'text-slate-400') + ' group-hover:text-emerald-600 transition-colors">' +
+          (prog.completed > 0 ? 'Continue Learning' : 'Start Learning') +
+          ' <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  app.innerHTML =
+    '<div class="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16">' +
+      '<section class="text-center mb-14" id="hero-section">' +
+        '<div class="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 text-sm font-semibold px-4 py-1.5 rounded-full mb-5">' +
+          '<i data-lucide="sparkles" class="w-4 h-4"></i>Free Interactive Coding Lessons' +
+        '</div>' +
+        '<h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-tight mb-4">' +
+          'Learn to Code<br>' +
+          '<span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-emerald-700">From Scratch</span>' +
+        '</h1>' +
+        '<p class="text-lg text-slate-500 max-w-xl mx-auto leading-relaxed mb-8">' +
+          'Master HTML, CSS, and JavaScript with hands-on lessons. Write real code, see instant results, and track your progress.' +
+        '</p>' +
+        '<div class="inline-flex items-center gap-4 bg-slate-50 rounded-2xl px-6 py-4" id="stats-section">' +
+          '<div class="text-center"><div class="text-2xl font-black text-emerald-600">' + overall.completed + '</div><div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Completed</div></div>' +
+          '<div class="w-px h-10 bg-slate-200"></div>' +
+          '<div class="text-center"><div class="text-2xl font-black text-slate-700">' + (overall.total - overall.completed) + '</div><div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Remaining</div></div>' +
+          '<div class="w-px h-10 bg-slate-200"></div>' +
+          '<div class="text-center"><div class="text-2xl font-black text-slate-700">' + overall.percent + '%</div><div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Overall</div></div>' +
+        '</div>' +
+      '</section>' +
+      '<section class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="courses-section">' + cardsHTML + '</section>' +
+      '<footer class="mt-20 text-center text-sm text-slate-400">' +
+        '<p>Built for learners. All progress saved locally in your browser.</p>' +
+        '<p class="mt-1">CodeGreen &mdash; Start your coding journey today.</p>' +
+      '</footer>' +
+    '</div>';
+
+  updateNavProgress();
+  lucide.createIcons();
+
+  try {
+    anime({ targets:'.card-lift', translateY:[30,0], opacity:[0,1], delay:anime.stagger(120,{start:200}), duration:600, easing:'easeOutCubic' });
+    anime({ targets:'#hero-section > *', translateY:[20,0], opacity:[0,1], delay:anime.stagger(80), duration:500, easing:'easeOutCubic' });
+  } catch(e){}
+
+  if (!state.introShown) {
+    state.introShown = true;
+    saveState();
+    setTimeout(startTour, 800);
+  }
+}
+
+function showCourse(courseId) {
+  var course = COURSES[courseId];
+  var prog = getCourseProgress(courseId);
+  var isDone = prog.percent === 100;
+  var lessonsHTML = '';
+
+  for (var i = 0; i < course.lessons.length; i++) {
+    var lesson = course.lessons[i];
+    var done = isCompleted(lesson.id);
+    var isNext = !done && (i === 0 || isCompleted(course.lessons[i-1].id));
+    var circleClass = done ? 'bg-emerald-500 text-white' : isNext ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-400';
+    var rowClass = done ? 'bg-emerald-50/60 hover:bg-emerald-50' : isNext ? 'bg-white border-2 border-emerald-200 hover:border-emerald-300 shadow-sm' : 'bg-white border border-slate-100 hover:bg-slate-50';
+    var titleClass = done ? 'line-through text-slate-400' : '';
+    var circleContent = done ? '<i data-lucide="check" class="w-5 h-5"></i>' : String(i + 1);
+    var dot = isNext && !done ? '<span class="pulse-dot w-2.5 h-2.5 bg-emerald-500 rounded-full flex-shrink-0"></span>' : '';
+
+    lessonsHTML +=
+      '<div class="lesson-item flex items-center gap-4 p-4 rounded-xl cursor-pointer ' + rowClass + ' transition-all" onclick="showLesson(\'' + courseId + '\',' + i + ')">' +
+        '<div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ' + circleClass + ' font-bold text-sm">' + circleContent + '</div>' +
+        '<div class="flex-1 min-w-0">' +
+          '<div class="font-semibold text-slate-800 ' + titleClass + '">' + lesson.title + '</div>' +
+          '<div class="text-xs text-slate-400 mt-0.5">' + (lesson.type === 'js' ? 'Console Output' : 'Live Preview') + '</div>' +
+        '</div>' +
+        dot +
+        '<i data-lucide="chevron-right" class="w-4 h-4 text-slate-300 flex-shrink-0"></i>' +
+      '</div>';
+  }
+
+  var trophyHTML = '';
+  if (isDone) {
+    trophyHTML =
+      '<div class="mb-6 bg-emerald-50 border border-emerald-200 rounded-xl p-5 flex items-center gap-4">' +
+        '<div class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0">' +
+          '<i data-lucide="trophy" class="w-6 h-6 text-white"></i>' +
+        '</div>' +
+        '<div>' +
+          '<div class="font-bold text-emerald-800">Course Completed!</div>' +
+          '<div class="text-sm text-emerald-600">You\'ve finished all ' + course.name + ' lessons. Great work!</div>' +
+        '</div>' +
+      '</div>';
+  }
+
+  app.innerHTML =
+    '<div class="max-w-3xl mx-auto px-4 sm:px-6 py-10">' +
+      '<button onclick="showDashboard()" class="flex items-center gap-2 text-sm font-semibold text-slate-400 hover:text-emerald-600 transition-colors mb-8 group">' +
+        '<i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>Back to Courses' +
+      '</button>' +
+      '<div class="flex items-center gap-4 mb-8">' +
+        '<div class="w-14 h-14 rounded-2xl ' + course.accentBg + ' flex items-center justify-center">' +
+          '<i data-lucide="' + course.icon + '" class="w-7 h-7 ' + course.accentText + '"></i>' +
+        '</div>' +
+        '<div>' +
+          '<h1 class="text-3xl font-black text-slate-900">' + course.name + '</h1>' +
+          '<p class="text-sm text-slate-400 mt-0.5">' + prog.completed + '/' + prog.total + ' lessons completed</p>' +
+        '</div>' +
+      '</div>' +
+      trophyHTML +
+      '<div class="mb-6"><div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full progress-fill" style="width:' + prog.percent + '%"></div></div></div>' +
+      '<div class="space-y-3">' + lessonsHTML + '</div>' +
+    '</div>';
+
+  updateNavProgress();
+  lucide.createIcons();
+
+  try { anime({ targets:'.lesson-item', translateX:[-20,0], opacity:[0,1], delay:anime.stagger(60,{start:100}), duration:400, easing:'easeOutCubic' }); } catch(e){}
+}
+
+var currentEditor = null;
+
+function showLesson(courseId, lessonIndex) {
+  var course = COURSES[courseId];
+  var lesson = course.lessons[lessonIndex];
+  var done = isCompleted(lesson.id);
+  var hasNext = lessonIndex < course.lessons.length - 1;
+  var hasPrev = lessonIndex > 0;
+  var savedCode = state.codeSnippets[lesson.id] || lesson.starterCode;
+
+  state.lastVisited = lesson.id;
+  saveState();
+
+  // Format content: replace <code> tags with styled versions
+  var formattedContent = lesson.content.replace(/<code>(.*?)<\/code>/g, '<code class="bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded text-[13px] font-mono font-semibold">$1</code>');
+
+  var prevBtn = hasPrev ? '<button onclick="showLesson(\'' + courseId + '\',' + (lessonIndex-1) + ')" class="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors"><i data-lucide="arrow-left" class="w-4 h-4"></i>Previous</button>' : '';
+  var nextBtn = hasNext ? '<button onclick="showLesson(\'' + courseId + '\',' + (lessonIndex+1) + ')" class="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors">Next<i data-lucide="arrow-right" class="w-4 h-4"></i></button>' : '';
+
+  var doneBadge = done ? '<span class="flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i>Done</span>' : '';
+
+  var completeBtnClass = done ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'bg-emerald-500 text-white hover:bg-emerald-600 shadow-lg shadow-emerald-200';
+  var completeBtnIcon = done ? 'check-circle' : 'circle-check';
+  var completeBtnText = done ? 'Completed' : 'Mark as Complete';
+  var nextLessonBtn = (hasNext && done) ? '<button onclick="showLesson(\'' + courseId + '\',' + (lessonIndex+1) + ')" class="flex items-center gap-1.5 px-5 py-3 rounded-xl font-bold text-sm bg-slate-900 text-white hover:bg-slate-800 transition-colors">Next Lesson<i data-lucide="arrow-right" class="w-4 h-4"></i></button>' : '';
+
+  app.innerHTML =
+    '<div class="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10">' +
+      '<div class="flex items-center gap-2 text-sm text-slate-400 mb-6 flex-wrap">' +
+        '<button onclick="showDashboard()" class="hover:text-emerald-600 transition-colors font-semibold">Courses</button>' +
+        '<i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>' +
+        '<button onclick="showCourse(\'' + courseId + '\')" class="hover:text-emerald-600 transition-colors font-semibold">' + course.name + '</button>' +
+        '<i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>' +
+        '<span class="text-slate-600 font-semibold">Lesson ' + (lessonIndex+1) + '</span>' +
+      '</div>' +
+      '<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">' +
+        '<div>' +
+          '<div class="flex items-center gap-2 mb-1">' +
+            '<span class="text-xs font-bold uppercase tracking-wider ' + course.accentText + ' ' + course.accentBg + ' px-2.5 py-0.5 rounded-full">Lesson ' + (lessonIndex+1) + '</span>' +
+            doneBadge +
+          '</div>' +
+          '<h1 class="text-2xl sm:text-3xl font-black text-slate-900">' + lesson.title + '</h1>' +
+        '</div>' +
+        '<div class="flex items-center gap-2">' + prevBtn + nextBtn + '</div>' +
+      '</div>' +
+      '<div class="grid lg:grid-cols-2 gap-6">' +
+        '<div class="space-y-6">' +
+          '<div class="bg-white border border-slate-200 rounded-2xl p-6">' +
+            '<div class="text-slate-600 leading-relaxed text-[15px]">' + formattedContent + '</div>' +
+          '</div>' +
+          '<div class="bg-amber-50 border border-amber-200 rounded-2xl p-5">' +
+            '<div class="flex items-start gap-3">' +
+              '<i data-lucide="lightbulb" class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5"></i>' +
+              '<div><div class="font-bold text-amber-800 text-sm mb-1">Try This</div><div class="text-sm text-amber-700 leading-relaxed">' + lesson.task + '</div></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="flex gap-3">' +
+            '<button id="complete-btn" onclick="completeLesson(\'' + lesson.id + '\',\'' + courseId + '\',' + lessonIndex + ')" class="flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm transition-all ' + completeBtnClass + '">' +
+              '<i data-lucide="' + completeBtnIcon + '" class="w-5 h-5"></i>' + completeBtnText +
+            '</button>' +
+            nextLessonBtn +
+          '</div>' +
+        '</div>' +
+        '<div class="space-y-4">' +
+          '<div class="bg-slate-900 rounded-2xl overflow-hidden shadow-xl">' +
+            '<div class="flex items-center justify-between px-4 py-3 bg-slate-800/50 border-b border-slate-700/50">' +
+              '<div class="flex items-center gap-2">' +
+                '<div class="flex gap-1.5"><div class="w-3 h-3 rounded-full bg-red-400/80"></div><div class="w-3 h-3 rounded-full bg-yellow-400/80"></div><div class="w-3 h-3 rounded-full bg-green-400/80"></div></div>' +
+                '<span class="text-xs text-slate-400 font-mono ml-2">' + lesson.type.toUpperCase() + '</span>' +
+              '</div>' +
+              '<button onclick="runCurrentCode(\'' + courseId + '\')" class="run-pulse flex items-center gap-1.5 px-4 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-white text-xs font-bold rounded-lg transition-all" aria-label="Run code">' +
+                '<i data-lucide="play" class="w-3.5 h-3.5"></i>Run' +
+              '</button>' +
+            '</div>' +
+            '<textarea id="code-editor" class="code-editor w-full bg-slate-900 text-emerald-300 p-4 text-sm scrollbar-thin" style="height:280px;" spellcheck="false" aria-label="Code editor">' + escapeHTML(savedCode) + '</textarea>' +
+          '</div>' +
+          '<div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">' +
+            '<div class="flex items-center gap-2 px-4 py-2.5 bg-slate-50 border-b border-slate-100">' +
+              '<i data-lucide="monitor" class="w-4 h-4 text-slate-400"></i>' +
+              '<span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Output</span>' +
+              '<button onclick="clearOutput()" class="ml-auto text-xs text-slate-400 hover:text-slate-600 font-semibold transition-colors">Clear</button>' +
+            '</div>' +
+            '<div id="output-panel" class="bg-white scrollbar-thin" style="height:220px;overflow:auto;">' +
+              '<div class="flex items-center justify-center h-full text-slate-300 text-sm"><div class="text-center"><i data-lucide="play-circle" class="w-8 h-8 mx-auto mb-2 text-slate-200"></i><p>Click "Run" to see output</p></div></div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+  updateNavProgress();
+  lucide.createIcons();
+
+  // Setup editor
+  var editor = document.getElementById('code-editor');
+  currentEditor = { courseId: courseId, lessonId: lesson.id, type: lesson.type };
+
+  var saveTimeout;
+  editor.addEventListener('input', function() {
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(function() {
+      state.codeSnippets[lesson.id] = editor.value;
+      saveState();
+    }, 500);
+  });
+
+  editor.addEventListener('keydown', function(e) {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      var start = editor.selectionStart;
+      var end = editor.selectionEnd;
+      var val = editor.value;
+      editor.value = val.substring(0, start) + '  ' + val.substring(end);
+      editor.selectionStart = editor.selectionEnd = start + 2;
+      editor.dispatchEvent(new Event('input'));
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      runCurrentCode(courseId);
+    }
+  });
+
+  try { anime({ targets:'.grid > div, .grid > div > div', translateY:[15,0], opacity:[0,1], delay:anime.stagger(80,{start:50}), duration:450, easing:'easeOutCubic' }); } catch(e){}
+}
+
+function escapeHTML(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ======================== CODE EXECUTION ========================
+function runCurrentCode(courseId) {
+  if (!currentEditor) return;
+  var editor = document.getElementById('code-editor');
+  var output = document.getElementById('output-panel');
+  if (!editor || !output) return;
+  var code = editor.value;
+
+  state.codeSnippets[currentEditor.lessonId] = code;
+  saveState();
+
+  var runBtn = document.querySelector('.run-pulse');
+  if (runBtn) { try { anime({ targets:runBtn, scale:[1,0.9,1], duration:200, easing:'easeInOutQuad' }); } catch(e){} }
+
+  if (currentEditor.type === 'js') {
+    runJavaScript(code, output);
+  } else {
+    runHTMLCSS(code, output);
+  }
+}
+
+function runJavaScript(code, outputEl) {
+  var logs = [];
+  var sandbox = document.createElement('iframe');
+  sandbox.style.cssText = 'position:fixed;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;';
+  document.body.appendChild(sandbox);
+
+  sandbox.contentWindow.console.log = function() {
+    var args = [];
+    for (var i = 0; i < arguments.length; i++) {
+      var a = arguments[i];
+      if (a === null) args.push('null');
+      else if (a === undefined) args.push('undefined');
+      else if (typeof a === 'object') { try { args.push(JSON.stringify(a, null, 2)); } catch(e) { args.push(String(a)); } }
+      else args.push(String(a));
+    }
+    logs.push(args.join(' '));
+  };
+  sandbox.contentWindow.console.error = function() {
+    var a = []; for (var i=0;i<arguments.length;i++) a.push(String(arguments[i])); logs.push('Error: ' + a.join(' '));
+  };
+  sandbox.contentWindow.console.warn = function() {
+    var a = []; for (var i=0;i<arguments.length;i++) a.push(String(arguments[i])); logs.push('Warning: ' + a.join(' '));
+  };
+
+  try {
+    sandbox.contentWindow.eval(code);
+  } catch(e) {
+    logs.push('Error: ' + e.message);
+  }
+
+  setTimeout(function() {
+    if (sandbox.parentNode) sandbox.parentNode.removeChild(sandbox);
+  }, 100);
+
+  if (logs.length === 0) {
+    outputEl.innerHTML = '<div class="flex items-center justify-center h-full text-slate-300 text-sm p-4"><p>No output. Use console.log() to print values.</p></div>';
+  } else {
+    outputEl.innerHTML = '<pre class="p-4 text-sm font-mono leading-relaxed whitespace-pre-wrap text-slate-700 scrollbar-thin">' + escapeHTML(logs.join('\n')) + '</pre>';
+  }
+
+  try { anime({ targets:outputEl, opacity:[0.5,1], duration:200 }); } catch(e){}
+}
+
+function runHTMLCSS(code, outputEl) {
+  var fullHTML;
+  var lowerCode = code.toLowerCase();
+  if (lowerCode.indexOf('<html') !== -1 || lowerCode.indexOf('<!doctype') !== -1) {
+    fullHTML = code;
+  } else if (lowerCode.indexOf('<style') !== -1) {
+    fullHTML = '<!DOCTYPE html><html><head><meta charset="UTF-8">' + code + '</head><body></body></html>';
+  } else {
+    fullHTML = '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:sans-serif;margin:16px;color:#1e293b;}</style></head><body>' + code + '</body></html>';
+  }
+
+  outputEl.innerHTML = '<iframe id="output-iframe" style="width:100%;height:100%;border:none;min-height:220px;" sandbox="allow-scripts"></iframe>';
+  var iframe = document.getElementById('output-iframe');
+  if (iframe) { iframe.srcdoc = fullHTML; }
+
+  try { anime({ targets:outputEl, opacity:[0.5,1], duration:200 }); } catch(e){}
+}
+
+function clearOutput() {
+  var output = document.getElementById('output-panel');
+  if (output) {
+    output.innerHTML = '<div class="flex items-center justify-center h-full text-slate-300 text-sm"><div class="text-center"><i data-lucide="play-circle" class="w-8 h-8 mx-auto mb-2 text-slate-200"></i><p>Click "Run" to see output</p></div></div>';
+    lucide.createIcons({ nodes: [output] });
+  }
+}
+
+// ======================== LESSON COMPLETION ========================
+function completeLesson(lessonId, courseId, lessonIndex) {
+  if (isCompleted(lessonId)) return;
+  markCompleted(lessonId);
+  celebrate();
+  showToast('Lesson completed! Great job!', 'success');
+  setTimeout(function() { showLesson(courseId, lessonIndex); }, 300);
+
+  var prog = getCourseProgress(courseId);
+  if (prog.percent === 100) {
+    setTimeout(function() {
+      celebrate();
+      showToast(COURSES[courseId].name + ' course completed! You\'re a champion!', 'success');
+    }, 1500);
+  }
+}
+
+// ======================== NAV PROGRESS ========================
+function updateNavProgress() {
+  var overall = getOverallProgress();
+  var bar = document.getElementById('nav-progress-bar');
+  var text = document.getElementById('nav-progress-text');
+  if (bar) bar.style.width = overall.percent + '%';
+  if (text) text.textContent = overall.completed + '/' + overall.total + ' lessons';
+}
+
+// ======================== INTRO.JS TOUR ========================
+function startTour() {
+  // Make sure we're on dashboard first
+  showDashboard();
+  setTimeout(function() {
+    if (typeof introJs === 'undefined') return;
+    try {
+      introJs().setOptions({
+        showBullets: false,
+        showStepNumbers: true,
+        nextLabel: 'Next',
+        prevLabel: 'Back',
+        skipLabel: 'Skip',
+        doneLabel: 'Got it!',
+        steps: [
+          { element: '#nav-logo', intro: 'Welcome to <strong>CodeGreen</strong>! Click the logo anytime to return to this dashboard.' },
+          { element: '#hero-section', intro: 'Here you\'ll find your learning path. We track your overall progress across all three languages.' },
+          { element: '#stats-section', intro: 'These stats update in real-time as you complete lessons. Everything is saved in your browser.' },
+          { element: '#courses-section', intro: 'Pick a course to start! Each course has interactive lessons with a built-in code editor. Your code and progress are saved automatically — come back anytime!' }
+        ]
+      }).start();
+    } catch(e) {
+      console.log('Tour error:', e);
+    }
+  }, 400);
+}
+
+// ======================== KEYBOARD ========================
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
+
+// ======================== INIT ========================
+function init() {
+  // Fix any corrupted state from old version
+  if (!Array.isArray(state.completedLessons)) state.completedLessons = [];
+  if (typeof state.codeSnippets !== 'object' || state.codeSnippets === null) state.codeSnippets = {};
+  saveState();
+
+  showDashboard();
+  lucide.createIcons();
+}
+
+init();
+</script>
+</body>
+</html>
