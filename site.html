@@ -1121,6 +1121,48 @@
                 </div>
             </div>
 
+<!-- Feedback Modal -->
+<div id="feedbackModal" class="fixed inset-0 z-[500] flex items-center justify-center p-4" style="display:none;">
+  <!-- Backdrop -->
+  <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeFeedbackModal()"></div>
+
+  <!-- Modal Card -->
+  <div id="feedbackCard" class="relative glass rounded-2xl max-w-md w-full p-8 text-center"
+       style="opacity:0; transform:scale(0.9) translateY(20px); transition: opacity 0.35s ease, transform 0.35s ease;">
+    
+    <!-- Icon -->
+    <div class="w-16 h-16 mx-auto mb-5 bg-emerald-100 rounded-2xl flex items-center justify-center">
+      <i data-lucide="message-square-heart" class="w-8 h-8 text-emerald-600"></i>
+    </div>
+
+    <!-- Heading -->
+    <h2 class="text-2xl font-bold text-gray-800 mb-2">Help Us Improve</h2>
+    <p class="text-gray-500 text-sm leading-relaxed mb-6">
+      Have an idea, suggestion, or complaint?<br>
+      We'd love to hear from you. Your feedback shapes Epsilon.
+    </p>
+
+    <!-- CTA Button -->
+    <a href="https://e-psilon.vercel.app/#contributions" target="_blank" rel="noopener noreferrer"
+       class="inline-flex items-center gap-2 w-full justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3.5 px-6 rounded-xl transition shadow-lg shadow-emerald-200 hover:shadow-emerald-300">
+      <i data-lucide="external-link" class="w-5 h-5"></i>
+      Share Your Feedback
+    </a>
+
+    <!-- Dismiss -->
+    <button onclick="closeFeedbackModal()"
+            class="mt-4 text-sm text-gray-400 hover:text-gray-600 transition">
+      Maybe later
+    </button>
+
+    <!-- Close X -->
+    <button onclick="closeFeedbackModal()"
+            class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition">
+      <i data-lucide="x" class="w-5 h-5"></i>
+    </button>
+  </div>
+</div>
+
             <!-- CHAT SECTION -->
             <div id="chatSection" class="section hidden">
                 <div class="max-w-6xl mx-auto h-[calc(100vh-12rem)]">
@@ -3483,6 +3525,36 @@ create index chat_messages_created_at_idx
                 closeAiModal();
             }
         });
+        // ── Feedback Modal Logic ──
+function showFeedbackModal() {
+  const modal = document.getElementById('feedbackModal');
+  const card = document.getElementById('feedbackCard');
+  modal.style.display = 'flex';
+  // Trigger reflow then animate in
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      card.style.opacity = '1';
+      card.style.transform = 'scale(1) translateY(0)';
+    });
+  });
+}
+
+function closeFeedbackModal() {
+  const modal = document.getElementById('feedbackModal');
+  const card = document.getElementById('feedbackCard');
+  card.style.opacity = '0';
+  card.style.transform = 'scale(0.9) translateY(20px)';
+  setTimeout(() => { modal.style.display = 'none'; }, 350);
+}
+
+// Show once per session (not on every internal navigation)
+if (!sessionStorage.getItem('feedbackModalShown')) {
+  // Wait until after auth/page loads
+  window.addEventListener('load', () => {
+    setTimeout(showFeedbackModal, 1200); // 1.2s delay so it doesn't feel jarring
+  });
+  sessionStorage.setItem('feedbackModalShown', 'true');
+}
     </script>
 </body>
 
