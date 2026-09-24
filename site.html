@@ -3647,6 +3647,346 @@ if (!sessionStorage.getItem('feedbackModalShown')) {
   sessionStorage.setItem('feedbackModalShown', 'true');
 }
     </script>
+    <script>
+      // Example for a dark mode site with a blue theme
+window.PAUI_DARK_MODE = false; 
+window.PAUI_THEME_COLOR = '#008000';
+
+(function() {
+    // ============================================
+    // DYNAMIC THEME CONFIG
+    // ============================================
+    const PRIMARY_COLOR = window.PAUI_THEME_COLOR || '#6366F1'; 
+    const IS_DARK_MODE = window.PAUI_DARK_MODE || false;
+
+    // Derived theme colors
+    const TEXT_COLOR = IS_DARK_MODE ? '#FFFFFF' : '#000000';
+    const CARD_BG = IS_DARK_MODE ? '#1E293B' : '#FFFFFF';
+    const OVERLAY_BG = IS_DARK_MODE ? 'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0.6)';
+    const INPUT_BG = IS_DARK_MODE ? '#334155' : '#F3F4F6';
+    const INPUT_BORDER = IS_DARK_MODE ? '#475569' : '#D1D5DB';
+    const SUBTLE_TEXT = IS_DARK_MODE ? '#94A3B8' : '#64748B';
+
+    // ============================================
+    // CSS INJECTION
+    // ============================================
+    const style = document.createElement('style');
+    style.innerHTML = `
+        .paui-premium-btn {
+            background: ${PRIMARY_COLOR};
+            color: ${TEXT_COLOR};
+            font-weight: 700;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: transform 0.2s, opacity 0.2s;
+            margin-left: auto;
+        }
+        .paui-premium-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .paui-premium-btn svg { width: 18px; height: 18px; }
+
+        .paui-grad-text {
+            background: linear-gradient(135deg, #EC4899, #8B5CF6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .paui-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: ${OVERLAY_BG}; backdrop-filter: blur(6px);
+            display: none; align-items: center; justify-content: center; z-index: 9999;
+            animation: pauiFadeIn 0.3s ease-out;
+        }
+        .paui-overlay.active { display: flex; }
+
+        .paui-card {
+            background: ${CARD_BG}; color: ${TEXT_COLOR}; border-radius: 16px; padding: 24px;
+            max-width: 400px; width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            text-align: center; max-height: 90vh; overflow-y: auto;
+        }
+        .paui-card h2 { margin-top: 0; font-size: 22px; color: ${TEXT_COLOR}; }
+        .paui-card p { font-size: 14px; color: ${SUBTLE_TEXT}; margin-bottom: 10px; }
+        
+        .paui-input {
+            width: 100%; padding: 12px; border: 1px solid ${INPUT_BORDER}; border-radius: 8px;
+            background: ${INPUT_BG}; color: ${TEXT_COLOR};
+            font-size: 16px; text-transform: uppercase; letter-spacing: 2px;
+            text-align: center; margin-bottom: 15px; box-sizing: border-box;
+        }
+        .paui-input:focus { outline: none; border-color: ${PRIMARY_COLOR}; box-shadow: 0 0 0 2px ${PRIMARY_COLOR}33; }
+
+        .paui-btn { padding: 12px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; width: 100%; margin-bottom: 8px; font-size: 15px; transition: opacity 0.2s; }
+        .paui-btn:hover { opacity: 0.9; }
+        .paui-btn-primary { background: ${PRIMARY_COLOR}; color: ${TEXT_COLOR}; }
+        .paui-btn-green { background: #00C853; color: #fff; }
+        .paui-btn-outline { background: transparent; border: 1px solid ${INPUT_BORDER}; color: ${TEXT_COLOR}; }
+        .paui-btn-link { background: #00C853; color: #fff; text-decoration: none; display: block; }
+        .paui-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        
+        .paui-error { color: #ff3333; font-size: 12px; margin-top: -10px; margin-bottom: 10px; display: none; }
+        .paui-pay-details { background: ${INPUT_BG}; padding: 12px; border-radius: 8px; margin-bottom: 15px; text-align: left; font-size: 13px; color: ${TEXT_COLOR};}
+        .paui-pay-details strong { color: ${TEXT_COLOR}; }
+        
+        /* Custom Checklist & Pages */
+        .paui-terms-wrap { display: flex; align-items: flex-start; gap: 8px; text-align: left; margin: 15px 0; font-size: 12px; color: ${SUBTLE_TEXT}; }
+        .paui-terms-wrap input { margin-top: 2px; accent-color: ${PRIMARY_COLOR}; }
+        .paui-page-list { text-align: left; margin: 10px 0 20px 0; padding-left: 20px; font-size: 14px; color: ${TEXT_COLOR}; }
+        .paui-page-list li { margin-bottom: 4px; }
+        .paui-duration-badge { display: inline-block; font-size: 12px; background: ${INPUT_BG}; padding: 4px 12px; border-radius: 20px; margin-bottom: 10px; font-weight: 600; color: ${PRIMARY_COLOR}; }
+
+        /* Custom Notification */
+        #pauiNotifOverlay { z-index: 10001; }
+        .paui-notif-box { text-align: center; }
+        .paui-notif-icon { font-size: 40px; margin-bottom: 10px; }
+        .paui-notif-body { text-align: left; font-size: 14px; line-height: 1.5; margin-bottom: 20px; }
+
+        /* Fallback fixed button */
+        .paui-fixed-fallback { position: fixed; bottom: 20px; right: 20px; z-index: 9998; margin-left: 0; }
+
+        @keyframes pauiFadeIn { from { opacity: 0; } to { opacity: 1; } }
+    `;
+    document.head.appendChild(style);
+
+    // ============================================
+    // HTML INJECTION
+    // ============================================
+    const wrapper = document.createElement('div');
+    wrapper.id = 'paui-premium-container';
+    wrapper.innerHTML = `
+        <!-- The Button -->
+        <button class="paui-premium-btn" id="pauiUnlockBtn" onclick="window.pauiOpenAdDialog()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 12v2h14v-2"/></svg>
+            UNLOCK PREMIUM
+        </button>
+
+        <!-- Dialog 1: Ad -->
+        <div id="pauiAdDialog" class="paui-overlay">
+            <div class="paui-card">
+                <h2>Go <span class="paui-grad-text">Premium</span> Today!</h2>
+                <p>Unlock exclusive features and pages to supercharge your experience:</p>
+                
+                <ul id="pauiAdPagesList" class="paui-page-list"></ul>
+
+                <div class="paui-duration-badge">⏱️ Valid for 30 Days</div>
+
+                <div class="paui-terms-wrap">
+                    <input type="checkbox" id="pauiTermsCheck">
+                    <label for="pauiTermsCheck">I agree to the 7-day refund policy and terms of service.</label>
+                </div>
+
+                <button class="paui-btn paui-btn-primary" id="pauiBuyBtn" disabled onclick="window.pauiBuyPremium()">Buy Premium - 250 KSH</button>
+                <button class="paui-btn paui-btn-outline" onclick="window.pauiCloseDialog('pauiAdDialog')">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Dialog 2: M-Pesa Payment -->
+        <div id="pauiMpesaDialog" class="paui-overlay">
+            <div class="paui-card">
+                <h2>Complete <span class="paui-grad-text">Payment</span></h2>
+                <div class="paui-pay-details">
+                    <p><strong>Paybill/Till:</strong> 254748895875</p>
+                    <p><strong>Amount:</strong> 250 KSH</p>
+                </div>
+                
+                <a href="intent://#Intent;package=com.safaricom.mysafaricom;scheme=https;end" class="paui-btn paui-btn-link" target="_blank">
+                    Open MySafaricom App
+                </a>
+                <br>
+                
+                <p style="font-size:12px; margin-top:10px;">After sending, enter the M-Pesa confirmation code below:</p>
+                <input type="text" id="pauiMpesaCodeInput" class="paui-input" placeholder="e.g. SBK3V4K7QR" maxlength="10">
+                <div id="pauiCodeError" class="paui-error">Invalid Safaricom code format.</div>
+                
+                <button class="paui-btn paui-btn-green" onclick="window.pauiVerifyAndSubscribe()">Verify & Subscribe</button>
+                <button class="paui-btn paui-btn-outline" onclick="window.pauiCloseDialog('pauiMpesaDialog')">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Custom Notification Box -->
+        <div id="pauiNotifOverlay" class="paui-overlay">
+            <div class="paui-card paui-notif-box">
+                <div id="pauiNotifIcon" class="paui-notif-icon"></div>
+                <h2 id="pauiNotifTitle"></h2>
+                <div id="pauiNotifBody" class="paui-notif-body"></div>
+                <button class="paui-btn paui-btn-primary" onclick="window.pauiCloseDialog('pauiNotifOverlay')">Okay</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(wrapper);
+
+    // ============================================
+    // SMART NAV INJECTION & LOGIC
+    // ============================================
+    const injectButton = () => {
+        const btn = document.getElementById('pauiUnlockBtn');
+        if (!btn) return;
+
+        const nav = document.querySelector('nav');
+        if (nav) {
+            nav.appendChild(btn);
+        } else {
+            btn.classList.add('paui-fixed-fallback');
+            document.body.appendChild(btn);
+        }
+
+        // Checkbox Logic: Enable Buy button only if terms are agreed to
+        const termsCheck = document.getElementById('pauiTermsCheck');
+        const buyBtn = document.getElementById('pauiBuyBtn');
+        if (termsCheck && buyBtn) {
+            termsCheck.addEventListener('change', (e) => {
+                buyBtn.disabled = !e.target.checked;
+            });
+        }
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', injectButton);
+    } else {
+        injectButton();
+    }
+
+    // ============================================
+    // HELPER FUNCTIONS
+    // ============================================
+    const getPagesListHTML = () => {
+        if (typeof PAUI_CONFIG === 'undefined' || !PAUI_CONFIG.pnb || PAUI_CONFIG.pnb.length === 0) {
+            return '<li>- All Premium Features</li>';
+        }
+        return PAUI_CONFIG.pnb.map(page => `<li>- ${page}</li>`).join('');
+    };
+
+    const showNotification = (title, bodyHTML, isSuccess = true) => {
+        document.getElementById('pauiNotifTitle').innerHTML = title;
+        document.getElementById('pauiNotifBody').innerHTML = bodyHTML;
+        document.getElementById('pauiNotifIcon').textContent = isSuccess ? '🎉' : '⚠️';
+        document.getElementById('pauiNotifOverlay').classList.add('active');
+    };
+
+    // ============================================
+    // GLOBAL ACTION FUNCTIONS
+    // ============================================
+    window.pauiOpenAdDialog = () => {
+        document.getElementById('pauiAdPagesList').innerHTML = getPagesListHTML();
+        document.getElementById('pauiAdDialog').classList.add('active');
+    };
+
+    window.pauiBuyPremium = () => {
+        if (!document.getElementById('pauiTermsCheck').checked) return;
+        window.pauiCloseDialog('pauiAdDialog');
+        document.getElementById('pauiMpesaDialog').classList.add('active');
+    };
+
+    window.pauiCloseDialog = (id) => {
+        document.getElementById(id).classList.remove('active');
+        if (id === 'pauiMpesaDialog') {
+            document.getElementById('pauiMpesaCodeInput').value = '';
+            document.getElementById('pauiCodeError').style.display = 'none';
+        }
+    };
+
+    // ============================================
+    // SAFARICOM VALIDATOR
+    // ============================================
+    const validateSafaricomCode = (code) => {
+        if (code.length !== 10) return false;
+        const regex = /^[A-Z][A-L][1-9A-V][0-9][A-Z0-9]{6}$/;
+        return regex.test(code.toUpperCase());
+    };
+
+    // ============================================
+    // SUPABASE INTEGRATION
+    // ============================================
+    window.pauiVerifyAndSubscribe = async () => {
+        const codeInput = document.getElementById('pauiMpesaCodeInput');
+        const errorDiv = document.getElementById('pauiCodeError');
+        const code = codeInput.value.trim().toUpperCase();
+
+        if (!validateSafaricomCode(code)) {
+            errorDiv.style.display = 'block';
+            codeInput.style.borderColor = '#ff3333';
+            return;
+        } else {
+            errorDiv.style.display = 'none';
+            codeInput.style.borderColor = '#00C853';
+        }
+
+        if (typeof supabaseClient === 'undefined' || typeof PAUI_CONFIG === 'undefined') {
+            showNotification('System Error', 'Core configuration missing. Cannot verify.', false);
+            return;
+        }
+
+        const site = PAUI_CONFIG.ssn;
+
+        const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+        if (!user || authError) {
+            showNotification('Not Logged In', 'You must be logged in to verify payment and unlock premium.', false);
+            return;
+        }
+
+        const now = new Date();
+        const dateStr = now.toISOString().split('T')[0];
+        const timeStr = now.toTimeString().split(' ')[0];
+
+        const { error: insertError } = await supabaseClient.from('premium_subscription').insert({
+            uuid: user.id,
+            email: user.email,
+            time: timeStr,
+            date: dateStr,
+            site: site,
+            safaricom_code: code
+        });
+
+        if (insertError) {
+            if (insertError.code === '23505') {
+                showNotification('Already Used', 'This M-Pesa code has already been used to activate premium.', false);
+            } else {
+                showNotification('Database Error', 'Error saving subscription. Please try again or contact support.', false);
+                console.error(insertError);
+            }
+            return;
+        }
+
+        const columnName = `paui_${site}`;
+        const { error: updateError } = await supabaseClient
+            .from('profiles')
+            .update({ [columnName]: true })
+            .eq('id', user.id);
+
+        if (updateError) {
+            showNotification('Activation Error', `Payment recorded, but failed to unlock features. Contact support with code: <strong>${code}</strong>`, false);
+            console.error(updateError);
+            return;
+        }
+
+        if (typeof pauiLoadAccess === 'function') {
+            await pauiLoadAccess();
+        }
+
+        // Success Notification: Informing them AGAIN about the 30 day duration
+        const unlockedPagesHTML = PAUI_CONFIG.pnb.map(p => `- ${p}`).join('<br>');
+        const successBody = `
+            <p style="color:${TEXT_COLOR};">You have successfully unlocked:</p>
+            <p style="margin-top:10px; font-weight:600; color:${TEXT_COLOR};">${unlockedPagesHTML || 'All Premium Features'}</p>
+            <div style="margin-top:15px; padding:8px; background:${INPUT_BG}; border-radius:8px; font-size:13px; color:${PRIMARY_COLOR}; font-weight:600;">
+                ⏱️ Access valid for 30 days
+            </div>
+        `;
+        showNotification('Premium Unlocked!', successBody, true);
+
+        window.pauiCloseDialog('pauiMpesaDialog');
+        
+        const unlockBtn = document.getElementById('pauiUnlockBtn');
+        if (unlockBtn) unlockBtn.style.display = 'none';
+    };
+
+})();
+    </script>
 </body>
 
 </html>
