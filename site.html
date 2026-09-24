@@ -1575,6 +1575,97 @@
             });
         });
 
+
+// ============================================
+// PAUI CONFIG — Epsilon Learner (lrn)
+// ============================================
+const PAUI_CONFIG = {
+    ssn: 'lrn',
+    lsn: 'Epsilon Learner',
+    pnb: ['chatrooms', 'users'],
+    npnb: ['dashboard', 'tracker', 'tools', 'quiz', 'calculator', 'pomodoro', 'flashcards', 'notes', 'discover', 'music', 'calendar'],
+};
+
+// ============================================
+// PAUI CORE — don't touch below
+// ============================================
+
+// Resolve a nav element by id first, then by data-page attribute
+function pauiResolveNavEl(value) {
+    const byId = document.getElementById(value);
+    if (byId) return byId;
+
+    const byDataPage = document.querySelector(`[data-page="${value}"]`);
+    if (byDataPage) return byDataPage;
+
+    console.warn(`PAUI: nav element "${value}" not found by id or data-page`);
+    return null;
+}
+
+// Show nav buttons (accepts array of ids or data-page values)
+function showNavBtn(btns) {
+    btns.forEach(val => {
+        const el = pauiResolveNavEl(val);
+        if (el) el.style.display = '';
+    });
+}
+
+// Hide nav buttons (accepts array of ids or data-page values)
+function hideNavBtn(btns) {
+    btns.forEach(val => {
+        const el = pauiResolveNavEl(val);
+        if (el) el.style.display = 'none';
+    });
+}
+
+// Load premium status from Supabase and toggle nav visibility
+async function pauiLoadAccess() {
+    // Get current logged-in user
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+
+    if (!user || authError) {
+        // Not logged in — hide premium, show non-premium
+        hideNavBtn(PAUI_CONFIG.pnb);
+        showNavBtn(PAUI_CONFIG.npnb);
+        return false;
+    }
+
+    // Query profiles table for the paui_<ssn> column
+    const columnName = `paui_${PAUI_CONFIG.ssn}`;
+
+    const { data, error } = await supabaseClient
+        .from('profiles')
+        .select(columnName)
+        .eq('id', user.id)
+        .single();
+
+    if (error || !data) {
+        console.error('PAUI: error fetching premium status', error);
+        hideNavBtn(PAUI_CONFIG.pnb);
+        showNavBtn(PAUI_CONFIG.npnb);
+        return false;
+    }
+
+    const isPremium = data[columnName];
+
+    if (isPremium === true) {
+        // Premium user — show premium btns AND non-premium btns
+        showNavBtn(PAUI_CONFIG.pnb);
+        showNavBtn(PAUI_CONFIG.npnb);
+    } else {
+        // Free user — hide premium btns, show non-premium btns
+        hideNavBtn(PAUI_CONFIG.pnb);
+        showNavBtn(PAUI_CONFIG.npnb);
+    }
+
+    return isPremium;
+}
+
+// ============================================
+// INIT — run on page load
+// ============================================
+pauiLoadAccess();
+
         // --- CALCULATOR LOGIC ---
         let calcExpression = ""; const display = document.getElementById('calcDisplay');
         function appendCalc(val) { calcExpression += val; display.value = calcExpression; }
