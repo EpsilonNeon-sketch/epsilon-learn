@@ -468,6 +468,12 @@
                     <span>Chat Rooms</span>
                 </button>
                 <button
+    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+    data-page="learnnotes">
+    <i data-lucide="book-open-check" class="w-5 h-5"></i>
+    <span>Learn Notes</span>
+</button>
+                <button
                     class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
                     data-page="videos">
                     <i data-lucide="video" class="w-5 h-5"></i>
@@ -1062,6 +1068,80 @@
                     </div>
                 </div>
             </div>
+
+<!-- LEARN NOTES / WIKI SECTION -->
+<div id="learnnotesSection" class="section hidden">
+    <div class="max-w-6xl mx-auto">
+
+        <!-- Header -->
+        <div class="glass p-8 rounded-2xl mb-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800">Learn Notes</h2>
+                    <p class="text-gray-500 text-sm mt-1">Study notes organized by subject and grade — your learning wiki.</p>
+                </div>
+                <div id="premiumBadgeLearnNotes" class="hidden">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 text-amber-700 rounded-full text-sm font-semibold">
+                        <i data-lucide="crown" class="w-4 h-4"></i> Premium Active
+                    </span>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="flex flex-col md:flex-row gap-3 mb-4">
+                <div class="flex-1 relative">
+                    <i data-lucide="search" class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" id="noteSearchInput" placeholder="Search notes by title or content..."
+                        class="input-field pl-10" oninput="LearnNotes.filterAndRender()">
+                </div>
+                <select id="noteSubjectFilter" class="input-field md:w-48" onchange="LearnNotes.filterAndRender()">
+                    <option value="all">All Subjects</option>
+                </select>
+                <select id="noteGradeFilter" class="input-field md:w-36" onchange="LearnNotes.filterAndRender()">
+                    <option value="all">All Grades</option>
+                    <option value="7">Grade 7</option>
+                    <option value="8">Grade 8</option>
+                    <option value="9">Grade 9</option>
+                </select>
+            </div>
+
+            <div id="notesCountDisplay" class="text-sm text-gray-500"></div>
+        </div>
+
+        <!-- Non-premium info banner -->
+        <div id="nonPremiumBanner" class="hidden mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+            <div class="flex items-start gap-3">
+                <i data-lucide="lock" class="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0"></i>
+                <div>
+                    <h3 class="font-bold text-amber-900 mb-1">Free Access Limit</h3>
+                    <p class="text-sm text-amber-800">You can view up to <strong>5 notes per subject</strong> on the free plan. Upgrade to Premium for unlimited access to all notes.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notes Grid -->
+        <div id="notesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+        <!-- Empty State -->
+        <div id="notesEmptyState" class="hidden text-center py-16">
+            <i data-lucide="book-x" class="w-16 h-16 mx-auto text-gray-300 mb-4"></i>
+            <h3 class="text-xl font-bold text-gray-400 mb-2">No notes found</h3>
+            <p class="text-gray-400">Try adjusting your filters or search terms.</p>
+        </div>
+
+        <!-- Note Detail Modal -->
+        <div id="noteDetailModal" class="fixed inset-0 z-[300] hidden items-center justify-center p-4">
+            <div class="absolute inset-0 bg-black/40" onclick="LearnNotes.closeModal()"></div>
+            <div class="relative glass p-8 rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto">
+                <button onclick="LearnNotes.closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+                <div id="noteModalContent"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
 
             <!-- NOTES SECTION -->
             <div id="notesSection" class="section hidden">
@@ -4081,6 +4161,310 @@ window.PAUI_THEME_COLOR = '#008000';
         waitForDepsAndRun();
         listenForAuthChanges();
     }
+})();
+const LearnNotes = (function() {
+    // ─── Private state ───
+    let allNotes = [];
+    let isPremium = false;
+    const FREE_LIMIT_PER_SUBJECT = 5;
+
+    // ─── Private: check premium status from your existing Supabase user metadata ───
+    function detectPremiumStatus() {
+        // Adapt this to match how your app determines premium.
+        // Example: check user metadata or a profile table.
+        try {
+            const user = JSON.parse(localStorage.getItem('epsilon_user') || '{}');
+            isPremium = !!(user && user.is_premium);
+        } catch(e) {
+            isPremium = false;
+        }
+
+        // Also expose to other parts of the app
+        return isPremium;
+    }
+
+    // ─── Private: apply the free-tier gate ───
+    function applyGate(notes) {
+        if (isPremium) return notes;
+
+        // Group by subject, take only FREE_LIMIT_PER_SUBJECT per subject
+        const grouped = {};
+        const result = [];
+
+        notes.forEach(note => {
+            const key = note.subject || 'Other';
+            if (!grouped[key]) grouped[key] = 0;
+
+            if (grouped[key] < FREE_LIMIT_PER_SUBJECT) {
+                result.push(note);
+                grouped[key]++;
+            }
+        });
+
+        return result;
+    }
+
+    // ─── Private: get unique subjects from all notes (before gating) ───
+    function getUniqueSubjects() {
+        const subjects = [...new Set(allNotes.map(n => n.subject || 'Other'))];
+        return subjects.sort();
+    }
+
+    // ─── Private: count how many notes are gated (locked) per subject ───
+    function getGatedCounts(visibleNotes) {
+        if (isPremium) return {};
+
+        const visibleBySubject = {};
+        visibleNotes.forEach(n => {
+            const key = n.subject || 'Other';
+            visibleBySubject[key] = (visibleBySubject[key] || 0) + 1;
+        });
+
+        const totalBySubject = {};
+        allNotes.forEach(n => {
+            const key = n.subject || 'Other';
+            totalBySubject[key] = (totalBySubject[key] || 0) + 1;
+        });
+
+        const gated = {};
+        Object.keys(totalBySubject).forEach(subj => {
+            const locked = totalBySubject[subj] - (visibleBySubject[subj] || 0);
+            if (locked > 0) gated[subj] = locked;
+        });
+
+        return gated;
+    }
+
+    // ─── Private: render notes cards ───
+    function renderNotes(notes) {
+        const grid = document.getElementById('notesGrid');
+        const emptyState = document.getElementById('notesEmptyState');
+        const countDisplay = document.getElementById('notesCountDisplay');
+
+        if (!grid) return;
+
+        const gatedCounts = getGatedCounts(notes);
+
+        if (notes.length === 0) {
+            grid.innerHTML = '';
+            emptyState && emptyState.classList.remove('hidden');
+            countDisplay && (countDisplay.textContent = 'No notes match your criteria.');
+            return;
+        }
+
+        emptyState && emptyState.classList.add('hidden');
+
+        const totalVisible = notes.length;
+        const totalAll = allNotes.length;
+        countDisplay && (countDisplay.textContent = isPremium
+            ? `Showing all ${totalVisible} notes.`
+            : `Showing ${totalVisible} of ${totalAll} notes (free plan: 5 per subject).`);
+
+        grid.innerHTML = notes.map(note => {
+            const subjectColors = {
+                'Mathematics': { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-700', badge: 'bg-blue-100' },
+                'Science':     { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-700', badge: 'bg-green-100' },
+                'History':     { bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-700', badge: 'bg-orange-100' },
+                'English':     { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-700', badge: 'bg-purple-100' },
+                'Geography':   { bg: 'bg-teal-50', border: 'border-teal-200', text: 'text-teal-700', badge: 'bg-teal-100' },
+            };
+            const color = subjectColors[note.subject] || { bg: 'bg-gray-50', border: 'border-gray-200', text: 'text-gray-700', badge: 'bg-gray-100' };
+            const truncated = note.notes.length > 150 ? note.notes.substring(0, 150) + '…' : note.notes;
+            const tags = (note.tags || []).slice(0, 3).map(t =>
+                `<span class="inline-block px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-xs">${t}</span>`
+            ).join('');
+
+            return `
+                <div class="glass p-6 rounded-2xl cursor-pointer hover:shadow-lg transition-shadow group" onclick="LearnNotes.openNote(${note.id})">
+                    <div class="flex items-start justify-between mb-3">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 ${color.badge} ${color.text} rounded-full text-xs font-semibold">
+                            ${note.subject}
+                        </span>
+                        <span class="text-xs text-gray-400 font-medium">Grade ${note.grade}</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2 group-hover:text-emerald-600 transition-colors">${note.title}</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">${truncated}</p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex gap-1 flex-wrap">${tags}</div>
+                        <i data-lucide="arrow-right" class="w-4 h-4 text-gray-300 group-hover:text-emerald-500 transition-colors"></i>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        // Render locked placeholder cards for gated notes
+        if (!isPremium) {
+            Object.entries(gatedCounts).forEach(([subject, count]) => {
+                const subjectColors = {
+                    'Mathematics': { bg: 'bg-blue-50', badge: 'bg-blue-100', text: 'text-blue-700' },
+                    'Science':     { bg: 'bg-green-50', badge: 'bg-green-100', text: 'text-green-700' },
+                    'History':     { bg: 'bg-orange-50', badge: 'bg-orange-100', text: 'text-orange-700' },
+                    'English':     { bg: 'bg-purple-50', badge: 'bg-purple-100', text: 'text-purple-700' },
+                    'Geography':   { bg: 'bg-teal-50', badge: 'bg-teal-100', text: 'text-teal-700' },
+                };
+                const color = subjectColors[subject] || { bg: 'bg-gray-50', badge: 'bg-gray-100', text: 'text-gray-700' };
+
+                grid.innerHTML += `
+                    <div class="p-6 rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50/50 flex flex-col items-center justify-center text-center min-h-[200px]">
+                        <i data-lucide="lock" class="w-8 h-8 text-amber-400 mb-3"></i>
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 ${color.badge} ${color.text} rounded-full text-xs font-semibold mb-2">${subject}</span>
+                        <p class="text-sm text-gray-500 font-medium">${count} more note${count > 1 ? 's' : ''} locked</p>
+                        <p class="text-xs text-gray-400 mt-1">Upgrade to Premium to unlock</p>
+                    </div>
+                `;
+            });
+        }
+
+        // Re-init lucide icons for new elements
+        if (window.lucide) lucide.createIcons();
+    }
+
+    // ─── Public API ───
+    return {
+        async init() {
+            detectPremiumStatus();
+
+            // Show/hide premium badge and non-premium banner
+            const badge = document.getElementById('premiumBadgeLearnNotes');
+            const banner = document.getElementById('nonPremiumBanner');
+            if (badge) badge.classList.toggle('hidden', !isPremium);
+            if (banner) banner.classList.toggle('hidden', isPremium);
+
+            // Load notes from JSON
+            try {
+                const resp = await fetch('learnnotes.json');
+                if (!resp.ok) throw new Error('Failed to load learnnotes.json');
+                allNotes = await resp.json();
+            } catch(err) {
+                console.error('LearnNotes load error:', err);
+                allNotes = [];
+            }
+
+            // Populate subject filter
+            const subjectSelect = document.getElementById('noteSubjectFilter');
+            if (subjectSelect) {
+                const subjects = getUniqueSubjects();
+                subjectSelect.innerHTML = '<option value="all">All Subjects</option>' +
+                    subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+            }
+
+            // Initial render
+            this.filterAndRender();
+        },
+
+        filterAndRender() {
+            const searchTerm = (document.getElementById('noteSearchInput')?.value || '').toLowerCase();
+            const subjectFilter = document.getElementById('noteSubjectFilter')?.value || 'all';
+            const gradeFilter = document.getElementById('noteGradeFilter')?.value || 'all';
+
+            // Filter all notes first (before gating)
+            let filtered = allNotes.filter(note => {
+                const matchesSearch = !searchTerm ||
+                    note.title.toLowerCase().includes(searchTerm) ||
+                    note.notes.toLowerCase().includes(searchTerm) ||
+                    (note.tags || []).some(t => t.toLowerCase().includes(searchTerm));
+                const matchesSubject = subjectFilter === 'all' || note.subject === subjectFilter;
+                const matchesGrade = gradeFilter === 'all' || String(note.grade) === gradeFilter;
+                return matchesSearch && matchesSubject && matchesGrade;
+            });
+
+            // Apply free-tier gate
+            const visibleNotes = applyGate(filtered);
+
+            renderNotes(visibleNotes);
+        },
+
+        openNote(id) {
+            const note = allNotes.find(n => n.id === id);
+            if (!note) return;
+
+            // Check if gated
+            const visibleNotes = applyGate(allNotes);
+            if (!isPremium && !visibleNotes.find(n => n.id === id)) {
+                // Note is locked — show upgrade prompt
+                const modal = document.getElementById('noteDetailModal');
+                const content = document.getElementById('noteModalContent');
+                content.innerHTML = `
+                    <div class="text-center py-8">
+                        <i data-lucide="lock" class="w-16 h-16 text-amber-400 mx-auto mb-4"></i>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-2">Premium Content</h2>
+                        <p class="text-gray-500 mb-6">This note is part of the premium collection. Upgrade to access all notes without limits.</p>
+                        <button class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition">
+                            Upgrade to Premium
+                        </button>
+                    </div>
+                `;
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                if (window.lucide) lucide.createIcons();
+                return;
+            }
+
+            // Render full note
+            const modal = document.getElementById('noteDetailModal');
+            const content = document.getElementById('noteModalContent');
+            const subjectColors = {
+                'Mathematics': 'text-blue-700',
+                'Science': 'text-green-700',
+                'History': 'text-orange-700',
+                'English': 'text-purple-700',
+                'Geography': 'text-teal-700',
+            };
+            const colorClass = subjectColors[note.subject] || 'text-gray-700';
+            const tags = (note.tags || []).map(t =>
+                `<span class="inline-block px-2.5 py-1 bg-gray-100 text-gray-600 rounded-lg text-xs font-medium">${t}</span>`
+            ).join('');
+
+            content.innerHTML = `
+                <div class="mb-6">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 ${colorClass} rounded-full text-xs font-bold">${note.subject}</span>
+                        <span class="text-xs text-gray-400 font-medium">Grade ${note.grade}</span>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">${note.title}</h2>
+                    <div class="flex items-center gap-4 text-xs text-gray-400">
+                        ${note.author ? `<span class="flex items-center gap-1"><i data-lucide="user" class="w-3.5 h-3.5"></i> ${note.author}</span>` : ''}
+                        ${note.lastUpdated ? `<span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> ${note.lastUpdated}</span>` : ''}
+                    </div>
+                </div>
+                <div class="prose prose-sm max-w-none text-gray-700 leading-relaxed whitespace-pre-line mb-6">${note.notes}</div>
+                ${tags ? `<div class="pt-4 border-t border-gray-100"><div class="flex gap-2 flex-wrap">${tags}</div></div>` : ''}
+            `;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            if (window.lucide) lucide.createIcons();
+        },
+
+        closeModal() {
+            const modal = document.getElementById('noteDetailModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        },
+
+        // Call this when user upgrades to premium at runtime
+        setPremium(status) {
+            isPremium = !!status;
+            // Update local storage too
+            try {
+                const user = JSON.parse(localStorage.getItem('epsilon_user') || '{}');
+                user.is_premium = isPremium;
+                localStorage.setItem('epsilon_user', JSON.stringify(user));
+            } catch(e) {}
+
+            const badge = document.getElementById('premiumBadgeLearnNotes');
+            const banner = document.getElementById('nonPremiumBanner');
+            if (badge) badge.classList.toggle('hidden', !isPremium);
+            if (banner) banner.classList.toggle('hidden', isPremium);
+
+            this.filterAndRender();
+        },
+
+        // For debugging
+        getStatus() {
+            return { isPremium, totalNotes: allNotes.length };
+        }
+    };
 })();
     </script>
 </body>
