@@ -4466,6 +4466,323 @@ const LearnNotes = (function() {
         }
     };
 })();
+        // ═══════════════════════════════════════════════
+// LEARN NOTES — Auto-Initializing IIFE
+// ═══════════════════════════════════════════════
+const LearnNotes = (function () {
+
+    // ─── Private State ───
+    let allNotes       = [];
+    let isPremium      = false;
+    let isInitialized  = false;
+    const FREE_LIMIT   = 5; // max notes per subject for free users
+
+    // ─── Private: detect premium ───
+    function detectPremium() {
+        try {
+            const user = JSON.parse(localStorage.getItem('epsilon_user') || '{}');
+            isPremium = !!(user && user.is_premium);
+        } catch (e) {
+            isPremium = false;
+        }
+        return isPremium;
+    }
+
+    // ─── Private: gate notes for free users ───
+    function applyGate(notes) {
+        if (isPremium) return notes;
+        const counts = {};
+        return notes.filter(n => {
+            const s = n.subject || 'Other';
+            counts[s] = (counts[s] || 0) + 1;
+            return counts[s] <= FREE_LIMIT;
+        });
+    }
+
+    // ─── Private: count locked notes per subject ───
+    function lockedPerSubject(visible) {
+        if (isPremium) return {};
+        const vis = {}, tot = {};
+        visible.forEach(n => { const s = n.subject||'Other'; vis[s]=(vis[s]||0)+1; });
+        allNotes.forEach(n => { const s = n.subject||'Other'; tot[s]=(tot[s]||0)+1; });
+        const locked = {};
+        Object.keys(tot).forEach(s => {
+            const d = tot[s] - (vis[s]||0);
+            if (d > 0) locked[s] = d;
+        });
+        return locked;
+    }
+
+    // ─── Private: subject color map ───
+    function colorOf(subject) {
+        const map = {
+            Mathematics: { badge:'bg-blue-100',   text:'text-blue-700'   },
+            Science:     { badge:'bg-green-100',  text:'text-green-700'  },
+            History:     { badge:'bg-orange-100', text:'text-orange-700' },
+            English:     { badge:'bg-purple-100', text:'text-purple-700' },
+            Geography:   { badge:'bg-teal-100',   text:'text-teal-700'   },
+        };
+        return map[subject] || { badge:'bg-gray-100', text:'text-gray-700' };
+    }
+
+    // ─── Private: populate subject <select> ───
+    function populateSubjects() {
+        const sel = document.getElementById('noteSubjectFilter');
+        if (!sel) return;
+        const subjects = [...new Set(allNotes.map(n => n.subject || 'Other'))].sort();
+        sel.innerHTML = '<option value="all">All Subjects</option>' +
+            subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+    }
+
+    // ─── Private: update banner / badge visibility ───
+    function updatePremiumUI() {
+        const badge   = document.getElementById('premiumBadgeLearnNotes');
+        const banner  = document.getElementById('nonPremiumBanner');
+        if (badge)  badge.classList.toggle('hidden', !isPremium);
+        if (banner) banner.classList.toggle('hidden', isPremium);
+    }
+
+    // ─── Private: render cards into grid ───
+    function renderCards(notes) {
+        const grid       = document.getElementById('notesGrid');
+        const empty      = document.getElementById('notesEmptyState');
+        const countDisp  = document.getElementById('notesCountDisplay');
+        if (!grid) return;
+
+        const locked = lockedPerSubject(notes);
+
+        // — Empty state —
+        if (notes.length === 0 && Object.keys(locked).length === 0) {
+            grid.innerHTML = '';
+            empty && empty.classList.remove('hidden');
+            countDisp && (countDisp.textContent = 'No notes match your criteria.');
+            refreshIcons();
+            return;
+        }
+        empty && empty.classList.add('hidden');
+
+        // — Count text —
+        const totalVis = notes.length;
+        const totalAll = allNotes.length;
+        countDisp && (countDisp.textContent = isPremium
+            ? `Showing all ${totalVis} notes.`
+            : `Showing ${totalVis} of ${totalAll} notes (free plan: ${FREE_LIMIT} per subject).`);
+
+        // — Visible note cards —
+        let html = notes.map(n => {
+            const c   = colorOf(n.subject);
+            const cut = n.notes.length > 150 ? n.notes.slice(0,150) + '…' : n.notes;
+            const tags = (n.tags||[]).slice(0,3).map(t =>
+                `<span class="inline-block px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-xs">${t}</span>`
+            ).join('');
+
+            return `
+            <div class="glass p-6 rounded-2xl cursor-pointer hover:shadow-lg transition-shadow group"
+                 onclick="LearnNotes.openNote(${n.id})">
+                <div class="flex items-start justify-between mb-3">
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 ${c.badge} ${c.text} rounded-full text-xs font-semibold">${n.subject}</span>
+                    <span class="text-xs text-gray-400 font-medium">Grade ${n.grade}</span>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-2 group-hover:text-emerald-600 transition-colors">${n.title}</h3>
+                <p class="text-sm text-gray-500 leading-relaxed mb-4">${cut}</p>
+                <div class="flex items-center justify-between">
+                    <div class="flex gap-1 flex-wrap">${tags}</div>
+                    <i data-lucide="arrow-right" class="w-4 h-4 text-gray-300 group-hover:text-emerald-500 transition-colors"></i>
+                </div>
+            </div>`;
+        }).join('');
+
+        // — Locked placeholder cards —
+        if (!isPremium) {
+            Object.entries(locked).forEach(([subj, count]) => {
+                const c = colorOf(subj);
+                html += `
+                <div class="p-6 rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50/50 flex flex-col items-center justify-center text-center min-h-[200px]">
+                    <i data-lucide="lock" class="w-8 h-8 text-amber-400 mb-3"></i>
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 ${c.badge} ${c.text} rounded-full text-xs font-semibold mb-2">${subj}</span>
+                    <p class="text-sm text-gray-500 font-medium">${count} more note${count>1?'s':''} locked</p>
+                    <p class="text-xs text-gray-400 mt-1">Upgrade to Premium to unlock</p>
+                </div>`;
+            });
+        }
+
+        grid.innerHTML = html;
+        refreshIcons();
+    }
+
+    // ─── Private: re-init lucide icons ───
+    function refreshIcons() {
+        try { if (window.lucide) lucide.createIcons(); } catch(e) {}
+    }
+
+    // ═══════════════════════════════════════════
+    //  DOMContentLoaded — Auto-Bootstrap
+    // ═══════════════════════════════════════════
+    document.addEventListener('DOMContentLoaded', async function () {
+
+        detectPremium();
+        updatePremiumUI();
+
+        // ── Fetch JSON ──
+        try {
+            const resp = await fetch('learnnotes.json');
+            if (!resp.ok) throw new Error(resp.status);
+            allNotes = await resp.json();
+            console.log(`[LearnNotes] Loaded ${allNotes.length} notes (premium: ${isPremium})`);
+        } catch (err) {
+            console.error('[LearnNotes] Failed to load learnnotes.json →', err);
+            allNotes = [];
+            const grid = document.getElementById('notesGrid');
+            if (grid) grid.innerHTML = `
+                <div class="col-span-full text-center py-12">
+                    <p class="text-red-500 font-semibold">Could not load notes.</p>
+                    <p class="text-gray-400 text-sm mt-1">Make sure learnnotes.json is in the same folder.</p>
+                </div>`;
+            return;
+        }
+
+        // ── Populate subject filter ──
+        populateSubjects();
+
+        // ── Wire filter inputs (only once) ──
+        const search  = document.getElementById('noteSearchInput');
+        const subject = document.getElementById('noteSubjectFilter');
+        const grade   = document.getElementById('noteGradeFilter');
+
+        if (search)  search.addEventListener('input',    () => LearnNotes.filterAndRender());
+        if (subject) subject.addEventListener('change',   () => LearnNotes.filterAndRender());
+        if (grade)   grade.addEventListener('change',     () => LearnNotes.filterAndRender());
+
+        // ── Close modal on Escape ──
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') LearnNotes.closeModal();
+        });
+
+        isInitialized = true;
+
+        // ── Render immediately (even if section is hidden) ──
+        LearnNotes.filterAndRender();
+    });
+
+    // ═══════════════════════════════════════════
+    //  Public API
+    // ═══════════════════════════════════════════
+    return {
+
+        /** Re-render with current filter values */
+        filterAndRender() {
+            const q   = (document.getElementById('noteSearchInput')?.value  || '').toLowerCase();
+            const sub = document.getElementById('noteSubjectFilter')?.value  || 'all';
+            const grd = document.getElementById('noteGradeFilter')?.value    || 'all';
+
+            let filtered = allNotes.filter(n => {
+                const matchQ   = !q || n.title.toLowerCase().includes(q)
+                              || n.notes.toLowerCase().includes(q)
+                              || (n.tags||[]).some(t => t.toLowerCase().includes(q));
+                const matchSub = sub === 'all' || n.subject === sub;
+                const matchGrd = grd === 'all' || String(n.grade) === grd;
+                return matchQ && matchSub && matchGrd;
+            });
+
+            renderCards(applyGate(filtered));
+        },
+
+        /** Open a single note in the modal */
+        openNote(id) {
+            const note = allNotes.find(n => n.id === id);
+            if (!note) return;
+
+            // If gated for free user, show lock
+            const visible = applyGate(allNotes);
+            if (!isPremium && !visible.find(n => n.id === id)) {
+                LearnNotes._showLockModal();
+                return;
+            }
+
+            const c    = colorOf(note.subject);
+            const tags = (note.tags||[]).map(t =>
+                `<span class="inline-block px-2.5 py-1 bg-gray-100 text-gray-600 rounded-lg text-xs font-medium">${t}</span>`
+            ).join('');
+
+            const content = document.getElementById('noteModalContent');
+            if (content) {
+                content.innerHTML = `
+                <div class="mb-6">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 ${c.text} rounded-full text-xs font-bold">${note.subject}</span>
+                        <span class="text-xs text-gray-400 font-medium">Grade ${note.grade}</span>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">${note.title}</h2>
+                    <div class="flex items-center gap-4 text-xs text-gray-400">
+                        ${note.author      ? `<span class="flex items-center gap-1"><i data-lucide="user" class="w-3.5 h-3.5"></i> ${note.author}</span>` : ''}
+                        ${note.lastUpdated ? `<span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> ${note.lastUpdated}</span>` : ''}
+                    </div>
+                </div>
+                <div class="text-gray-700 leading-relaxed whitespace-pre-line mb-6">${note.notes}</div>
+                ${tags ? `<div class="pt-4 border-t border-gray-100"><div class="flex gap-2 flex-wrap">${tags}</div></div>` : ''}`;
+            }
+
+            const modal = document.getElementById('noteDetailModal');
+            if (modal) { modal.classList.remove('hidden'); modal.classList.add('flex'); }
+            refreshIcons();
+        },
+
+        /** Close the modal */
+        closeModal() {
+            const modal = document.getElementById('noteDetailModal');
+            if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
+        },
+
+        /** Toggle premium at runtime */
+        setPremium(val) {
+            isPremium = !!val;
+            try {
+                const user = JSON.parse(localStorage.getItem('epsilon_user')||'{}');
+                user.is_premium = isPremium;
+                localStorage.setItem('epsilon_user', JSON.stringify(user));
+            } catch(e) {}
+            updatePremiumUI();
+            this.filterAndRender();
+        },
+
+        /** Force-reload JSON + re-render (call after login) */
+        async reload() {
+            detectPremium();
+            updatePremiumUI();
+            try {
+                const resp = await fetch('learnnotes.json');
+                if (!resp.ok) throw new Error(resp.status);
+                allNotes = await resp.json();
+            } catch(e) {
+                console.error('[LearnNotes] reload failed →', e);
+                allNotes = [];
+            }
+            populateSubjects();
+            this.filterAndRender();
+        },
+
+        /** Debug */
+        _showLockModal() {
+            const content = document.getElementById('noteModalContent');
+            if (content) {
+                content.innerHTML = `
+                <div class="text-center py-8">
+                    <i data-lucide="lock" class="w-16 h-16 text-amber-400 mx-auto mb-4"></i>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Premium Content</h2>
+                    <p class="text-gray-500 mb-6">This note is locked. Upgrade to access all notes without limits.</p>
+                    <button class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition">Upgrade to Premium</button>
+                </div>`;
+            }
+            const modal = document.getElementById('noteDetailModal');
+            if (modal) { modal.classList.remove('hidden'); modal.classList.add('flex'); }
+            refreshIcons();
+        },
+
+        get status() {
+            return { isPremium, total: allNotes.length, initialized: isInitialized };
+        }
+    };
+})();
     </script>
 </body>
 
