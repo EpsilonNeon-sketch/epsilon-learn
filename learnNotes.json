@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1,
+    "title": "Introduction to Algebra",
+    "notes": "Algebra is a branch of mathematics dealing with symbols and the rules for manipulating these symbols. In its most general form, algebra is the study of mathematical symbols and the rules for manipulating these symbols; it is a unifying thread of almost all of mathematics. Key concepts include variables, constants, coefficients, terms, expressions, and equations. A variable represents an unknown value, typically denoted by letters such as x, y, or z. Linear equations take the form ax + b = 0, where a and b are constants and x is the variable to solve for. Solving linear equations involves isolating the variable through inverse operations.",
+    "grade": 7,
+    "subject": "Mathematics",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-01-15",
+    "tags": ["algebra", "equations", "linear"]
+  },
+  {
+    "id": 2,
+    "title": "Fractions and Decimals",
+    "notes": "A fraction represents a part of a whole or, more generally, any number of equal parts. When spoken in everyday English, a fraction describes how many parts of a certain size there are. A fraction consists of a numerator and a denominator. The numerator represents the number of equal parts, and the denominator represents the total number of parts that make up the whole. Converting fractions to decimals involves division: divide the numerator by the denominator. For example, 3/4 = 0.75. Repeating decimals occur when the division does not terminate, such as 1/3 = 0.333...",
+    "grade": 7,
+    "subject": "Mathematics",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-01-10",
+    "tags": ["fractions", "decimals", "conversion"]
+  },
+  {
+    "id": 3,
+    "title": "Basic Geometry",
+    "notes": "Geometry is a branch of mathematics concerned with properties of space such as distance, shape, size, and relative position of figures. Basic geometric shapes include points, lines, line segments, rays, angles, triangles, quadrilaterals, and circles. An angle is formed by two rays sharing a common endpoint. Angles are measured in degrees: acute (<90°), right (=90°), obtuse (>90° and <180°), and straight (=180°). The sum of angles in a triangle is always 180°.",
+    "grade": 7,
+    "subject": "Mathematics",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-02-01",
+    "tags": ["geometry", "angles", "shapes"]
+  },
+  {
+    "id": 4,
+    "title": "Cell Structure and Function",
+    "notes": "Cells are the basic building blocks of all living organisms. The cell theory states that all living things are made of cells, cells are the basic unit of life, and all cells come from pre-existing cells. Animal cells contain: nucleus (controls cell activities), cytoplasm (gel-like substance where reactions occur), cell membrane (controls what enters and leaves), mitochondria (site of respiration), ribosomes (site of protein synthesis). Plant cells also have: cell wall (provides support), chloroplasts (site of photosynthesis), permanent vacuole (contains cell sap).",
+    "grade": 7,
+    "subject": "Science",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-01-20",
+    "tags": ["cells", "biology", "organelles"]
+  },
+  {
+    "id": 5,
+    "title": "Forces and Motion",
+    "notes": "A force is a push or pull that can change the shape, speed, or direction of an object. Forces are measured in Newtons (N) using a Newton meter. Key concepts: balanced forces produce no change in motion, unbalanced forces cause acceleration. Friction opposes motion and acts in the opposite direction. Gravity is the force that pulls objects toward Earth (10 N/kg). Speed = distance/time. Acceleration = change in velocity/time taken.",
+    "grade": 7,
+    "subject": "Science",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-02-05",
+    "tags": ["forces", "motion", "physics"]
+  },
+  {
+    "id": 6,
+    "title": "The Medieval Period",
+    "notes": "The Medieval Period (also called the Middle Ages) lasted from approximately 500 CE to 1500 CE in Europe. It began after the fall of the Roman Empire. Key features: feudalism (system of land ownership and duties), the Catholic Church held great power, castles and manors were centers of life, limited education and trade. The Black Death (1347-1351) killed approximately one-third of Europe's population. The period ended with the Renaissance and Age of Exploration.",
+    "grade": 7,
+    "subject": "History",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-01-25",
+    "tags": ["medieval", "feudalism", "europe"]
+  },
+  {
+    "id": 7,
+    "title": "Quadratic Equations",
+    "notes": "A quadratic equation is any equation that can be written in the form ax² + bx + c = 0, where a, b, and c are real numbers and a ≠ 0. Methods to solve: 1) Factoring — rewrite as product of two binomials. 2) Quadratic formula: x = (-b ± √(b²-4ac)) / 2a. 3) Completing the square. The discriminant (b²-4ac) determines the nature of roots: positive = two real roots, zero = one repeated root, negative = no real roots. The graph of a quadratic is a parabola.",
+    "grade": 8,
+    "subject": "Mathematics",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-02-10",
+    "tags": ["quadratic", "equations", "parabola"]
+  },
+  {
+    "id": 8,
+    "title": "Pythagorean Theorem",
+    "notes": "In a right-angled triangle, the square of the hypotenuse is equal to the sum of the squares of the other two sides: a² + b² = c², where c is the hypotenuse. Used to find missing sides of right triangles. Converse: if a² + b² = c² holds, the triangle is right-angled. Common Pythagorean triples: (3,4,5), (5,12,13), (8,15,17). Applications include finding distances, determining if a triangle is right-angled, and navigation problems.",
+    "grade": 8,
+    "subject": "Mathematics",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-02-15",
+    "tags": ["pythagoras", "triangles", "geometry"]
+  },
+  {
+    "id": 9,
+    "title": "Chemical Reactions",
+    "notes": "A chemical reaction occurs when substances (reactants) are transformed into new substances (products) with different chemical properties. Signs of a reaction: color change, gas produced, temperature change, precipitate formed. Types: synthesis (A+B→AB), decomposition (AB→A+B), displacement, combustion. Word equations describe reactions using substance names. Balancing equations ensures the number of atoms of each element is equal on both sides (conservation of mass).",
+    "grade": 8,
+    "subject": "Science",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-02-20",
+    "tags": ["chemistry", "reactions", "equations"]
+  },
+  {
+    "id": 10,
+    "title": "The Industrial Revolution",
+    "notes": "The Industrial Revolution (1760-1840) was a period of major industrialization that began in Great Britain and spread around the world. Key changes: shift from hand production to machine manufacturing, steam engine power, factory system replaced cottage industry, urbanization increased dramatically. Inventions: spinning jenny, water frame, power loom, steam engine. Social impacts: poor working conditions, child labor, pollution, but also increased production and lower prices.",
+    "grade": 8,
+    "subject": "History",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-03-01",
+    "tags": ["industrial", "revolution", "britain"]
+  },
+  {
+    "id": 11,
+    "title": "Probability",
+    "notes": "Probability measures the likelihood of an event occurring. P(event) = number of favorable outcomes / total number of outcomes. Probability ranges from 0 (impossible) to 1 (certain). Complement: P(not A) = 1 - P(A). For mutually exclusive events: P(A or B) = P(A) + P(B). For independent events: P(A and B) = P(A) × P(B). Experimental probability is based on actual trials, while theoretical probability is based on possible outcomes.",
+    "grade": 8,
+    "subject": "Mathematics",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-03-05",
+    "tags": ["probability", "chance", "statistics"]
+  },
+  {
+    "id": 12,
+    "title": "Ecosystems and Energy",
+    "notes": "An ecosystem is a community of living organisms interacting with their physical environment. Producers (plants) convert light energy via photosynthesis. Primary consumers eat producers, secondary consumers eat primary consumers, decomposers break down dead material. Energy flows through food chains and webs, decreasing at each trophic level (approximately 10% transfer efficiency). Carbon cycle: photosynthesis, respiration, combustion, decomposition.",
+    "grade": 8,
+    "subject": "Science",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-03-10",
+    "tags": ["ecosystems", "energy", "food chains"]
+  },
+  {
+    "id": 13,
+    "title": "Creative Writing Techniques",
+    "notes": "Effective creative writing uses: Show don't tell — use sensory details instead of stating emotions directly. Figurative language: simile (comparison using like/as), metaphor (direct comparison), personification (giving human qualities to non-human things). Narrative structure: exposition, rising action, climax, falling action, resolution. Character development through actions, dialogue, and description. Setting creates atmosphere and mood. Point of view: first person, third person limited, third person omniscient.",
+    "grade": 8,
+    "subject": "English",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-03-15",
+    "tags": ["writing", "creative", "techniques"]
+  },
+  {
+    "id": 14,
+    "title": "Simultaneous Equations",
+    "notes": "Simultaneous equations are two or more equations with two or more unknowns that are solved together. Methods: 1) Substitution — rearrange one equation to express one variable in terms of the other, then substitute into the second equation. 2) Elimination — add or subtract equations to eliminate one variable. Example: 2x + y = 7 and x - y = 2. Adding: 3x = 9, so x = 3. Substituting back: 6 + y = 7, y = 1. Always verify by substituting both values into original equations.",
+    "grade": 9,
+    "subject": "Mathematics",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-03-20",
+    "tags": ["simultaneous", "equations", "algebra"]
+  },
+  {
+    "id": 15,
+    "title": "Genetics and Inheritance",
+    "notes": "Genetics is the study of inheritance and variation. DNA (deoxyribonucleic acid) carries genetic information in the nucleus. Genes are sections of DNA that code for specific proteins. Alleles are different forms of a gene. Dominant alleles are expressed when present (uppercase letter), recessive alleles are only expressed when two copies are present (lowercase). Genotype is the genetic makeup, phenotype is the physical expression. Punnett squares predict offspring ratios. Homozygous = same alleles, heterozygous = different alleles.",
+    "grade": 9,
+    "subject": "Science",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-03-25",
+    "tags": ["genetics", "DNA", "inheritance"]
+  },
+  {
+    "id": 16,
+    "title": "World War I",
+    "notes": "WWI (1914-1918) was triggered by the assassination of Archduke Franz Ferdinand of Austria-Hungary. Causes (M.A.I.N): Militarism, Alliances, Imperialism, Nationalism. Key events: Schlieffen Plan, trench warfare, Battle of the Somme, use of new weapons (machine guns, poison gas, tanks). The USA joined in 1917. The war ended with the Armistice on November 11, 1918. The Treaty of Versailles imposed heavy reparations on Germany, contributing to future tensions.",
+    "grade": 9,
+    "subject": "History",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-04-01",
+    "tags": ["WWI", "war", "treaty"]
+  },
+  {
+    "id": 17,
+    "title": "Poetry Analysis",
+    "notes": "Analyzing poetry involves examining: Form — structure, stanza type, rhyme scheme, meter. Language — imagery, simile, metaphor, alliteration, onomatopoeia, enjambment. Tone — the poet's attitude toward the subject. Theme — the central idea or message. Context — when and why the poem was written. Comparison essays: identify similarities and differences in form, language, and theme. Always use PEEL paragraphs: Point, Evidence, Explain, Link.",
+    "grade": 9,
+    "subject": "English",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-04-05",
+    "tags": ["poetry", "analysis", "literature"]
+  },
+  {
+    "id": 18,
+    "title": "Trigonometry Basics",
+    "notes": "Trigonometry relates angles and sides in right-angled triangles. SOH CAH TOA: sin θ = opposite/hypotenuse, cos θ = adjacent/hypotenuse, tan θ = opposite/adjacent. Use these to find missing sides or angles. Inverse trig functions find angles: θ = sin⁻¹(x). Angles of elevation (looking up) and depression (looking down) create right triangles. The exact values for 0°, 30°, 45°, 60°, 90° should be memorized. Applications include navigation, engineering, and physics problems.",
+    "grade": 9,
+    "subject": "Mathematics",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-04-10",
+    "tags": ["trigonometry", "SOHCAHTOA", "angles"]
+  },
+  {
+    "id": 19,
+    "title": "Atomic Structure",
+    "notes": "Atoms consist of protons (positive, in nucleus), neutrons (neutral, in nucleus), and electrons (negative, orbiting in shells). Atomic number = number of protons. Mass number = protons + neutrons. Isotopes are atoms of the same element with different numbers of neutrons. Electron configuration: first shell holds 2, second holds 8, third holds 8. Elements in the periodic table are arranged by atomic number. Groups (columns) share similar properties; periods (rows) have the same number of electron shells.",
+    "grade": 9,
+    "subject": "Science",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-04-15",
+    "tags": ["atoms", "periodic table", "chemistry"]
+  },
+  {
+    "id": 20,
+    "title": "Shakespeare: Macbeth",
+    "notes": "Macbeth is a tragedy by William Shakespeare about a Scottish general who receives a prophecy from three witches that he will become king. Key themes: ambition and its corrupting power, guilt and paranoia, the supernatural, appearance vs reality, loyalty and betrayal. Key characters: Macbeth (tragic hero), Lady Macbeth (manipulative, then guilt-ridden), Banquo (noble contrast), the Witches (agents of chaos). Key quotes: 'Fair is foul and foul is fair' — establishes theme of inverted values. Context: written during James I's reign, reflecting contemporary anxieties about kingship and witchcraft.",
+    "grade": 9,
+    "subject": "English",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-04-20",
+    "tags": ["shakespeare", "macbeth", "tragedy"]
+  },
+  {
+    "id": 21,
+    "title": "Circles and Circle Theorems",
+    "notes": "A circle is the set of all points equidistant from a center point. Key terms: radius, diameter, circumference, chord, tangent, arc, sector. Formulas: C = 2πr = πd, A = πr². Circle theorems: 1) Angle at center is twice angle at circumference. 2) Angle in a semicircle is 90°. 3) Angles in the same segment are equal. 4) Opposite angles in a cyclic quadrilateral sum to 180°. 5) Tangent is perpendicular to radius at point of contact. 6) Alternate segment theorem.",
+    "grade": 9,
+    "subject": "Mathematics",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-04-22",
+    "tags": ["circles", "theorems", "geometry"]
+  },
+  {
+    "id": 22,
+    "title": "Plate Tectonics",
+    "notes": "The Earth's lithosphere is divided into tectonic plates that move on the semi-fluid asthenosphere. Types of plate boundaries: 1) Constructive (divergent) — plates move apart, magma rises, creating new crust (mid-ocean ridges). 2) Destructive (convergent) — plates collide, one subducts under another, creating volcanoes and ocean trenches. 3) Conservative (transform) — plates slide past each other, causing earthquakes (e.g., San Andreas Fault). Continental drift was proposed by Alfred Wegener in 1912. Evidence: fossil distribution, jigsaw fit of continents, matching rock sequences.",
+    "grade": 7,
+    "subject": "Science",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-04-25",
+    "tags": ["tectonics", "earthquakes", "geology"]
+  },
+  {
+    "id": 23,
+    "title": "Ratios and Proportion",
+    "notes": "A ratio compares two or more quantities in their simplest form. Written as a:b or a to b. Simplifying ratios: divide all parts by the HCF. Proportion: when two ratios are equal. Direct proportion: y = kx (as one increases, the other increases). Inverse proportion: y = k/x (as one increases, the other decreases). Unitary method: find the value of one unit first, then multiply. Sharing in a ratio: add the parts, divide the total by the sum, multiply each share by the ratio parts.",
+    "grade": 7,
+    "subject": "Mathematics",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-04-28",
+    "tags": ["ratios", "proportion", "direct"]
+  },
+  {
+    "id": 24,
+    "title": "Map Skills and Grid References",
+    "notes": "Maps use grid references to locate places. Four-figure grid references: read eastings (horizontal) first, then northings (vertical). Six-figure grid references give more precision — divide each square into tenths. Contour lines connect points of equal height. Contours close together indicate steep slopes; far apart indicate gentle slopes. Scale shows the relationship between map distance and real distance. Common scales: 1:25,000 (OS Explorer), 1:50,000 (OS Landranger). Measure distance using string or paper edge along the route, then compare to the scale bar.",
+    "grade": 7,
+    "subject": "Geography",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-05-01",
+    "tags": ["maps", "grid references", "contours"]
+  },
+  {
+    "id": 25,
+    "title": "Population and Settlement",
+    "notes": "Population distribution describes where people live. Densely populated areas have many people per km², sparsely populated areas have few. Factors affecting distribution: climate, resources, terrain, economic opportunities, transport. Settlement hierarchy: hamlet → village → town → city → conurbation. Urbanization is the increase in the proportion of people living in urban areas. Push factors (rural): lack of jobs, poor services. Pull factors (urban): employment, education, healthcare. LEDCs experience rapid, unplanned urbanization creating shanty towns.",
+    "grade": 8,
+    "subject": "Geography",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-05-05",
+    "tags": ["population", "settlement", "urbanization"]
+  },
+  {
+    "id": 26,
+    "title": "Rivers and Flooding",
+    "notes": "The water cycle: evaporation, condensation, precipitation, surface runoff, infiltration, percolation. River drainage basin: the area of land drained by a river and its tributaries. Key features: source, mouth, tributary, confluence, watershed. Upper course: steep gradient, V-shaped valleys, waterfalls, rapids. Middle course: meanders form due to erosion on the outside bend and deposition on the inside. Lower course: wide floodplain, levees, estuaries. Flooding causes: heavy rainfall, snowmelt, deforestation, urbanization. Management: hard engineering (dams, levees, channelization) vs soft engineering (afforestation, flood warnings, land-use zoning).",
+    "grade": 9,
+    "subject": "Geography",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-05-10",
+    "tags": ["rivers", "flooding", "water cycle"]
+  },
+  {
+    "id": 27,
+    "title": "Percentages and Interest",
+    "notes": "Percentage means 'per 100'. Finding a percentage: (part/whole) × 100. Percentage increase: ((new - original)/original) × 100. Simple interest: I = PRT/100, where P = principal, R = rate, T = time. Compound interest: A = P(1 + R/100)^T. Reverse percentages: if a price after 20% increase is $120, original = 120/1.2 = $100. Percentage change problems appear frequently in exams. Compound growth applies to population, bacteria, and investment calculations.",
+    "grade": 8,
+    "subject": "Mathematics",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-05-15",
+    "tags": ["percentages", "interest", "compound"]
+  },
+  {
+    "id": 28,
+    "title": "Speech Writing",
+    "notes": "Effective speeches use: rhetorical questions to engage the audience, repetition and rule of three for emphasis (e.g., 'I came, I saw, I conquered'), emotive language to provoke feelings, direct address ('You must act now'), counter-arguments to anticipate objections. Structure: opening hook, clear thesis, supporting arguments with evidence, counter-argument, powerful conclusion with call to action. DAFOREST techniques: Direct address, Alliteration, Facts, Opinions, Rhetorical questions, Emotive language, Statistics, Rule of three. Adapt tone and register for the audience and purpose.",
+    "grade": 9,
+    "subject": "English",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-05-20",
+    "tags": ["speech", "writing", "rhetoric"]
+  },
+  {
+    "id": 29,
+    "title": "Energy and Electricity",
+    "notes": "Energy cannot be created or destroyed, only transferred (conservation of energy). Energy stores: kinetic, gravitational, elastic, thermal, chemical, nuclear. Energy transfers involve work done. Efficiency = useful energy output / total energy input × 100%. Electrical circuits: current (A) = rate of flow of charge, voltage (V) = energy transferred per unit charge, resistance (Ω) = opposition to current. Ohm's Law: V = IR. Series circuits: same current, voltage splits. Parallel circuits: same voltage, current splits. Power = VI = I²R = V²/R.",
+    "grade": 9,
+    "subject": "Science",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-05-25",
+    "tags": ["energy", "electricity", "circuits"]
+  },
+  {
+    "id": 30,
+    "title": "Inequalities",
+    "notes": "Inequalities show that one expression is greater than or less than another. Symbols: < (less than), > (greater than), ≤ (less than or equal to), ≥ (greater than or equal to). Solve inequalities like equations, but REVERSE the inequality sign when multiplying or dividing by a negative number. Represent solutions on a number line: open circle for < and >, filled circle for ≤ and ≥. Compound inequalities: 2 < x ≤ 5 means x is between 2 and 5. Inequalities can be represented on graphs as shaded regions.",
+    "grade": 8,
+    "subject": "Mathematics",
+    "author": "Epsilon Team",
+    "lastUpdated": "2025-05-28",
+    "tags": ["inequalities", "algebra", "number line"]
+  }
+]
