@@ -3986,6 +3986,102 @@ window.PAUI_THEME_COLOR = '#008000';
     };
 
 })();
+        (function() {
+    const PAUI_PREMIUM_CHECK_INTERVAL = 500;
+    const PAUI_PREMIUM_MAX_WAIT = 10000;
+
+    const checkAndHidePremiumButton = async () => {
+        try {
+            if (typeof supabaseClient === 'undefined' || typeof PAUI_CONFIG === 'undefined') {
+                return false;
+            }
+
+            const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+
+            if (authError || !user) {
+                // Not logged in — keep button visible so they can buy
+                return true;
+            }
+
+            const columnName = `paui_${PAUI_CONFIG.ssn}`;
+
+            const { data, error } = await supabaseClient
+                .from('profiles')
+                .select(columnName)
+                .eq('id', user.id)
+                .single();
+
+            if (error) {
+                console.warn('PAUI Premium Check: Could not read profile —', error.message);
+                return true;
+            }
+
+            if (data && data[columnName] === true) {
+                const btn = document.getElementById('pauiUnlockBtn');
+                if (btn) {
+                    btn.style.display = 'none';
+                    console.log('PAUI Premium Check: User already has premium. Button hidden.');
+                }
+                return true; // done
+            }
+
+            // Value is false/null — ensure button is visible
+            const btn = document.getElementById('pauiUnlockBtn');
+            if (btn) btn.style.display = '';
+            return true; // done
+
+        } catch (e) {
+            console.error('PAUI Premium Check: Unexpected error —', e);
+            return false;
+        }
+    };
+
+    const waitForDepsAndRun = () => {
+        let elapsed = 0;
+
+        const timer = setInterval(async () => {
+            elapsed += PAUI_PREMIUM_CHECK_INTERVAL;
+
+            const depsReady = typeof supabaseClient !== 'undefined' && typeof PAUI_CONFIG !== 'undefined';
+            const btnExists = document.getElementById('pauiUnlockBtn') !== null;
+
+            if (depsReady && btnExists) {
+                clearInterval(timer);
+                await checkAndHidePremiumButton();
+            }
+
+            if (elapsed >= PAUI_PREMIUM_MAX_WAIT) {
+                clearInterval(timer);
+                console.warn('PAUI Premium Check: Timed out waiting for dependencies or button element.');
+            }
+        }, PAUI_PREMIUM_CHECK_INTERVAL);
+    };
+
+    // Also re-check on auth state changes (login/logout mid-session)
+    const listenForAuthChanges = () => {
+        if (typeof supabaseClient === 'undefined') return;
+
+        supabaseClient.auth.onAuthStateChange(async (event) => {
+            if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
+                // Small delay to let the UI settle
+                setTimeout(async () => {
+                    await checkAndHidePremiumButton();
+                }, 600);
+            }
+        });
+    };
+
+    // Boot
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            waitForDepsAndRun();
+            listenForAuthChanges();
+        });
+    } else {
+        waitForDepsAndRun();
+        listenForAuthChanges();
+    }
+})();
     </script>
 </body>
 
