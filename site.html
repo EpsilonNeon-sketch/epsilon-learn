@@ -1652,6 +1652,7 @@
                 if (page === 'chatrooms') loadChatRooms();
                 if (page === 'videos') loadVideos();
                 if (page === 'questions') loadQuestions();
+                if (page === 'learnnotes') LearnNotes.reload();
             });
         });
 
@@ -4162,7 +4163,7 @@ window.PAUI_THEME_COLOR = '#008000';
         listenForAuthChanges();
     }
 })();
-const LearnNotes = (function() {
+const LearnNotesLegacy = (function() {
     // ─── Private state ───
     let allNotes = [];
     let isPremium = false;
@@ -4477,14 +4478,25 @@ const LearnNotes = (function () {
     let isInitialized  = false;
     const FREE_LIMIT   = 5; // max notes per subject for free users
 
-    // ─── Private: detect premium ───
-    function detectPremium() {
+    // ─── Private: check premium access in the signed-in user's profile ───
+    async function detectPremium() {
+        isPremium = false;
+
         try {
-            const user = JSON.parse(localStorage.getItem('epsilon_user') || '{}');
-            isPremium = !!(user && user.is_premium);
-        } catch (e) {
-            isPremium = false;
+            const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+            if (authError || !user) return isPremium;
+
+            const { data: profile, error } = await supabaseClient
+                .from('profiles')
+                .select('paui_lrn')
+                .eq('id', user.id)
+                .single();
+
+            if (!error && profile) isPremium = profile.paui_lrn === true;
+        } catch (error) {
+            console.error('[LearnNotes] Could not check premium status:', error);
         }
+
         return isPremium;
     }
 
@@ -4620,12 +4632,12 @@ const LearnNotes = (function () {
     // ═══════════════════════════════════════════
     document.addEventListener('DOMContentLoaded', async function () {
 
-        detectPremium();
+        await detectPremium();
         updatePremiumUI();
 
         // ── Fetch JSON ──
         try {
-            const resp = await fetch('learnnotes.json');
+            const resp = await fetch('learnNotes.json');
             if (!resp.ok) throw new Error(resp.status);
             allNotes = await resp.json();
             console.log(`[LearnNotes] Loaded ${allNotes.length} notes (premium: ${isPremium})`);
@@ -4747,10 +4759,10 @@ const LearnNotes = (function () {
 
         /** Force-reload JSON + re-render (call after login) */
         async reload() {
-            detectPremium();
+            await detectPremium();
             updatePremiumUI();
             try {
-                const resp = await fetch('learnnotes.json');
+                const resp = await fetch('learnNotes.json');
                 if (!resp.ok) throw new Error(resp.status);
                 allNotes = await resp.json();
             } catch(e) {
