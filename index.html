@@ -1140,14 +1140,45 @@
             <p class="text-gray-400">Try adjusting your filters or search terms.</p>
         </div>
 
-        <!-- Note Detail Modal -->
-        <div id="noteDetailModal" class="fixed inset-0 z-[300] hidden items-center justify-center p-4">
-            <div class="absolute inset-0 bg-black/40" onclick="LearnNotes.closeModal()"></div>
-            <div class="relative glass p-8 rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto">
-                <button onclick="LearnNotes.closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition">
-                    <i data-lucide="x" class="w-6 h-6"></i>
-                </button>
-                <div id="noteModalContent"></div>
+        <!-- Full-screen Learn Notes reader -->
+        <div id="noteDetailModal" class="fixed inset-0 z-[300] hidden overflow-y-auto bg-gray-50">
+            <div class="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50">
+                <header class="sticky top-0 z-10 border-b border-emerald-100 bg-white/95 backdrop-blur">
+                    <div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-4 sm:px-8">
+                        <button onclick="LearnNotes.closeModal()" class="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
+                            <i data-lucide="arrow-left" class="w-5 h-5"></i><span>Back to Learn Notes</span>
+                        </button>
+                        <button onclick="LearnNotes.closeModal()" aria-label="Close note" class="rounded-lg p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition">
+                            <i data-lucide="x" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </header>
+                <main class="mx-auto max-w-4xl px-4 py-8 sm:px-8 sm:py-12">
+                    <div class="mb-6 rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm sm:p-6">
+                        <div class="mb-4 flex flex-wrap items-center gap-3">
+                            <button id="noteReadButton" onclick="LearnNotes.toggleSpeech()" class="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-5 py-3 font-semibold text-white shadow-sm transition hover:bg-emerald-700">
+                                <i data-lucide="volume-2" class="w-5 h-5"></i><span>Read notes</span>
+                            </button>
+                            <button onclick="LearnNotes.stopSpeech()" class="inline-flex items-center gap-2 rounded-lg border border-gray-200 px-4 py-3 font-medium text-gray-600 transition hover:bg-gray-50">
+                                <i data-lucide="square" class="w-4 h-4"></i>Stop
+                            </button>
+                            <span id="speechStatus" class="text-sm text-gray-500" aria-live="polite">Ready to read</span>
+                        </div>
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                            <label class="text-sm font-medium text-gray-700">Voice
+                                <select id="speechVoice" class="input-field mt-1" onchange="LearnNotes.updateSpeechSettings()"><option value="">Default voice</option></select>
+                            </label>
+                            <label class="text-sm font-medium text-gray-700">Speed <span id="speechRateValue" class="font-normal text-gray-500">1×</span>
+                                <input id="speechRate" type="range" min="0.5" max="2" step="0.1" value="1" class="mt-3 w-full accent-emerald-600" oninput="LearnNotes.updateSpeechSettings()">
+                            </label>
+                            <label class="text-sm font-medium text-gray-700">Pitch <span id="speechPitchValue" class="font-normal text-gray-500">1×</span>
+                                <input id="speechPitch" type="range" min="0.5" max="2" step="0.1" value="1" class="mt-3 w-full accent-emerald-600" oninput="LearnNotes.updateSpeechSettings()">
+                            </label>
+                        </div>
+                        <p id="speechUnavailable" class="mt-3 hidden text-sm text-amber-700">Speech reading is not supported in this browser.</p>
+                    </div>
+                    <article id="noteModalContent" class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm sm:p-10"></article>
+                </main>
             </div>
         </div>
 
@@ -4487,7 +4518,27 @@ const LearnNotes = (function () {
     let allNotes       = [];
     let isPremium      = false;
     let isInitialized  = false;
+    let activeNoteText = '';
     const FREE_LIMIT   = 5; // max notes per subject for free users
+
+    function populateSpeechVoices() {
+        const select = document.getElementById('speechVoice');
+        if (!select || !('speechSynthesis' in window)) return;
+        const selectedVoice = select.value;
+        const voices = window.speechSynthesis.getVoices();
+        select.innerHTML = '<option value="">Default voice</option>';
+        voices.forEach((voice, index) => {
+            const option = document.createElement('option');
+            option.value = String(index);
+            option.textContent = `${voice.name}${voice.lang ? ` (${voice.lang})` : ''}`;
+            select.appendChild(option);
+        });
+        if (selectedVoice && Number(selectedVoice) < voices.length) select.value = selectedVoice;
+    }
+
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.addEventListener('voiceschanged', populateSpeechVoices);
+    }
 
     // ─── Private: check premium access in the signed-in user's profile ───
     async function detectPremium() {
@@ -4710,18 +4761,28 @@ const LearnNotes = (function () {
             renderCards(applyGate(filtered));
         },
 
-        /** Open a single note in the modal */
+        /** Open a note in the full-screen reader */
         openNote(id) {
             const note = allNotes.find(n => n.id === id);
             if (!note) return;
+            this.stopSpeech();
+            populateSpeechVoices();
+            const speechUnavailable = document.getElementById('speechUnavailable');
+            if (speechUnavailable) speechUnavailable.classList.toggle('hidden', 'speechSynthesis' in window);
+            const speechStatus = document.getElementById('speechStatus');
+            if (speechStatus) speechStatus.textContent = 'Ready to read';
+            const readButton = document.getElementById('noteReadButton');
+            if (readButton) readButton.innerHTML = '<i data-lucide="volume-2" class="w-5 h-5"></i><span>Read notes</span>';
 
             // If gated for free user, show lock
             const visible = applyGate(allNotes);
             if (!isPremium && !visible.find(n => n.id === id)) {
+                activeNoteText = '';
                 LearnNotes._showLockModal();
                 return;
             }
 
+            activeNoteText = note.notes || '';
             const c    = colorOf(note.subject);
             const tags = (note.tags||[]).map(t =>
                 `<span class="inline-block px-2.5 py-1 bg-gray-100 text-gray-600 rounded-lg text-xs font-medium">${t}</span>`
@@ -4750,8 +4811,76 @@ const LearnNotes = (function () {
             refreshIcons();
         },
 
-        /** Close the modal */
+        /** Read, pause, or resume the currently open note using browser speech. */
+        toggleSpeech() {
+            if (!('speechSynthesis' in window)) return;
+            const synth = window.speechSynthesis;
+            const status = document.getElementById('speechStatus');
+            const button = document.getElementById('noteReadButton');
+
+            if (synth.speaking && synth.paused) {
+                synth.resume();
+                if (status) status.textContent = 'Reading…';
+                if (button) button.innerHTML = '<i data-lucide="pause" class="w-5 h-5"></i><span>Pause reading</span>';
+                refreshIcons();
+                return;
+            }
+            if (synth.speaking) {
+                synth.pause();
+                if (status) status.textContent = 'Paused';
+                if (button) button.innerHTML = '<i data-lucide="play" class="w-5 h-5"></i><span>Resume reading</span>';
+                refreshIcons();
+                return;
+            }
+            if (!activeNoteText.trim()) return;
+
+            const utterance = new SpeechSynthesisUtterance(activeNoteText);
+            const voices = synth.getVoices();
+            const voiceIndex = document.getElementById('speechVoice')?.value;
+            if (voiceIndex !== '' && voices[Number(voiceIndex)]) utterance.voice = voices[Number(voiceIndex)];
+            utterance.rate = Number(document.getElementById('speechRate')?.value || 1);
+            utterance.pitch = Number(document.getElementById('speechPitch')?.value || 1);
+            utterance.onend = () => {
+                if (status) status.textContent = 'Finished reading';
+                if (button) button.innerHTML = '<i data-lucide="volume-2" class="w-5 h-5"></i><span>Read again</span>';
+                refreshIcons();
+            };
+            utterance.onerror = () => {
+                if (status) status.textContent = 'Could not read this note';
+                if (button) button.innerHTML = '<i data-lucide="volume-2" class="w-5 h-5"></i><span>Read notes</span>';
+                refreshIcons();
+            };
+            synth.cancel();
+            synth.speak(utterance);
+            if (status) status.textContent = 'Reading…';
+            if (button) button.innerHTML = '<i data-lucide="pause" class="w-5 h-5"></i><span>Pause reading</span>';
+            refreshIcons();
+        },
+
+        /** Stop speech and reset the reader controls. */
+        stopSpeech() {
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            const status = document.getElementById('speechStatus');
+            const button = document.getElementById('noteReadButton');
+            if (status) status.textContent = 'Ready to read';
+            if (button) button.innerHTML = '<i data-lucide="volume-2" class="w-5 h-5"></i><span>Read notes</span>';
+            refreshIcons();
+        },
+
+        /** Update visible speed and pitch values; settings apply to the next playback. */
+        updateSpeechSettings() {
+            const rate = document.getElementById('speechRate')?.value || 1;
+            const pitch = document.getElementById('speechPitch')?.value || 1;
+            const rateLabel = document.getElementById('speechRateValue');
+            const pitchLabel = document.getElementById('speechPitchValue');
+            if (rateLabel) rateLabel.textContent = `${Number(rate).toFixed(1).replace('.0', '')}×`;
+            if (pitchLabel) pitchLabel.textContent = `${Number(pitch).toFixed(1).replace('.0', '')}×`;
+        },
+
+        /** Close the full-screen reader and stop any speech. */
         closeModal() {
+            this.stopSpeech();
+            activeNoteText = '';
             const modal = document.getElementById('noteDetailModal');
             if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
         },
