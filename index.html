@@ -397,6 +397,12 @@
                 </button>
                 <button
                     class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
+                    data-page="learnnotes">
+                    <i data-lucide="book-open-check" class="w-5 h-5"></i>
+                    <span>Learn Notes</span>
+                </button>
+                <button
+                    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
                     data-page="tracker">
                     <i data-lucide="check-square" class="w-5 h-5"></i>
                     <span>Work Tracker</span>
@@ -467,12 +473,7 @@
                     <i data-lucide="messages-square" class="w-5 h-5"></i>
                     <span>Chat Rooms</span>
                 </button>
-                <button
-    class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
-    data-page="learnnotes">
-    <i data-lucide="book-open-check" class="w-5 h-5"></i>
-    <span>Learn Notes</span>
-</button>
+                
                 <button
                     class="nav-btn w-full flex items-center gap-3 p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition text-left text-gray-600"
                     data-page="videos">
@@ -612,6 +613,16 @@
                             <i data-lucide="help-circle" class="w-6 h-6"></i>
                         </div>
                     </div>
+                </div>
+                <div class="glass p-6 rounded-2xl mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">Dive in and learn something new!</h3>
+                        <p class="text-gray-500">Explore Learn Notes and discover your next topic to master.</p>
+                    </div>
+                    <button onclick="document.querySelector('[data-page=learnnotes]').click()"
+                        class="shrink-0 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-3 rounded-lg transition">
+                        Explore Learn Notes
+                    </button>
                 </div>
                 <div class="glass p-6 rounded-2xl">
                     <h3 class="text-lg font-bold text-gray-800 mb-4">Productivity Overview</h3>
